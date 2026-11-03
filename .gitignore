@@ -10,6 +10,9 @@ __pycache__/
 *.db-shm
 .local/
 
+# Owner's publication drafts (PR texts, LinkedIn draft): kept local, never published
+publication/
+
 # Raw test output (curated evidence lives in evidence/)
 artifacts/
 test-results/
