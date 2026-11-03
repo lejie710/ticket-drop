@@ -1,0 +1,17 @@
+# Direct dependencies. requirements-lock.txt records the exact tested environment.
+
+# Application
+fastapi
+uvicorn[standard]
+
+# Tests and tooling
+httpx
+pytest
+pytest-playwright
+playwright
+locust
+pip-audit
+bandit
+
+# Learning companion generation
+python-docx

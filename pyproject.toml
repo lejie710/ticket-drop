@@ -1,0 +1,15 @@
+[project]
+name = "ticket-drop"
+version = "0.1.0"
+description = "A concert ticket sale app built to be tested: seat holds, payment failure, concurrency, load and security."
+requires-python = ">=3.12"
+license = "MIT"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "e2e: browser tests that drive the real UI with Playwright",
+    "concurrency: tests that send parallel requests to a live server",
+    "security: authorization, input and abuse tests",
+]
