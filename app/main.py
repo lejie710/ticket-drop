@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import auth, db, service
+from . import auth, db, faults, service
 from .clock import Clock
 from .config import Settings
 from .ratelimit import FailureWindow, TokenBucket
@@ -49,6 +49,15 @@ class SeatIn(Strict):
 
 class CheckoutIn(Strict):
     card_number: str = Field(pattern=r"^[0-9 ]{12,23}$")
+
+
+class CheckoutWithAmountIn(CheckoutIn):
+    # Used only by the client_sets_amount fault.
+    amount_cents: int | None = None
+
+
+# Faults the browser must know about. Exposed in /api/event only when enabled.
+FRONTEND_FAULTS = ("map_stale_after_failed_seat_change",)
 
 
 class ClockIn(Strict):
@@ -112,8 +121,11 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
             raise ApiError(401, "not_signed_in", "Your session has ended. Sign in again.")
         return user
 
-    def limit_seat_changes(user=Depends(current_user)):
-        wait = hold_limiter.take(str(user["id"]), time.monotonic())
+    def limit_seat_changes(request: Request, user=Depends(current_user)):
+        key = str(user["id"])
+        if faults.on(settings, "seat_rate_limit_per_session"):
+            key = request.headers.get("authorization", "")
+        wait = hold_limiter.take(key, time.monotonic())
         if wait:
             raise ApiError(429, "too_many_requests", "Too many seat changes. Wait a moment and try again.",
                            {"Retry-After": str(max(1, round(wait + 0.5)))})
@@ -122,7 +134,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     @app.get("/api/event")
     def event():
         now = clock.now_ms()
-        return {
+        body = {
             **EVENT,
             "sale_opens_at_ms": settings.sale_opens_at_ms,
             "sale_open": service.sale_is_open(settings, now),
@@ -131,6 +143,10 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
             "hold_seconds": settings.hold_seconds,
             "prices_cents": {str(k): v for k, v in db.PRICES_CENTS.items()},
         }
+        frontend_faults = [name for name in FRONTEND_FAULTS if faults.on(settings, name)]
+        if frontend_faults:
+            body["faults"] = frontend_faults
+        return body
 
     @app.post("/api/login")
     def login(body: LoginIn, request: Request, conn=Depends(connection)):
@@ -178,12 +194,20 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         service.release_hold(conn, settings, clock, user["id"])
         return Response(status_code=204)
 
+    checkout_model = CheckoutIn
+    if faults.on(settings, "client_sets_amount"):
+        checkout_model = CheckoutWithAmountIn
+
     @app.post("/api/checkout")
-    def checkout(body: CheckoutIn, idempotency_key: str | None = Header(default=None),
+    def checkout(body: checkout_model, idempotency_key: str | None = Header(default=None),
                  user=Depends(current_user), conn=Depends(connection)):
         if not idempotency_key or not IDEMPOTENCY_KEY.match(idempotency_key):
             raise ApiError(400, "invalid_idempotency_key",
                            "Send an Idempotency-Key header of 8 to 64 letters, digits, '-' or '_'.")
+        if faults.on(settings, "client_sets_amount"):
+            status, payload = service.checkout(conn, settings, clock, user["id"], idempotency_key, body.card_number,
+                                               client_amount_cents=body.amount_cents)
+            return JSONResponse(payload, status_code=status)
         status, payload = service.checkout(conn, settings, clock, user["id"], idempotency_key, body.card_number)
         return JSONResponse(payload, status_code=status)
 
