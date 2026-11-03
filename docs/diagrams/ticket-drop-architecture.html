@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ticket Drop runtime architecture</title>
+<style>
+  body { margin: 0; background: #f5f6f8; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 640" width="1200" height="640" role="img" aria-labelledby="arch-title arch-desc" font-family="Segoe UI, system-ui, sans-serif">
+  <title id="arch-title">Ticket Drop runtime architecture</title>
+  <desc id="arch-desc">A browser page calls the JSON API of one local server process. Routes in main.py validate and authenticate requests and call the booking rules in service.py, which use write transactions on one SQLite file and call a mock payment gateway that records charges in the same file.</desc>
+  <defs>
+    <marker id="arch-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#4f5d75"/>
+    </marker>
+    <marker id="arch-arrow-link" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#2e5aa8"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1200" height="640" fill="#f5f6f8"/>
+
+  <text x="40" y="44" font-size="22" font-weight="700" fill="#18233a">Ticket Drop: runtime architecture</text>
+  <text x="40" y="70" font-size="14" fill="#55607a">One server process on 127.0.0.1. Everything below runs on the fan's own computer in this project.</text>
+
+  <!-- Browser -->
+  <rect x="40" y="120" width="250" height="300" rx="10" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+  <text x="60" y="152" font-size="17" font-weight="700" fill="#18233a">Browser</text>
+  <text x="60" y="176" font-size="13" fill="#55607a">app/static/</text>
+  <text x="60" y="214" font-size="14" fill="#18233a">index.html, app.css</text>
+  <text x="60" y="238" font-size="14" fill="#18233a">app.js</text>
+  <text x="76" y="262" font-size="13" fill="#55607a">sign-in, seat map</text>
+  <text x="76" y="282" font-size="13" fill="#55607a">keyboard selection</text>
+  <text x="76" y="302" font-size="13" fill="#55607a">hold timer on server time</text>
+  <text x="76" y="322" font-size="13" fill="#55607a">payment form</text>
+  <text x="76" y="342" font-size="13" fill="#55607a">polls every 4 s</text>
+  <text x="60" y="386" font-size="12" fill="#55607a">Token kept in sessionStorage</text>
+
+  <!-- Server boundary -->
+  <rect x="360" y="100" width="470" height="500" rx="12" fill="none" stroke="#8a94a8" stroke-width="1.5" stroke-dasharray="7 5"/>
+  <rect x="376" y="88" width="262" height="24" fill="#f5f6f8"/>
+  <text x="384" y="106" font-size="14" font-weight="600" fill="#55607a">Server process: serve.py, uvicorn</text>
+
+  <!-- main.py -->
+  <rect x="390" y="130" width="410" height="120" rx="8" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+  <text x="410" y="160" font-size="16" font-weight="700" fill="#18233a">main.py: HTTP API</text>
+  <text x="410" y="186" font-size="13" fill="#18233a">routes under /api, request validation (pydantic)</text>
+  <text x="410" y="206" font-size="13" fill="#18233a">token sign-in (auth.py), rate limits (ratelimit.py)</text>
+  <text x="410" y="226" font-size="13" fill="#18233a">security headers, error format, static files</text>
+
+  <!-- service.py (focal) -->
+  <rect x="390" y="290" width="410" height="130" rx="8" fill="#fbecec" stroke="#b3261e" stroke-width="2"/>
+  <text x="410" y="320" font-size="16" font-weight="700" fill="#18233a">service.py: booking rules</text>
+  <text x="410" y="346" font-size="13" fill="#18233a">hold, release, expire, checkout, tickets</text>
+  <text x="410" y="366" font-size="13" fill="#18233a">every change inside BEGIN IMMEDIATE</text>
+  <text x="410" y="386" font-size="13" fill="#18233a">seat claim: UPDATE ... WHERE status = 'available'</text>
+  <text x="410" y="406" font-size="13" fill="#18233a">reads skip the write lock unless a hold is overdue</text>
+
+  <!-- payments + clock + faults -->
+  <rect x="390" y="460" width="196" height="110" rx="8" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+  <text x="406" y="488" font-size="15" font-weight="700" fill="#18233a">payments.py</text>
+  <text x="406" y="510" font-size="13" fill="#18233a">mock gateway</text>
+  <text x="406" y="530" font-size="13" fill="#55607a">test card decides:</text>
+  <text x="406" y="550" font-size="13" fill="#55607a">pay, decline, timeout</text>
+
+  <rect x="604" y="460" width="196" height="50" rx="8" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+  <text x="620" y="490" font-size="14" fill="#18233a"><tspan font-weight="700">clock.py</tspan> injectable time</text>
+  <rect x="604" y="520" width="196" height="50" rx="8" fill="#ffffff" stroke="#8a94a8" stroke-width="1.5" stroke-dasharray="4 3"/>
+  <text x="620" y="550" font-size="14" fill="#55607a"><tspan font-weight="700">faults.py</tspan> off by default</text>
+
+  <!-- SQLite -->
+  <rect x="922" y="200" width="250" height="330" rx="10" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+  <text x="942" y="232" font-size="17" font-weight="700" fill="#18233a">SQLite file (WAL)</text>
+  <text x="942" y="256" font-size="13" fill="#55607a">.local/ticket-drop.db</text>
+  <g font-family="Consolas, ui-monospace, monospace" font-size="14" fill="#18233a">
+    <text x="942" y="292">users, sessions</text>
+    <text x="942" y="318">seats</text>
+    <text x="942" y="344">holds</text>
+    <text x="942" y="370">payments</text>
+    <text x="942" y="396">charges</text>
+    <text x="942" y="422">tickets</text>
+  </g>
+  <text x="942" y="460" font-size="12" fill="#55607a">tickets.seat_id UNIQUE: last line</text>
+  <text x="942" y="478" font-size="12" fill="#55607a">of defence against double sale</text>
+  <text x="942" y="504" font-size="12" fill="#55607a">charges = money that moved</text>
+
+  <!-- Arrows -->
+  <path d="M290,190 L388,190" stroke="#2e5aa8" stroke-width="2" fill="none" marker-end="url(#arch-arrow-link)"/>
+  <rect x="296" y="150" width="88" height="34" fill="#f5f6f8"/>
+  <text x="300" y="164" font-size="12" fill="#2e5aa8">HTTP JSON</text>
+  <text x="300" y="180" font-size="12" fill="#2e5aa8">Bearer token</text>
+
+  <path d="M595,250 L595,288" stroke="#4f5d75" stroke-width="2" fill="none" marker-end="url(#arch-arrow)"/>
+  <text x="605" y="274" font-size="12" fill="#55607a">function calls</text>
+
+  <path d="M800,355 L920,355" stroke="#4f5d75" stroke-width="2" fill="none" marker-end="url(#arch-arrow)"/>
+  <text x="838" y="345" font-size="12" fill="#55607a">transactions</text>
+
+  <path d="M488,420 L488,458" stroke="#4f5d75" stroke-width="2" fill="none" marker-end="url(#arch-arrow)"/>
+  <text x="498" y="444" font-size="12" fill="#55607a">charge(card, amount)</text>
+
+  <path d="M586,540 L590,540 L590,590 L1030,590 L1030,532" stroke="#4f5d75" stroke-width="2" fill="none" marker-end="url(#arch-arrow)"/>
+  <rect x="846" y="594" width="170" height="20" fill="#f5f6f8"/>
+  <text x="850" y="608" font-size="12" fill="#55607a">charges ledger row on success</text>
+
+  <path d="M800,190 L850,190 L850,250 L920,250" stroke="#4f5d75" stroke-width="2" fill="none" marker-end="url(#arch-arrow)"/>
+  <text x="858" y="240" font-size="12" fill="#55607a">sessions</text>
+</svg>
+</body>
+</html>
