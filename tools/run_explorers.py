@@ -58,18 +58,24 @@ def main() -> int:
     parser.add_argument("--random-seeds", type=int, default=3)
     parser.add_argument("--only", default="")
     parser.add_argument("--no-llm", action="store_true")
+    parser.add_argument("--llm-seeds", default="5",
+                        help="Comma-separated model seeds, one model run per seed per fault. Default: 5.")
+    parser.add_argument("--out", default="explorers.json",
+                        help="Result file in evidence/faults. Transcripts are appended to, not replaced, "
+                             "unless this is the default file.")
     args = parser.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
     faults = [""] + ([n for n in args.only.split(",") if n] or list(CATALOGUE))
-    provider = None
+    seeds = [int(s) for s in args.llm_seeds.split(",") if s]
+    providers = []
     if not args.no_llm:
-        provider = OllamaProvider(temperature=0.7, seed=5)
-        if not provider.available():
+        providers = [OllamaProvider(temperature=0.7, seed=seed) for seed in seeds]
+        if not providers[0].available():
             print("The local model is not available; running the random baseline only.")
-            provider = None
+            providers = []
     TRANSCRIPTS.parent.mkdir(parents=True, exist_ok=True)
-    if provider:
+    if providers and args.out == "explorers.json":
         TRANSCRIPTS.write_text("", encoding="utf-8")
 
     results = []
@@ -78,18 +84,19 @@ def main() -> int:
             r = one_run(fault, RandomChooser(seed), args.steps, seed)
             results.append(r)
             print(f"{r['fault']:<38} random#{seed}: {len(r['findings'])} finding(s), {r['seconds']} s", flush=True)
-        if provider:
-            r = one_run(fault, ModelChooser(provider), args.steps, 1)
+        for provider in providers:
+            r = one_run(fault, ModelChooser(provider), args.steps, provider.seed)
             results.append(r)
-            print(f"{r['fault']:<38} llm: {len(r['findings'])} finding(s), {r['invalid_steps']} invalid step(s), "
-                  f"{r['seconds']} s", flush=True)
+            print(f"{r['fault']:<38} llm seed {provider.seed}: {len(r['findings'])} finding(s), "
+                  f"{r['invalid_steps']} invalid step(s), {r['seconds']} s", flush=True)
     OUT.mkdir(parents=True, exist_ok=True)
-    (OUT / "explorers.json").write_text(json.dumps({
+    (OUT / args.out).write_text(json.dumps({
         "run_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "steps_per_run": args.steps, "random_seeds": args.random_seeds,
-        "model": provider.name if provider else None,
-        "model_calls": provider.calls if provider else 0,
-        "model_seconds": round(provider.seconds) if provider else 0,
+        "model": providers[0].name if providers else None,
+        "model_seeds": seeds if providers else [],
+        "model_calls": sum(p.calls for p in providers),
+        "model_seconds": round(sum(p.seconds for p in providers)),
         "results": results,
     }, indent=2), encoding="utf-8")
     return 0

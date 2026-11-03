@@ -1,70 +1,70 @@
 {
-  "run_at": "2026-11-03 15:11 UTC",
+  "run_at": "2026-11-03 17:07 UTC",
   "users": 200,
   "spawn_rate_per_second": 200,
   "duration_seconds": 60,
-  "wall_seconds": 62.9,
+  "wall_seconds": 63.4,
   "locust_exit_code": 0,
   "endpoints": [
     {
       "name": "GET /api/seats",
-      "requests": 630,
+      "requests": 476,
       "failures": 0,
-      "median_ms": 2300.0,
-      "p95_ms": 4900.0,
-      "p99_ms": 5200.0,
-      "max_ms": 5219.750100000965,
-      "rps": 10.5
+      "median_ms": 3200.0,
+      "p95_ms": 5400.0,
+      "p99_ms": 5600.0,
+      "max_ms": 5765.56459999847,
+      "rps": 7.9
     },
     {
       "name": "POST /api/checkout",
-      "requests": 93,
+      "requests": 54,
       "failures": 0,
-      "median_ms": 1600.0,
-      "p95_ms": 4900.0,
-      "p99_ms": 7400.0,
-      "max_ms": 7444.5066999996925,
-      "rps": 1.6
+      "median_ms": 2200.0,
+      "p95_ms": 7600.0,
+      "p99_ms": 12000.0,
+      "max_ms": 11582.973000000493,
+      "rps": 0.9
     },
     {
       "name": "POST /api/hold/seats",
-      "requests": 634,
+      "requests": 430,
       "failures": 0,
-      "median_ms": 2200.0,
-      "p95_ms": 5900.0,
-      "p99_ms": 9200.0,
-      "max_ms": 12122.782899999947,
-      "rps": 10.6
+      "median_ms": 3200.0,
+      "p95_ms": 6600.0,
+      "p99_ms": 11000.0,
+      "max_ms": 14849.241500000062,
+      "rps": 7.2
     },
     {
       "name": "login",
       "requests": 200,
       "failures": 0,
-      "median_ms": 1500.0,
-      "p95_ms": 3600.0,
-      "p99_ms": 3700.0,
-      "max_ms": 3848.611899999014,
+      "median_ms": 1300.0,
+      "p95_ms": 3200.0,
+      "p99_ms": 3400.0,
+      "max_ms": 3382.5963999988744,
       "rps": 3.3
     },
     {
       "name": "Aggregated",
-      "requests": 1557,
+      "requests": 1160,
       "failures": 0,
-      "median_ms": 2100.0,
-      "p95_ms": 5100.0,
-      "p99_ms": 7800.0,
-      "max_ms": 12122.782899999947,
-      "rps": 25.9
+      "median_ms": 2900.0,
+      "p95_ms": 5400.0,
+      "p99_ms": 9000.0,
+      "max_ms": 14849.241500000062,
+      "rps": 19.3
     }
   ],
   "integrity": {
-    "tickets_issued": 123,
+    "tickets_issued": 60,
     "seats_sold_twice": 0,
     "sold_seats_without_ticket": 0,
     "tickets_on_unsold_seats": 0,
     "accounts_over_limit": 0,
-    "charged_cents": 3590400,
-    "ticket_value_cents": 3590400,
+    "charged_cents": 1726000,
+    "ticket_value_cents": 1726000,
     "payments_left_pending": 0,
     "money_matches_tickets": true,
     "passed": true

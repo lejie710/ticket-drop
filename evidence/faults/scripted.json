@@ -1,0 +1,111 @@
+{
+  "run_at": "2026-11-03 16:19 UTC",
+  "suite": [
+    "tests/api",
+    "tests/security",
+    "tests/concurrency",
+    "tests/e2e"
+  ],
+  "results": [
+    {
+      "fault": "clean",
+      "tests": 158,
+      "failed": [],
+      "seconds": 125,
+      "exit_code": 0
+    },
+    {
+      "fault": "seat_checked_before_lock",
+      "tests": 158,
+      "failed": [
+        "test_checkout::test_a_declined_hold_still_expires_on_time",
+        "test_races::test_fifty_fans_press_the_same_seat_at_once",
+        "test_races::test_crowd_on_a_few_hot_seats_never_double_sells"
+      ],
+      "seconds": 165,
+      "exit_code": 1
+    },
+    {
+      "fault": "limit_ignores_owned_tickets",
+      "tests": 158,
+      "failed": [
+        "test_limits::test_owned_tickets_count_towards_the_limit"
+      ],
+      "seconds": 122,
+      "exit_code": 1
+    },
+    {
+      "fault": "hold_expiry_boundary_exclusive",
+      "tests": 158,
+      "failed": [
+        "test_checkout::test_a_declined_hold_still_expires_on_time",
+        "test_time_rules::test_hold_ends_exactly_at_expiry",
+        "test_time_rules::test_adding_seats_does_not_extend_the_hold",
+        "test_time_rules::test_paying_after_expiry_is_refused"
+      ],
+      "seconds": 124,
+      "exit_code": 1
+    },
+    {
+      "fault": "timeout_leaves_hold_paying",
+      "tests": 158,
+      "failed": [
+        "test_checkout::test_gateway_timeout_charges_nothing_and_keeps_the_seats"
+      ],
+      "seconds": 125,
+      "exit_code": 1
+    },
+    {
+      "fault": "idempotency_reruns_failed_payment",
+      "tests": 158,
+      "failed": [
+        "test_checkout::test_repeating_a_declined_checkout_returns_the_same_decline"
+      ],
+      "seconds": 125,
+      "exit_code": 1
+    },
+    {
+      "fault": "client_sets_amount",
+      "tests": 158,
+      "failed": [
+        "test_checkout::test_the_client_cannot_set_the_price"
+      ],
+      "seconds": 124,
+      "exit_code": 1
+    },
+    {
+      "fault": "remove_seat_from_any_hold",
+      "tests": 158,
+      "failed": [
+        "test_holds::test_cannot_release_a_seat_you_do_not_hold",
+        "test_access_control::test_cannot_release_someone_elses_seat"
+      ],
+      "seconds": 128,
+      "exit_code": 1
+    },
+    {
+      "fault": "seat_rate_limit_per_session",
+      "tests": 158,
+      "failed": [],
+      "seconds": 129,
+      "exit_code": 0
+    },
+    {
+      "fault": "map_stale_after_failed_seat_change",
+      "tests": 158,
+      "failed": [],
+      "seconds": 131,
+      "exit_code": 0
+    },
+    {
+      "fault": "release_hold_leaves_seats_held",
+      "tests": 158,
+      "failed": [
+        "test_holds::test_releasing_the_whole_hold",
+        "test_access_control::test_cannot_release_someone_elses_seat"
+      ],
+      "seconds": 125,
+      "exit_code": 1
+    }
+  ]
+}

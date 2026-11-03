@@ -1,0 +1,36 @@
+{
+  "run_at": "2026-11-03 17:30 UTC",
+  "suite": [
+    "tests/api",
+    "tests/security",
+    "tests/concurrency",
+    "tests/e2e"
+  ],
+  "results": [
+    {
+      "fault": "clean",
+      "tests": 159,
+      "failed": [],
+      "seconds": 231,
+      "exit_code": 0
+    },
+    {
+      "fault": "seat_rate_limit_per_session",
+      "tests": 159,
+      "failed": [
+        "test_abuse_and_headers::test_signing_in_again_does_not_reset_the_rate_limit"
+      ],
+      "seconds": 229,
+      "exit_code": 1
+    },
+    {
+      "fault": "map_stale_after_failed_seat_change",
+      "tests": 159,
+      "failed": [
+        "test_journeys::test_seat_taken_while_the_map_was_open[chromium]"
+      ],
+      "seconds": 237,
+      "exit_code": 1
+    }
+  ]
+}
