@@ -82,9 +82,36 @@ def hold_view(conn, user_id: int) -> dict | None:
     }
 
 
+@contextmanager
+def read_snapshot(conn):
+    """A consistent read without the write lock. In WAL mode readers do not block writers."""
+    conn.execute("BEGIN")
+    try:
+        yield
+    finally:
+        conn.execute("COMMIT")
+
+
+def expire_if_due(conn, now_ms: int) -> None:
+    """For read endpoints: take the write lock only when an overdue hold actually exists.
+
+    Taking it on every read made every seat-map request queue behind every
+    seat claim. Removing that raised spike throughput only from about 21 to 26
+    requests per second, because the main limit turned out to be CPU time in
+    one Python process (DEF-002 in docs/DEFECTS.md).
+    """
+    due = conn.execute(
+        "SELECT 1 FROM holds WHERE status = 'active' AND expires_ms <= ? LIMIT 1", (now_ms,)
+    ).fetchone()
+    if due:
+        with write_transaction(conn):
+            expire_due_holds(conn, now_ms)
+
+
 def get_hold(conn, settings, clock, user_id: int) -> dict | None:
-    with write_transaction(conn):
-        expire_due_holds(conn, clock.now_ms())
+    now = clock.now_ms()
+    expire_if_due(conn, now)
+    with read_snapshot(conn):
         return hold_view(conn, user_id)
 
 
@@ -158,8 +185,8 @@ def release_hold(conn, settings, clock, user_id: int) -> None:
 
 
 def seat_map(conn, settings, clock, user_id: int) -> list[dict]:
-    with write_transaction(conn):
-        expire_due_holds(conn, clock.now_ms())
+    expire_if_due(conn, clock.now_ms())
+    with read_snapshot(conn):
         hold = _open_hold(conn, user_id)
         mine = hold["id"] if hold else None
         owned = {r["seat_id"] for r in conn.execute("SELECT seat_id FROM tickets WHERE user_id = ?", (user_id,))}

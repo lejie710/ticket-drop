@@ -45,6 +45,9 @@ CREATE TABLE IF NOT EXISTS seats (
     CHECK ((status = 'held') = (hold_id IS NOT NULL))
 );
 
+CREATE INDEX IF NOT EXISTS holds_due ON holds(status, expires_ms);
+CREATE INDEX IF NOT EXISTS seats_by_hold ON seats(hold_id);
+
 CREATE TABLE IF NOT EXISTS payments (
     id TEXT PRIMARY KEY,
     user_id INTEGER NOT NULL REFERENCES users(id),
@@ -114,7 +117,6 @@ def hash_password(password: str, salt: bytes) -> bytes:
 def connect(path: str) -> sqlite3.Connection:
     conn = sqlite3.connect(path, isolation_level=None, timeout=10, check_same_thread=False)
     conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA journal_mode = WAL")
     conn.execute("PRAGMA foreign_keys = ON")
     conn.execute("PRAGMA busy_timeout = 10000")
     return conn
@@ -125,6 +127,9 @@ def initialise(path: str) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     conn = connect(path)
     try:
+        # WAL lets readers continue while a write is in progress. The mode is
+        # stored in the file, so it is set once here rather than per connection.
+        conn.execute("PRAGMA journal_mode = WAL")
         conn.executescript(SCHEMA)
         if conn.execute("SELECT COUNT(*) FROM seats").fetchone()[0] == 0:
             seed(conn)
