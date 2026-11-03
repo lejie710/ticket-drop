@@ -49,6 +49,24 @@ def test_declined_card_keeps_the_seats(signed_in):
     expect(page.get_by_role("button", name="Pay RM 388")).to_be_enabled()
 
 
+def test_pressing_enter_twice_sends_one_payment(signed_in, server):
+    """Found by review: Enter in the card field submitted again while a payment was in flight.
+
+    The server would refuse the duplicate, so the database alone cannot show the bug.
+    The page must not send it, and must not unlock the seats mid-payment.
+    """
+    page = signed_in()
+    seat(page, "D-07").click()
+    expect(seat(page, "D-07")).to_have_attribute("data-state", "mine")
+    sent = []
+    page.on("request", lambda r: sent.append(r) if r.method == "POST" and r.url.endswith("/api/checkout") else None)
+    page.get_by_label("Card number").fill("4000 0000 0000 0408")  # The gateway takes 0.5 s to time out here.
+    page.get_by_label("Card number").press("Enter")
+    page.get_by_label("Card number").press("Enter")
+    expect(page.locator("#notice")).to_have_text("The payment service did not answer. You were not charged.")
+    assert len(sent) == 1
+
+
 def test_seat_taken_while_the_map_was_open(signed_in, server):
     """The map is a few seconds old; someone else gets the seat first."""
     page = signed_in()
