@@ -1,5 +1,6 @@
 """Shared fixtures. Each test gets a fresh database file and a frozen clock."""
 
+import os
 import sqlite3
 import uuid
 from pathlib import Path
@@ -13,6 +14,8 @@ from app.config import Settings
 from app.main import create_app
 
 T0 = 1_800_000_000_000  # A fixed instant, so time rules are exact.
+# Normally empty. tools/fault_matrix.py sets it to run the whole suite against one seeded fault.
+FAULTS = frozenset(f for f in os.environ.get("TICKET_DROP_FAULTS", "").split(",") if f)
 SUCCESS = payments.SUCCESS_CARD
 DECLINE = payments.DECLINE_CARD
 TIMEOUT = payments.TIMEOUT_CARD
@@ -69,7 +72,7 @@ def db_path(tmp_path):
 @pytest.fixture
 def make_client(db_path, clock):
     def make(**overrides):
-        settings = Settings(db_path=db_path, payment_timeout_seconds=0, **overrides)
+        settings = Settings(db_path=db_path, payment_timeout_seconds=0, faults=FAULTS, **overrides)
         return TestClient(create_app(settings, clock))
     return make
 

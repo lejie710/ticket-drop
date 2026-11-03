@@ -46,8 +46,11 @@ def free_port() -> int:
         return s.getsockname()[1]
 
 
-def start(db_path: str, faults: str = "", sale_opens_in: float | None = None, sample_sales: float = 0.0,
+def start(db_path: str, faults: str | None = None, sale_opens_in: float | None = None, sample_sales: float = 0.0,
           extra_env: dict | None = None) -> LiveServer:
+    """faults: comma-separated seeded faults; by default inherited from TICKET_DROP_FAULTS (normally empty)."""
+    if faults is None:
+        faults = os.environ.get("TICKET_DROP_FAULTS", "")
     port = free_port()
     env = {
         **os.environ,
