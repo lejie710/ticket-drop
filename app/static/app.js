@@ -137,6 +137,8 @@
     state.user = null;
     state.hold = null;
     state.hadHold = false;
+    state.payKey = null;
+    state.payKeyFor = null;
     sessionStorage.removeItem("td.token");
     sessionStorage.removeItem("td.user");
     route();
@@ -457,7 +459,13 @@
     }
   }
 
+  function basketSignature() {
+    return state.hold ? `${state.hold.id}:${state.hold.seats.map((s) => s.id).join(",")}` : "";
+  }
+
   async function pay() {
+    // Enter in the card field submits the form even while the button is disabled.
+    if (state.paying) return;
     const card = $("card").value.trim();
     if (!card) {
       setNotice($("notice"), "Enter a card number. Use a test card listed below the field.");
@@ -467,7 +475,10 @@
     state.paying = true;
     setNotice($("notice"), "");
     renderHold();
+    // A kept key is only reused for exactly the same hold and seats.
+    if (state.payKeyFor !== basketSignature()) state.payKey = null;
     state.payKey = state.payKey || (crypto.randomUUID ? crypto.randomUUID() : `k${Date.now()}${Math.random().toString(16).slice(2)}`);
+    state.payKeyFor = basketSignature();
     try {
       const data = await api("POST", "/api/checkout", { card_number: card }, { "Idempotency-Key": state.payKey });
       state.payKey = null;
