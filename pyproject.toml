@@ -10,10 +10,13 @@ testpaths = ["tests"]
 pythonpath = ["."]
 # Temporary files go under .local because some managed Windows machines block
 # pytest's default folder in AppData (see docs/OPERATIONS.md, troubleshooting).
-addopts = "-ra --strict-markers --basetemp=.local/pytest"
+# Playwright drives the installed Google Chrome, so no separate browser download is needed.
+addopts = "-ra --strict-markers --basetemp=.local/pytest --browser-channel=chrome --screenshot=only-on-failure --output=.local/playwright"
 filterwarnings = [
     # Starlette's TestClient warns about its httpx dependency; it does not affect results.
     "ignore:Using `httpx` with `starlette.testclient`",
+    # Raised inside pytest-playwright's own base_url fixture, not by this project.
+    "ignore:Session-scoped fixtures defined as instance methods",
 ]
 markers = [
     "e2e: browser tests that drive the real UI with Playwright",
