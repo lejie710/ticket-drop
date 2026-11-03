@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticket Drop: a ticket sale, tested where it breaks</title>
+<meta name="description" content="A concert ticket sale app built to be tested: exact time boundaries, parallel requests, a 200-fan burst, cross-account security and seeded faults.">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<header class="top wrap">
+  <a class="wordmark" href="#">Ticket Drop</a>
+  <nav aria-label="Sections">
+    <a href="#testing">How it was tested</a>
+    <a href="#faults">Planted bugs</a>
+    <a href="#code">Code</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <h1>Fifty fans pressed the same seat at the same instant. One got it.</h1>
+      <p>Ticket Drop is a small concert ticket sale, built to answer one question with evidence: when everyone presses Buy at once, can a seat be sold twice, can seats vanish after a declined card, can someone pay without getting tickets?</p>
+    </div>
+    <aside class="stub" aria-label="Results">
+      <h2>What the checks found</h2>
+      <dl>
+        <dt>159</dt><dd>automated tests passing: API, security, races, browser</dd>
+        <dt>1 of 50</dt><dd>parallel requests for one seat got it; 49 were refused</dd>
+        <dt>0</dt><dd>seats sold twice in a 200-fan burst at the sale opening</dd>
+        <dt>0</dt><dd>difference between money charged and tickets issued</dd>
+        <dt><!-- FAULTS_CAUGHT -->8 of 10</dt><dd>planted bugs caught by the test suite</dd>
+      </dl>
+      <div class="tear" aria-hidden="true"></div>
+      <small>Measured on one laptop. Latency figures are observations, not a promise.</small>
+    </aside>
+  </section>
+
+  <figure class="shot">
+    <img src="assets/seat-map-hold.png" alt="The seat map with two seats in row C held, and a ticket stub on the right showing the seats, the total and a countdown of 4 minutes 50 seconds" width="1366" height="860">
+    <figcaption>Two seats held. The timer counts down on the server's clock; grey seats are taken, about half of them by sample accounts.</figcaption>
+  </figure>
+
+  <section class="block" id="testing">
+    <h2>How it was tested</h2>
+    <p>The application is small on purpose. Each part of the testing answers a different question, and each result is saved in the repository.</p>
+    <div class="levels">
+      <div><strong>Exact boundaries</strong><span>A hold is valid at 299,999 ms and gone at 300,000 ms. Four seats allowed, the fifth refused.</span></div>
+      <div><strong>Real parallel requests</strong><span>Threads released together against a live server; then the database is read, not just the replies.</span></div>
+      <div><strong>A burst at the opening</strong><span>200 fans within one second with Locust, followed by an integrity check of every sale.</span></div>
+      <div><strong>One account attacking another</strong><span>Other fans' tickets, seats and payments; guessed passwords; flooded requests; leaked headers.</span></div>
+      <div><strong>The fan's journeys</strong><span>Playwright in Chrome: paying, a declined card, a seat taken a moment earlier, keyboard only, a phone.</span></div>
+      <div><strong>Testing the tests</strong><span>Ten bugs planted by an agent that never saw the tests, then hunted by the suite, a random explorer and a local AI explorer.</span></div>
+    </div>
+  </section>
+
+  <section class="block pair">
+    <figure>
+      <img src="assets/payment-declined.png" alt="The page after a declined card: a red message says the card was declined and the seats are still held" width="1366" height="860">
+      <figcaption>A declined card charges nothing and keeps the seats until the hold ends.</figcaption>
+    </figure>
+    <figure class="phone">
+      <img src="assets/phone.png" alt="The phone layout: the seat map scrolls sideways and the timer and Pay button are docked at the bottom" width="390" height="844">
+      <figcaption>On a phone the stub docks to the bottom edge.</figcaption>
+    </figure>
+  </section>
+
+  <section class="block" id="faults">
+    <h2>Ten planted bugs, three ways to look for them</h2>
+    <p>A passing suite only says the app did what the tests checked. To measure whether the tests notice bugs, a separate agent planted ten realistic ones, reading only the requirements and the application code. Each was then switched on alone.</p>
+    <div class="table-scroll">
+<!-- FAULT_TABLE -->
+<table>
+<thead><tr><th>Planted bug</th><th>Test suite</th><th>Random explorer</th><th>Local AI explorer (llama3.2)</th></tr></thead>
+<tbody>
+<tr><td>Two fans clicking one seat at the same instant could both be told they hold it</td><td class="yes">caught</td><td class="yes">1 of 3 runs</td><td class="yes">1 of 3 runs</td></tr>
+<tr><td>A fan who already bought four tickets could hold four more</td><td class="yes">caught</td><td class="no">0 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+<tr><td>At the exact second a hold ends, its seats stayed blocked</td><td class="yes">caught</td><td class="no">0 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+<tr><td>After a payment timeout, the fan&#x27;s seats were stuck for ever</td><td class="yes">caught</td><td class="no">0 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+<tr><td>Retrying a declined payment with the same key charged the card</td><td class="yes">caught</td><td class="no">0 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+<tr><td>The browser could choose the price</td><td class="yes">caught</td><td class="no">0 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+<tr><td>A fan could release a seat held by someone else</td><td class="yes">caught</td><td class="no">0 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+<tr><td>Signing in again reset the rate limit</td><td class="no">missed</td><td class="no">0 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+<tr><td>After a failed click the seat map stayed wrong for a few seconds</td><td class="no">missed</td><td class="no">0 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+<tr><td>Releasing all seats closed the hold but never freed the seats</td><td class="yes">caught</td><td class="yes">1 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
+</tbody>
+</table>
+<p>The two bugs the suite missed were then covered by one new test each; both are now caught.</p>
+<!-- /FAULT_TABLE -->
+    </div>
+  </section>
+
+  <section class="block" id="code">
+    <h2>Read the code and the evidence</h2>
+    <p>The repository holds the application, every test, the saved results, a test plan, a defect log that includes a first guess measurement proved wrong, and a learning companion.</p>
+    <p><a href="https://github.com/lejie710/ticket-drop">github.com/lejie710/ticket-drop</a></p>
+  </section>
+</main>
+
+<footer class="wrap">
+  Ticket Drop by Le Jie Tan. Developed with assistance from AI tools. Runs locally; this page shows saved results and screenshots of the real application.
+</footer>
+
+</body>
+</html>

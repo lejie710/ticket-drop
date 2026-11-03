@@ -1,0 +1,88 @@
+:root {
+  --paper: #EEF1F4;
+  --ink: #18233A;
+  --ink-soft: #55607A;
+  --line: #D5DAE1;
+  --cat1: #C8326B;
+  --cat2: #1F8A87;
+  --cat3: #C99A1E;
+  --alert: #B3261E;
+  --type: "Bahnschrift", "DIN Alternate", "Barlow Condensed", "Arial Narrow", Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--type);
+  font-size: 17px;
+  line-height: 1.5;
+}
+a { color: var(--ink); text-underline-offset: 3px; }
+:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+.wrap { max-width: 68rem; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 2.5rem); }
+
+header.top {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 1rem;
+  padding-top: 1.25rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--line);
+}
+.wordmark { font-weight: 700; font-stretch: condensed; font-size: 1.4rem; text-decoration: none; }
+header.top nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
+
+.hero { padding: 3.5rem 0 2rem; display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem; align-items: end; }
+.hero h1 {
+  margin: 0; font-size: clamp(2.4rem, 5.4vw, 4.2rem); font-weight: 700; font-stretch: condensed;
+  line-height: 0.98; letter-spacing: -0.02em; max-width: 14ch;
+}
+.hero p { margin: 1.25rem 0 0; font-size: 1.15rem; color: var(--ink-soft); max-width: 34rem; }
+
+/* The verdict as a ticket stub: the one object on the page */
+.stub {
+  background: #fff; border-radius: 6px; padding: 1.4rem 1.5rem 1.2rem;
+  box-shadow: 0 1px 0 var(--line), 0 18px 34px -22px rgba(24, 35, 58, 0.5);
+  position: relative;
+}
+.stub h2 { margin: 0 0 0.6rem; font-size: 1.1rem; font-stretch: condensed; }
+.stub dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 0.35rem 1rem; }
+.stub dt { font-weight: 700; font-variant-numeric: tabular-nums; }
+.stub dd { margin: 0; color: var(--ink-soft); }
+.stub .tear { border-top: 2px dashed #CBD1D9; margin: 1rem -1.5rem 0.8rem; }
+.stub small { color: var(--ink-soft); font-size: 0.85rem; }
+
+figure { margin: 0; min-width: 0; }
+figure img { max-width: 100%; height: auto; display: block; }
+.shot { padding: 1rem 0 3rem; }
+.shot img { width: 100%; height: auto; display: block; border-radius: 6px; box-shadow: 0 1px 0 var(--line), 0 22px 40px -28px rgba(24, 35, 58, 0.55); }
+figcaption { margin-top: 0.7rem; color: var(--ink-soft); font-size: 0.95rem; }
+
+section.block { padding: 2.5rem 0; border-top: 1px solid var(--line); }
+section.block h2 { margin: 0 0 1rem; font-size: clamp(1.6rem, 3vw, 2.2rem); font-stretch: condensed; line-height: 1.05; }
+section.block > p { max-width: 42rem; }
+
+.levels { display: grid; grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr)); gap: 1.5rem 2rem; margin-top: 1.5rem; }
+.levels div { border-left: 4px solid var(--cat2); padding-left: 0.9rem; }
+.levels div:nth-child(3n + 1) { border-color: var(--cat1); }
+.levels div:nth-child(3n) { border-color: var(--cat3); }
+.levels strong { display: block; font-size: 1.05rem; }
+.levels span { color: var(--ink-soft); font-size: 0.95rem; }
+
+table { border-collapse: collapse; width: 100%; font-size: 0.95rem; margin-top: 1rem; }
+th, td { text-align: left; padding: 0.55rem 0.7rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-weight: 700; }
+td.yes { color: #145E5C; font-weight: 600; }
+td.no { color: var(--alert); font-weight: 600; }
+.table-scroll { overflow-x: auto; }
+
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start; }
+.phone img { max-width: 16rem; }
+
+footer { padding: 2.5rem 0 3rem; border-top: 1px solid var(--line); color: var(--ink-soft); font-size: 0.95rem; }
+
+@media (max-width: 760px) {
+  .hero, .pair { grid-template-columns: 1fr; }
+  .hero { padding-top: 2.2rem; }
+  header.top nav { display: none; }
+  .table-scroll table { min-width: 36rem; }
+}
