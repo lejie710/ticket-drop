@@ -19,6 +19,17 @@ def test_rapid_seat_changes_are_limited(sign_in):
     assert 429 in codes[10:]
 
 
+def test_signing_in_again_does_not_reset_the_rate_limit(sign_in):
+    """Added after fault injection: the limit belongs to the account, not to one session."""
+    first, second = sign_in("mei"), sign_in("mei")
+    codes = []
+    for i in range(14):
+        fan = first if i % 2 == 0 else second
+        response = fan.hold("C-09") if (i // 2) % 2 == 0 else fan.unhold("C-09")
+        codes.append(response.status_code)
+    assert 429 in codes, codes
+
+
 def test_one_fans_rate_limit_does_not_affect_another(sign_in):
     mei, arjun = sign_in("mei"), sign_in("arjun")
     for i in range(14):

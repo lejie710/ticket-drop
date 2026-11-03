@@ -75,7 +75,9 @@ def test_seat_taken_while_the_map_was_open(signed_in, server):
     server.http.post("/api/hold/seats", json={"seat_id": "E-07"}, headers=other).raise_for_status()
     seat(page, "E-07").click()
     expect(page.locator("#mapError")).to_have_text("Seat E-07 has just been taken.")
-    expect(seat(page, "E-07")).to_have_attribute("data-state", "taken")
+    # The map must correct itself at once, not on the next 4-second refresh.
+    # (Added after fault injection: the default 5 s wait let a stale map pass.)
+    expect(seat(page, "E-07")).to_have_attribute("data-state", "taken", timeout=1500)
 
 
 def test_fifth_seat_shows_the_limit(signed_in):

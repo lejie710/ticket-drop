@@ -45,6 +45,7 @@ def run_suite(fault: str) -> dict:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--only", default="", help="Comma-separated fault names. Default: all.")
+    parser.add_argument("--out", default="scripted.json", help="Result file name in evidence/faults.")
     args = parser.parse_args()
     names = [n for n in args.only.split(",") if n] or list(CATALOGUE)
     OUT.mkdir(parents=True, exist_ok=True)
@@ -55,7 +56,7 @@ def main() -> int:
         results.append(result)
         print(f"{name}: {'CAUGHT' if result['failed'] else 'missed'} by {len(result['failed'])} test(s) "
               f"in {result['seconds']} s", flush=True)
-    (OUT / "scripted.json").write_text(json.dumps({
+    (OUT / args.out).write_text(json.dumps({
         "run_at": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "suite": SUITE, "results": results,
     }, indent=2), encoding="utf-8")
