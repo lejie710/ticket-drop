@@ -2,7 +2,6 @@
 
 import re
 
-import httpx
 import pytest
 from playwright.sync_api import expect
 
@@ -55,7 +54,7 @@ def test_seat_taken_while_the_map_was_open(signed_in, server):
     page = signed_in()
     expect(seat(page, "E-07")).to_have_attribute("data-state", "available")
     other = server.login("arjun")
-    httpx.post(f"{server.url}/api/hold/seats", json={"seat_id": "E-07"}, headers=other).raise_for_status()
+    server.http.post("/api/hold/seats", json={"seat_id": "E-07"}, headers=other).raise_for_status()
     seat(page, "E-07").click()
     expect(page.locator("#mapError")).to_have_text("Seat E-07 has just been taken.")
     expect(seat(page, "E-07")).to_have_attribute("data-state", "taken")
