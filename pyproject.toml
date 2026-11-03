@@ -7,7 +7,14 @@ license = "MIT"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "-ra --strict-markers"
+pythonpath = ["."]
+# Temporary files go under .local because some managed Windows machines block
+# pytest's default folder in AppData (see docs/OPERATIONS.md, troubleshooting).
+addopts = "-ra --strict-markers --basetemp=.local/pytest"
+filterwarnings = [
+    # Starlette's TestClient warns about its httpx dependency; it does not affect results.
+    "ignore:Using `httpx` with `starlette.testclient`",
+]
 markers = [
     "e2e: browser tests that drive the real UI with Playwright",
     "concurrency: tests that send parallel requests to a live server",
