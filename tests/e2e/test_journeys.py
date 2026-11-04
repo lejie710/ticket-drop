@@ -133,7 +133,8 @@ def test_tabbing_into_the_map_shows_a_focus_ring(signed_in):
     # Within 1 s: the page re-renders every 4 s, which must not be what adds the ring.
     expect(focused).to_have_class(re.compile(r"(^|\s)focused(\s|$)"), timeout=1000)
     ring = focused.evaluate("el => getComputedStyle(el).stroke")
-    other = page.locator('[data-seat="T-01"]').evaluate("el => getComputedStyle(el).stroke")
+    # Compare with another category-1 seat: same fill and no stroke of its own, so only focus can differ.
+    other = page.locator('[data-seat="A-02"]').evaluate("el => getComputedStyle(el).stroke")
     assert ring != other
 
 
