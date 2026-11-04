@@ -21,6 +21,7 @@ def test_the_fifth_seat_is_refused(sign_in):
     response = lejie.hold("E-05")
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "limit_reached"
+    assert response.json()["error"]["message"] == "Each account can have up to 4 tickets. You hold 4."
     assert len(lejie.current_hold()["seats"]) == 4
 
 
@@ -30,7 +31,10 @@ def test_owned_tickets_count_towards_the_limit(sign_in):
         lejie.hold(seat)
     assert lejie.checkout().status_code == 200
     assert lejie.hold("F-01").status_code == 200  # 3 owned + 1 held = 4
-    assert lejie.hold("F-02").json()["error"]["code"] == "limit_reached"
+    refused = lejie.hold("F-02").json()["error"]
+    assert refused["code"] == "limit_reached"
+    # The message names the owned tickets; "you can hold 4" would be wrong while holding 1.
+    assert refused["message"] == "Each account can have up to 4 tickets. You already own 3 and hold 1."
 
 
 def test_releasing_a_seat_frees_room_under_the_limit(sign_in):

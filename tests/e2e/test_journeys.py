@@ -88,7 +88,7 @@ def test_fifth_seat_shows_the_limit(signed_in):
         seat(page, f"F-0{n}").click()
         expect(seat(page, f"F-0{n}")).to_have_attribute("data-state", "mine")
     seat(page, "F-05").click()
-    expect(page.locator("#mapError")).to_have_text("You can hold up to 4 tickets.")
+    expect(page.locator("#mapError")).to_have_text("Each account can have up to 4 tickets. You hold 4.")
     expect(seat(page, "F-05")).to_have_attribute("data-state", "available")
 
 

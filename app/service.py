@@ -148,7 +148,9 @@ def add_seat(conn, settings, clock, user_id: int, seat_id: str) -> dict:
         if faults.on(settings, "limit_ignores_owned_tickets"):
             owned = 0
         if held + owned >= settings.max_seats:
-            raise BookingError("limit_reached", f"You can hold up to {settings.max_seats} tickets.")
+            # Owned tickets count too, so say so: "you can hold 4" is wrong for a fan who owns some.
+            mine = f"You already own {owned} and hold {held}." if owned else f"You hold {held}."
+            raise BookingError("limit_reached", f"Each account can have up to {settings.max_seats} tickets. {mine}")
 
         if hold is None:
             hold_id = uuid.uuid4().hex
