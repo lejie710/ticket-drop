@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticket Drop</title>
+<link rel="stylesheet" href="/app.css">
+<script src="/app.js" defer></script>
+</head>
+<body>
+
+<header class="bar">
+  <a class="wordmark" href="#seats">Ticket Drop</a>
+  <nav class="account" id="account" hidden>
+    <span id="whoami"></span>
+    <a href="#seats" id="navSeats">Seats</a>
+    <a href="#tickets" id="navTickets">My tickets</a>
+    <button type="button" class="link" id="signOut">Sign out</button>
+  </nav>
+</header>
+
+<main>
+  <!-- Sign in -->
+  <section class="signin" id="signinView" hidden aria-labelledby="signinTitle">
+    <h1 id="signinTitle">Sign in to buy tickets</h1>
+    <p class="muted">This is a demo. Use one of the demo accounts: mei, arjun, siti or wei. The password for all of them is demo-pass.</p>
+    <form id="signinForm" novalidate>
+      <label for="username">Username</label>
+      <input id="username" name="username" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required>
+      <p class="form-error" id="signinError" role="alert" hidden></p>
+      <button type="submit" class="primary">Sign in</button>
+    </form>
+  </section>
+
+  <!-- Seat selection -->
+  <section id="seatsView" hidden>
+    <div class="event">
+      <div>
+        <h1 id="eventTitle">Halcyon Static<br>Neon Tide Tour</h1>
+        <p id="eventMeta" class="muted"></p>
+      </div>
+      <div class="sale-state" id="saleState" aria-live="polite"></div>
+    </div>
+
+    <div class="stage-area">
+      <div class="map-wrap">
+        <p class="pan-hint">Swipe sideways to see the whole hall.</p>
+        <div class="map-scroll">
+          <svg class="map" id="map" role="group" aria-labelledby="mapLabel"></svg>
+        </div>
+        <p id="mapLabel" class="visually-hidden">Seat map. Stage at the top, rows A to T. Use the arrow keys to move between seats and Enter to hold or release a seat.</p>
+        <div class="map-foot">
+          <ul class="legend">
+            <li><span class="dot tier1"></span>Category 1, <span data-price="1"></span></li>
+            <li><span class="dot tier2"></span>Category 2, <span data-price="2"></span></li>
+            <li><span class="dot tier3"></span>Category 3, <span data-price="3"></span></li>
+            <li><span class="dot taken"></span>Taken</li>
+            <li><span class="dot mine"></span>Held for you</li>
+          </ul>
+          <p class="hover-line" id="seatInfo" aria-live="polite"></p>
+        </div>
+        <p class="map-error" id="mapError" role="alert" hidden></p>
+      </div>
+
+      <aside class="stub" id="stub" aria-label="Your held seats">
+        <div class="stub-top" id="stubTop">
+          <h2>Held for you</h2>
+          <ul class="seat-list" id="seatList"></ul>
+          <div class="total"><span>Total</span><span id="total">RM 0.00</span></div>
+        </div>
+        <div class="stub-bottom">
+          <p class="notice" id="notice" role="alert" hidden></p>
+          <p class="timer" id="timer">5:00</p>
+          <p class="timer-note" id="timerNote"></p>
+          <form id="payForm" hidden>
+            <label for="card">Card number</label>
+            <input id="card" inputmode="numeric" autocomplete="off" placeholder="4242 4242 4242 4242">
+            <p class="card-help muted">Test cards: 4242 4242 4242 4242 pays. 4000 0000 0000 0002 is declined. 4000 0000 0000 0408 does not answer.</p>
+          </form>
+          <button type="button" class="primary pay" id="pay" disabled>Pay</button>
+          <button type="button" class="link release" id="release" hidden>Release seats</button>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Tickets -->
+  <section class="tickets-view" id="ticketsView" hidden aria-labelledby="ticketsTitle">
+    <h1 id="ticketsTitle">My tickets</h1>
+    <p class="notice ok" id="ticketsNotice" role="status" hidden></p>
+    <p class="muted" id="ticketsEmpty" hidden>You have no tickets yet. <a href="#seats">Choose seats</a>.</p>
+    <ul class="ticket-list" id="ticketList"></ul>
+  </section>
+</main>
+
+</body>
+</html>

@@ -132,6 +132,45 @@ def initialise(path: str) -> None:
         conn.close()
 
 
+def add_sample_sales(path: str, fraction: float, seed_value: int = 2027) -> int:
+    """Mark a share of seats as already sold to sample fan accounts, for demos and screenshots.
+
+    Sample data only: payments are recorded with idempotency keys starting
+    'sample-' and no gateway charge. Runs once; a database that already has
+    tickets is left alone. Returns the number of seats sold.
+    """
+    import random
+    import uuid
+
+    conn = connect(path)
+    try:
+        if conn.execute("SELECT COUNT(*) FROM tickets").fetchone()[0]:
+            return 0
+        rng = random.Random(seed_value)
+        seats = [dict(r) for r in conn.execute("SELECT id, row, price_cents FROM seats ORDER BY rowid")]
+        # Front rows sell faster, as they do at real sales.
+        chosen = [s for s in seats if rng.random() < fraction * (1.35 - 0.035 * (ord(s["row"]) - ord("A")))]
+        fans = [r["id"] for r in conn.execute("SELECT id FROM users WHERE username LIKE 'fan%' ORDER BY id")]
+        conn.execute("BEGIN")
+        for i in range(0, len(chosen), 4):
+            group = chosen[i:i + 4]
+            user_id = fans[(i // 4) % len(fans)]
+            hold_id, payment_id = uuid.uuid4().hex, uuid.uuid4().hex
+            conn.execute("INSERT INTO holds VALUES (?, ?, 0, 0, 'paid')", (hold_id, user_id))
+            conn.execute(
+                "INSERT INTO payments (id, user_id, hold_id, idempotency_key, amount_cents, outcome, created_ms)"
+                " VALUES (?, ?, ?, ?, ?, 'succeeded', 0)",
+                (payment_id, user_id, hold_id, f"sample-{payment_id}", sum(s["price_cents"] for s in group)),
+            )
+            for s in group:
+                conn.execute("INSERT INTO tickets VALUES (?, ?, ?, ?, 0)", (uuid.uuid4().hex, user_id, s["id"], payment_id))
+                conn.execute("UPDATE seats SET status = 'sold' WHERE id = ?", (s["id"],))
+        conn.execute("COMMIT")
+        return len(chosen)
+    finally:
+        conn.close()
+
+
 def seed(conn: sqlite3.Connection) -> None:
     # Every demo account shares one password, so the slow hash is computed once.
     # This is a demo shortcut, recorded in docs/DESIGN.md as a known limitation.

@@ -14,7 +14,8 @@ __pycache__/
 artifacts/
 test-results/
 
-# Editors and OS
+# Editors, agents and OS
+.claude/
 .vscode/
 .idea/
 Thumbs.db
