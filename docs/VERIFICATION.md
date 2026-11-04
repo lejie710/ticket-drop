@@ -44,7 +44,7 @@ Runs 1 and 4 are saved under [evidence/load/before-read-path-fix](../evidence/lo
 
 **What it shows.** In every run: zero server errors, no seat sold twice, no sold seat without a ticket, no ticket on an unsold seat, no account over four seats, no payment left pending, and money charged exactly equal to the value of the tickets issued.
 
-**What it does not show.** A capacity or latency figure for production. Latency varied by a factor of three between runs on the same laptop, which also ran the load generator and, at times, other work. The throughput ceiling is CPU in one Python process (DEF-002).
+**What it does not show.** A capacity or latency figure for production. Median latency rose by a factor of three across the four runs, from 970 ms to 2900 ms, on the same laptop, which also ran the load generator and, at times, other work. No run was repeated on unchanged code, so the cause of the rise was not isolated. The throughput ceiling is CPU in one Python process (DEF-002).
 
 ## 4. Static security scans
 
