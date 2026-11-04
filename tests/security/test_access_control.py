@@ -5,6 +5,7 @@ identifiers that belong to someone else.
 """
 
 import sqlite3
+import uuid
 
 import pytest
 
@@ -33,12 +34,13 @@ def test_cannot_pay_for_someone_elses_hold(sign_in, query):
 def test_cannot_replay_someone_elses_idempotency_key(sign_in, query):
     """Keys are scoped to the account, so a leaked key reveals nothing."""
     lejie, attacker = sign_in("lejie"), sign_in("arjun")
-    lejie.hold("C-09")
-    lejie.checkout(key="shared-key-123")
+    assert lejie.hold("C-09").status_code == 200
+    assert lejie.checkout(key="shared-key-123").status_code == 200
     attacker.hold("D-02")
     response = attacker.checkout(key="shared-key-123")
     assert response.status_code == 200
     assert [t["seat_id"] for t in response.json()["tickets"]] == ["D-02"]
+    assert query("SELECT COUNT(*) AS n FROM payments") == [{"n": 2}]  # Two payments, not one replayed.
 
 
 def test_ticket_ids_cannot_be_used_across_accounts(sign_in):
@@ -53,7 +55,8 @@ def test_ticket_ids_are_not_guessable(sign_in):
     for seat in ["C-09", "C-10"]:
         lejie.hold(seat)
     ids = [t["id"] for t in lejie.checkout().json()["tickets"]]
-    assert all(len(i) == 32 for i in ids)
+    assert len(set(ids)) == 2
+    assert all(len(i) == 32 and uuid.UUID(i).version == 4 for i in ids)  # 122 random bits each.
     assert int(ids[0], 16) - int(ids[1], 16) not in (-1, 1)  # Not sequential.
 
 

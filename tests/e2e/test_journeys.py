@@ -106,13 +106,19 @@ def test_expired_hold_is_explained_and_seats_return(signed_in, server):
 def test_seats_can_be_chosen_with_the_keyboard_only(signed_in):
     page = signed_in()
     page.locator('[data-seat][tabindex="0"]').focus()
-    focused = page.evaluate("document.activeElement.dataset.seat")
-    assert focused == "A-01"
+
+    def focused():
+        return page.evaluate("document.activeElement.dataset.seat")
+
+    assert focused() == "A-01"
     page.keyboard.press("ArrowRight")
+    assert focused() == "A-02"
     page.keyboard.press("ArrowRight")
+    assert focused() == "A-03"
     page.keyboard.press("ArrowDown")
-    target = page.evaluate("document.activeElement.dataset.seat")
+    target = focused()
     assert target.startswith("B-")
+    assert page.locator('[data-seat][tabindex="0"]').evaluate("el => el.dataset.seat") == target  # One tab stop.
     page.keyboard.press("Enter")
     expect(seat(page, target)).to_have_attribute("data-state", "mine")
     expect(seat(page, target)).to_have_attribute("aria-pressed", "true")
@@ -168,6 +174,31 @@ def test_retry_after_a_server_error_reuses_the_payment_key(signed_in):
     expect(page.get_by_role("heading", name="My tickets")).to_be_visible()
     expect(page.locator(".ticket")).to_have_count(1)
     assert len(keys) == 2 and keys[0] == keys[1]
+
+
+def test_a_kept_payment_key_is_not_reused_for_different_seats(signed_in):
+    """DEF-009: after a payment got no answer the page keeps its key, but only for the same seats."""
+    page = signed_in()
+    seat(page, "D-03").click()
+    expect(seat(page, "D-03")).to_have_attribute("data-state", "mine")
+    keys = []
+
+    def first_request_lost(route):
+        keys.append(route.request.headers.get("idempotency-key"))
+        if len(keys) == 1:
+            route.abort()  # No answer at all: the page cannot know whether it was charged.
+        else:
+            route.continue_()
+
+    page.route("**/api/checkout", first_request_lost)
+    page.get_by_label("Card number").fill(SUCCESS)
+    page.get_by_role("button", name="Pay RM 388").click()
+    expect(page.locator("#notice")).to_have_text(re.compile("could not be reached"))
+    seat(page, "D-04").click()
+    expect(seat(page, "D-04")).to_have_attribute("data-state", "mine")
+    page.get_by_role("button", name="Pay RM 776").click()
+    expect(page.locator(".ticket")).to_have_count(2)
+    assert len(keys) == 2 and keys[0] != keys[1]
 
 
 def test_a_new_seat_clears_an_old_payment_message(signed_in):

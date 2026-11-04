@@ -43,6 +43,19 @@ def test_malformed_idempotency_keys_are_refused(sign_in, key):
     assert response.status_code == 400
 
 
+@pytest.mark.parametrize("method,path", [("delete", "/api/hold/seats/c-09"), ("delete", "/api/hold/seats/C-009"),
+                                         ("get", "/api/tickets/not-a-ticket-id"), ("get", "/api/tickets/" + "G" * 32)])
+def test_malformed_ids_in_the_address_are_refused(sign_in, query, method, path):
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    before = query("SELECT id, status, hold_id FROM seats WHERE status != 'available'")
+    response = lejie.client.request(method.upper(), path, headers=lejie.headers)
+    assert response.status_code == 422
+    assert response.json()["error"]["code"] == "invalid_request"
+    assert query("SELECT id, status, hold_id FROM seats WHERE status != 'available'") == before
+    assert lejie.current_hold()["status"] == "active"
+
+
 def test_an_unknown_api_address_answers_in_the_error_shape(client):
     response = client.get("/api/no-such-thing")
     assert response.status_code == 404

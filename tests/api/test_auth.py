@@ -1,5 +1,24 @@
 """R9: only signed-in fans can use their account."""
 
+import pytest
+
+from tests.conftest import SUCCESS
+
+# Every route that needs a signed-in fan, each with a body and headers that would
+# otherwise be accepted, so a 401 can only come from the missing or wrong token.
+AUTHENTICATED_ROUTES = [
+    ("post", "/api/logout", {}),
+    ("get", "/api/me", {}),
+    ("get", "/api/seats", {}),
+    ("get", "/api/hold", {}),
+    ("post", "/api/hold/seats", {"json": {"seat_id": "C-09"}}),
+    ("delete", "/api/hold/seats/C-09", {}),
+    ("delete", "/api/hold", {}),
+    ("post", "/api/checkout", {"json": {"card_number": SUCCESS}, "headers": {"Idempotency-Key": "attempt-0001"}}),
+    ("get", "/api/tickets", {}),
+    ("get", "/api/tickets/" + "0" * 32, {}),
+]
+
 
 def test_demo_account_signs_in(client):
     response = client.post("/api/login", json={"username": "lejie", "password": "demo-pass"})
@@ -17,17 +36,18 @@ def test_wrong_password_and_unknown_user_look_the_same(client):
     assert wrong_password.json() == unknown_user.json()
 
 
-def test_requests_without_a_token_are_refused(client):
-    for method, path in [("get", "/api/seats"), ("get", "/api/hold"), ("get", "/api/tickets"),
-                         ("post", "/api/hold/seats"), ("delete", "/api/hold")]:
-        response = getattr(client, method)(path)
-        assert response.status_code == 401, path
-        assert response.json()["error"]["code"] == "not_signed_in"
-
-
-def test_a_made_up_token_is_refused(client):
-    response = client.get("/api/hold", headers={"Authorization": "Bearer made-up"})
+@pytest.mark.parametrize("token", [None, "made-up-token"], ids=["no-token", "made-up-token"])
+@pytest.mark.parametrize("method,path,kwargs", AUTHENTICATED_ROUTES, ids=[f"{m} {p}" for m, p, _ in AUTHENTICATED_ROUTES])
+def test_every_account_route_refuses_a_missing_or_made_up_token(client, query, token, method, path, kwargs):
+    headers = dict(kwargs.get("headers", {}))
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    request = {k: v for k, v in kwargs.items() if k != "headers"}
+    response = client.request(method.upper(), path, headers=headers, **request)
     assert response.status_code == 401
+    assert response.json()["error"]["code"] == "not_signed_in"
+    assert query("SELECT COUNT(*) AS n FROM holds") == [{"n": 0}]
+    assert query("SELECT COUNT(*) AS n FROM payments") == [{"n": 0}]
 
 
 def test_signing_out_ends_the_session(sign_in, client):

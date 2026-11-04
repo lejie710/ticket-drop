@@ -4,6 +4,8 @@ The charges table is the mock gateway's ledger. Checking it, not just the
 HTTP response, is how these tests know whether money actually moved.
 """
 
+import pytest
+
 from tests.conftest import DECLINE, SUCCESS, TIMEOUT
 
 
@@ -83,14 +85,28 @@ def test_repeating_a_checkout_with_the_same_key_charges_once(sign_in, query):
     assert len(lejie.tickets()) == 1
 
 
-def test_repeating_a_declined_checkout_returns_the_same_decline(sign_in, query):
+@pytest.mark.parametrize("card,status", [(DECLINE, 402), (TIMEOUT, 504)], ids=["declined", "timed-out"])
+def test_repeating_a_failed_checkout_returns_the_same_failure(sign_in, query, card, status):
     lejie = sign_in("lejie")
     lejie.hold("C-09")
-    first = lejie.checkout(DECLINE, key="order-attempt-2")
+    first = lejie.checkout(card, key="order-attempt-2")
     # Same key, different card: the key identifies the original attempt, so its result is returned.
     second = lejie.checkout(SUCCESS, key="order-attempt-2")
-    assert first.status_code == second.status_code == 402
+    assert first.status_code == second.status_code == status
+    assert first.json() == second.json()
     assert charges(query) == []
+    assert query("SELECT COUNT(*) AS n FROM payments") == [{"n": 1}]
+
+
+def test_a_paid_key_still_replays_after_the_hold_would_have_expired(sign_in, clock, query):
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    first = lejie.checkout(SUCCESS, key="order-attempt-3")
+    clock.advance(400_000)
+    again = lejie.checkout(SUCCESS, key="order-attempt-3")
+    assert again.status_code == 200
+    assert again.json() == first.json()
+    assert len(charges(query)) == 1
 
 
 def test_a_paid_key_cannot_be_reused_for_new_seats(sign_in, query):
