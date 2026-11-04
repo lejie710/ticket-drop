@@ -1,0 +1,265 @@
+{
+  "provenance": "Inputs proposed by ollama:llama3.2 via ai/datagen.py on 2026-11-03. expected_valid comes from the written input rules (ai.datagen.oracle), not from the model.",
+  "cases": [
+    {
+      "field": "seat_id",
+      "value": "A-01",
+      "expected_valid": true
+    },
+    {
+      "field": "seat_id",
+      "value": "B-0",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-09",
+      "expected_valid": true
+    },
+    {
+      "field": "seat_id",
+      "value": "d-09",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-09a",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-090",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-01a",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-0123",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-0abc",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-09 ",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "—-09",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-09—",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": "C-",
+      "expected_valid": false
+    },
+    {
+      "field": "seat_id",
+      "value": " invalid",
+      "expected_valid": false
+    },
+    {
+      "field": "card_number",
+      "value": "12345678901234567890 ",
+      "expected_valid": true
+    },
+    {
+      "field": "card_number",
+      "value": "123456789012345678901",
+      "expected_valid": true
+    },
+    {
+      "field": "card_number",
+      "value": "12 345 678 901 234 567 890",
+      "expected_valid": false
+    },
+    {
+      "field": "card_number",
+      "value": "12345678901234567890",
+      "expected_valid": true
+    },
+    {
+      "field": "card_number",
+      "value": "12345678901234567890 ",
+      "expected_valid": false
+    },
+    {
+      "field": "card_number",
+      "value": "12345678901234567890°",
+      "expected_valid": false
+    },
+    {
+      "field": "card_number",
+      "value": "12345678901234567890123456789012",
+      "expected_valid": false
+    },
+    {
+      "field": "card_number",
+      "value": " 12345678901234567890 ",
+      "expected_valid": true
+    },
+    {
+      "field": "card_number",
+      "value": "123456789012345678901234567890",
+      "expected_valid": false
+    },
+    {
+      "field": "card_number",
+      "value": "12345678901234567890�",
+      "expected_valid": false
+    },
+    {
+      "field": "card_number",
+      "value": "12345678901234567890123456789012345678901234567890",
+      "expected_valid": false
+    },
+    {
+      "field": "idempotency_key",
+      "value": "hello_world",
+      "expected_valid": true
+    },
+    {
+      "field": "idempotency_key",
+      "value": "",
+      "expected_valid": false
+    },
+    {
+      "field": "idempotency_key",
+      "value": "1234567890",
+      "expected_valid": true
+    },
+    {
+      "field": "idempotency_key",
+      "value": "12345",
+      "expected_valid": false
+    },
+    {
+      "field": "idempotency_key",
+      "value": "Hello_World",
+      "expected_valid": true
+    },
+    {
+      "field": "idempotency_key",
+      "value": "_hello_world",
+      "expected_valid": true
+    },
+    {
+      "field": "idempotency_key",
+      "value": "-hello-world",
+      "expected_valid": true
+    },
+    {
+      "field": "idempotency_key",
+      "value": "_-hello_world",
+      "expected_valid": true
+    },
+    {
+      "field": "idempotency_key",
+      "value": " -hello-world ",
+      "expected_valid": false
+    },
+    {
+      "field": "idempotency_key",
+      "value": "@#$%^&*()",
+      "expected_valid": false
+    },
+    {
+      "field": "idempotency_key",
+      "value": "a",
+      "expected_valid": false
+    },
+    {
+      "field": "idempotency_key",
+      "value": "very long string that exceeds 64 characters",
+      "expected_valid": false
+    },
+    {
+      "field": "idempotency_key",
+      "value": "hello\nworld",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "test_username",
+      "expected_valid": true
+    },
+    {
+      "field": "username",
+      "value": "",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "test_username123",
+      "expected_valid": true
+    },
+    {
+      "field": "username",
+      "value": "test@username123",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "_test_username",
+      "expected_valid": true
+    },
+    {
+      "field": "username",
+      "value": "test!username123",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "test_username12345",
+      "expected_valid": true
+    },
+    {
+      "field": "username",
+      "value": "￺test_username￼",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "test_username￼",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "test@username",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "test",
+      "expected_valid": true
+    },
+    {
+      "field": "username",
+      "value": "test_username123456789012345678901234567890",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "�test_username�",
+      "expected_valid": false
+    },
+    {
+      "field": "username",
+      "value": "test%username123",
+      "expected_valid": false
+    }
+  ]
+}

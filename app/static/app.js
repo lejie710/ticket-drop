@@ -59,6 +59,9 @@
 
   const serverNow = () => Date.now() + state.offsetMs;
 
+  // Seeded faults (see app/faults.py). The server lists them only when one is enabled.
+  const faultOn = (name) => Boolean(state.event && state.event.faults && state.event.faults.includes(name));
+
   function money(cents) {
     return cents % 100 === 0 ? `RM ${cents / 100}` : `RM ${(cents / 100).toFixed(2)}`;
   }
@@ -347,16 +350,18 @@
     }
     const c = state.circles.get(id);
     c.classList.add("pending");
+    let failed = false;
     try {
       const data = seat.state === "mine"
         ? await api("DELETE", `/api/hold/seats/${id}`)
         : await api("POST", "/api/hold/seats", { seat_id: id });
       applyHold(data.hold);
     } catch (err) {
+      failed = true;
       if (err.status !== 401) setNotice($("mapError"), err.message);
     } finally {
       c.classList.remove("pending");
-      await refreshSeats();
+      if (!(failed && faultOn("map_stale_after_failed_seat_change"))) await refreshSeats();
       describeSeat(id);
     }
   }

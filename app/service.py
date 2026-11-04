@@ -8,10 +8,11 @@ the first one's result. The seat update itself is also conditional
 """
 
 import json
+import time
 import uuid
 from contextlib import contextmanager
 
-from . import payments
+from . import faults, payments
 
 
 class BookingError(Exception):
@@ -37,15 +38,16 @@ def write_transaction(conn):
         conn.execute("COMMIT")
 
 
-def expire_due_holds(conn, now_ms: int) -> None:
+def expire_due_holds(conn, now_ms: int, settings=None) -> None:
     """End every active hold whose expiry instant has been reached and free its seats.
 
     Must run inside a write transaction. A hold that is 'paying' is skipped:
     its seats stay protected until the gateway answers.
     """
-    expired = [r["id"] for r in conn.execute(
-        "SELECT id FROM holds WHERE status = 'active' AND expires_ms <= ?", (now_ms,)
-    )]
+    query = "SELECT id FROM holds WHERE status = 'active' AND expires_ms <= ?"
+    if settings is not None and faults.on(settings, "hold_expiry_boundary_exclusive"):
+        query = "SELECT id FROM holds WHERE status = 'active' AND expires_ms < ?"
+    expired = [r["id"] for r in conn.execute(query, (now_ms,))]
     for hold_id in expired:
         conn.execute("UPDATE seats SET status = 'available', hold_id = NULL WHERE hold_id = ? AND status = 'held'", (hold_id,))
         conn.execute("UPDATE holds SET status = 'expired' WHERE id = ?", (hold_id,))
@@ -92,7 +94,7 @@ def read_snapshot(conn):
         conn.execute("COMMIT")
 
 
-def expire_if_due(conn, now_ms: int) -> None:
+def expire_if_due(conn, now_ms: int, settings=None) -> None:
     """For read endpoints: take the write lock only when an overdue hold actually exists.
 
     Taking it on every read made every seat-map request queue behind every
@@ -100,25 +102,31 @@ def expire_if_due(conn, now_ms: int) -> None:
     requests per second, because the main limit turned out to be CPU time in
     one Python process (DEF-002 in docs/DEFECTS.md).
     """
-    due = conn.execute(
-        "SELECT 1 FROM holds WHERE status = 'active' AND expires_ms <= ? LIMIT 1", (now_ms,)
-    ).fetchone()
+    query = "SELECT 1 FROM holds WHERE status = 'active' AND expires_ms <= ? LIMIT 1"
+    if settings is not None and faults.on(settings, "hold_expiry_boundary_exclusive"):
+        query = "SELECT 1 FROM holds WHERE status = 'active' AND expires_ms < ? LIMIT 1"
+    due = conn.execute(query, (now_ms,)).fetchone()
     if due:
         with write_transaction(conn):
-            expire_due_holds(conn, now_ms)
+            expire_due_holds(conn, now_ms, settings)
 
 
 def get_hold(conn, settings, clock, user_id: int) -> dict | None:
     now = clock.now_ms()
-    expire_if_due(conn, now)
+    expire_if_due(conn, now, settings)
     with read_snapshot(conn):
         return hold_view(conn, user_id)
 
 
 def add_seat(conn, settings, clock, user_id: int, seat_id: str) -> dict:
+    precheck = None
+    if faults.on(settings, "seat_checked_before_lock"):
+        # Availability is read outside the write lock. The sleep widens the race window.
+        precheck = conn.execute("SELECT status FROM seats WHERE id = ?", (seat_id,)).fetchone()
+        time.sleep(0.05)
     with write_transaction(conn):
         now = clock.now_ms()
-        expire_due_holds(conn, now)
+        expire_due_holds(conn, now, settings)
         if not sale_is_open(settings, now):
             raise BookingError("sale_not_open", "The sale has not opened yet.")
 
@@ -135,7 +143,10 @@ def add_seat(conn, settings, clock, user_id: int, seat_id: str) -> dict:
         held = 0
         if hold is not None:
             held = conn.execute("SELECT COUNT(*) FROM seats WHERE hold_id = ?", (hold["id"],)).fetchone()[0]
-        if held + _owned_ticket_count(conn, user_id) >= settings.max_seats:
+        owned = _owned_ticket_count(conn, user_id)
+        if faults.on(settings, "limit_ignores_owned_tickets"):
+            owned = 0
+        if held + owned >= settings.max_seats:
             raise BookingError("limit_reached", f"You can hold up to {settings.max_seats} tickets.")
 
         if hold is None:
@@ -147,9 +158,14 @@ def add_seat(conn, settings, clock, user_id: int, seat_id: str) -> dict:
         else:
             hold_id = hold["id"]
 
-        claimed = conn.execute(
-            "UPDATE seats SET status = 'held', hold_id = ? WHERE id = ? AND status = 'available'", (hold_id, seat_id)
-        ).rowcount
+        if precheck is not None:
+            if precheck["status"] != "available":
+                raise BookingError("seat_taken", f"Seat {seat_id} has just been taken.")
+            claimed = conn.execute("UPDATE seats SET status = 'held', hold_id = ? WHERE id = ?", (hold_id, seat_id)).rowcount
+        else:
+            claimed = conn.execute(
+                "UPDATE seats SET status = 'held', hold_id = ? WHERE id = ? AND status = 'available'", (hold_id, seat_id)
+            ).rowcount
         if claimed == 0:
             raise BookingError("seat_taken", f"Seat {seat_id} has just been taken.")
         return hold_view(conn, user_id)
@@ -157,13 +173,18 @@ def add_seat(conn, settings, clock, user_id: int, seat_id: str) -> dict:
 
 def remove_seat(conn, settings, clock, user_id: int, seat_id: str) -> dict | None:
     with write_transaction(conn):
-        expire_due_holds(conn, clock.now_ms())
+        expire_due_holds(conn, clock.now_ms(), settings)
         hold = _open_hold(conn, user_id)
         if hold is None or hold["status"] != "active":
             raise BookingError("seat_not_held", f"Seat {seat_id} is not in your hold.", 404)
-        freed = conn.execute(
-            "UPDATE seats SET status = 'available', hold_id = NULL WHERE id = ? AND hold_id = ?", (seat_id, hold["id"])
-        ).rowcount
+        if faults.on(settings, "remove_seat_from_any_hold"):
+            freed = conn.execute(
+                "UPDATE seats SET status = 'available', hold_id = NULL WHERE id = ? AND status = 'held'", (seat_id,)
+            ).rowcount
+        else:
+            freed = conn.execute(
+                "UPDATE seats SET status = 'available', hold_id = NULL WHERE id = ? AND hold_id = ?", (seat_id, hold["id"])
+            ).rowcount
         if freed == 0:
             raise BookingError("seat_not_held", f"Seat {seat_id} is not in your hold.", 404)
         remaining = conn.execute("SELECT COUNT(*) FROM seats WHERE hold_id = ?", (hold["id"],)).fetchone()[0]
@@ -174,18 +195,23 @@ def remove_seat(conn, settings, clock, user_id: int, seat_id: str) -> dict | Non
 
 def release_hold(conn, settings, clock, user_id: int) -> None:
     with write_transaction(conn):
-        expire_due_holds(conn, clock.now_ms())
+        expire_due_holds(conn, clock.now_ms(), settings)
         hold = _open_hold(conn, user_id)
         if hold is None:
             return
         if hold["status"] == "paying":
             raise BookingError("checkout_in_progress", "A payment for your seats is in progress.")
-        conn.execute("UPDATE seats SET status = 'available', hold_id = NULL WHERE hold_id = ?", (hold["id"],))
+        if faults.on(settings, "release_hold_leaves_seats_held"):
+            # Wrong status in the condition: matches no seat, so nothing is freed.
+            conn.execute("UPDATE seats SET status = 'available', hold_id = NULL WHERE hold_id = ? AND status = 'available'",
+                         (hold["id"],))
+        else:
+            conn.execute("UPDATE seats SET status = 'available', hold_id = NULL WHERE hold_id = ?", (hold["id"],))
         conn.execute("UPDATE holds SET status = 'released' WHERE id = ?", (hold["id"],))
 
 
 def seat_map(conn, settings, clock, user_id: int) -> list[dict]:
-    expire_if_due(conn, clock.now_ms())
+    expire_if_due(conn, clock.now_ms(), settings)
     with read_snapshot(conn):
         hold = _open_hold(conn, user_id)
         mine = hold["id"] if hold else None
@@ -205,7 +231,8 @@ def seat_map(conn, settings, clock, user_id: int) -> list[dict]:
         return result
 
 
-def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_number: str) -> tuple[int, dict]:
+def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_number: str,
+             client_amount_cents: int | None = None) -> tuple[int, dict]:
     """Pay for the open hold. Returns (HTTP status, response body).
 
     Three steps, so the slow gateway call never holds the database lock:
@@ -219,12 +246,17 @@ def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_num
         previous = conn.execute(
             "SELECT * FROM payments WHERE user_id = ? AND idempotency_key = ?", (user_id, idempotency_key)
         ).fetchone()
+        if (previous is not None and previous["outcome"] in ("declined", "timeout")
+                and faults.on(settings, "idempotency_reruns_failed_payment")):
+            # A failed attempt is treated as retryable under the same key.
+            conn.execute("DELETE FROM payments WHERE id = ?", (previous["id"],))
+            previous = None
         if previous is not None:
             if previous["outcome"] == "pending":
                 raise BookingError("checkout_in_progress", "This payment is still being processed.")
             return previous["response_status"], json.loads(previous["response_body"])
 
-        expire_due_holds(conn, now)
+        expire_due_holds(conn, now, settings)
         hold = _open_hold(conn, user_id)
         if hold is None:
             raise BookingError("no_hold", "You have no seats on hold. Your hold may have expired.")
@@ -233,6 +265,8 @@ def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_num
         amount = conn.execute(
             "SELECT COALESCE(SUM(price_cents), 0) FROM seats WHERE hold_id = ?", (hold["id"],)
         ).fetchone()[0]
+        if client_amount_cents is not None and faults.on(settings, "client_sets_amount"):
+            amount = client_amount_cents
         payment_id = uuid.uuid4().hex
         conn.execute(
             "INSERT INTO payments (id, user_id, hold_id, idempotency_key, amount_cents, outcome, created_ms)"
@@ -266,8 +300,11 @@ def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_num
             }
         else:
             # Seats stay held until the original expiry, so the fan can retry.
-            conn.execute("UPDATE holds SET status = 'active' WHERE id = ?", (hold["id"],))
-            expire_due_holds(conn, now)
+            if outcome == "timeout" and faults.on(settings, "timeout_leaves_hold_paying"):
+                pass  # The hold is never put back to 'active' after a timeout.
+            else:
+                conn.execute("UPDATE holds SET status = 'active' WHERE id = ?", (hold["id"],))
+            expire_due_holds(conn, now, settings)
             if outcome == "declined":
                 status, body = 402, {"error": {"code": "payment_declined", "message": "The card was declined. Your seats are still held."}}
             else:
