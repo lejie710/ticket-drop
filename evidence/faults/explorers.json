@@ -1,0 +1,946 @@
+{
+  "run_at": "2026-11-03 17:05 UTC",
+  "steps_per_run": 30,
+  "random_seeds": 3,
+  "model": "ollama:llama3.2",
+  "model_calls": 330,
+  "model_seconds": 2176,
+  "results": [
+    {
+      "fault": "clean",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 5,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "clean",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 2,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "clean",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 5,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "clean",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 239,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "seat_checked_before_lock",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 7,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "seat_checked_before_lock",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 3,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "seat_checked_before_lock",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [
+        {
+          "step": 29,
+          "rule": "R2",
+          "detail": "5 fans were all told they hold seat A-07"
+        }
+      ],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "seat_checked_before_lock",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 212,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "limit_ignores_owned_tickets",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "limit_ignores_owned_tickets",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 2,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "limit_ignores_owned_tickets",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 5,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "limit_ignores_owned_tickets",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 226,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "hold_expiry_boundary_exclusive",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 8,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "hold_expiry_boundary_exclusive",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 2,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "hold_expiry_boundary_exclusive",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "hold_expiry_boundary_exclusive",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 215,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "timeout_leaves_hold_paying",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 7,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "timeout_leaves_hold_paying",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 3,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "timeout_leaves_hold_paying",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "timeout_leaves_hold_paying",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 213,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "idempotency_reruns_failed_payment",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 8,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "idempotency_reruns_failed_payment",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 3,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "idempotency_reruns_failed_payment",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "idempotency_reruns_failed_payment",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 213,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "client_sets_amount",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 8,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "client_sets_amount",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 3,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "client_sets_amount",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "client_sets_amount",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 216,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "remove_seat_from_any_hold",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 8,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "remove_seat_from_any_hold",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 3,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "remove_seat_from_any_hold",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "remove_seat_from_any_hold",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 213,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "seat_rate_limit_per_session",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 8,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "seat_rate_limit_per_session",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 3,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "seat_rate_limit_per_session",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "seat_rate_limit_per_session",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 212,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "map_stale_after_failed_seat_change",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 8,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "map_stale_after_failed_seat_change",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 3,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "map_stale_after_failed_seat_change",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "map_stale_after_failed_seat_change",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 215,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "release_hold_leaves_seats_held",
+      "chooser": "random",
+      "run": 1,
+      "steps": 30,
+      "seconds": 8,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "release_all",
+        "seat_map",
+        "unhold"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "release_hold_leaves_seats_held",
+      "chooser": "random",
+      "run": 2,
+      "steps": 30,
+      "seconds": 3,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "release_hold_leaves_seats_held",
+      "chooser": "random",
+      "run": 3,
+      "steps": 30,
+      "seconds": 6,
+      "findings": [
+        {
+          "step": 30,
+          "rule": "R13",
+          "detail": "1 seat(s) still held under a closed hold"
+        }
+      ],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "double_pay",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "rapid_changes",
+        "release_all",
+        "seat_map",
+        "unhold",
+        "wait"
+      ],
+      "invalid_steps": 0
+    },
+    {
+      "fault": "release_hold_leaves_seats_held",
+      "chooser": "llm",
+      "run": 1,
+      "steps": 30,
+      "seconds": 216,
+      "findings": [],
+      "distinct_actions": [
+        "checkout",
+        "crowd_hold",
+        "get_ticket",
+        "hold",
+        "hold_many",
+        "my_tickets",
+        "wait"
+      ],
+      "invalid_steps": 0
+    }
+  ]
+}

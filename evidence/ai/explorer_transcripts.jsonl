@@ -1,0 +1,990 @@
+{"fault": "clean", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "clean", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "clean", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "clean", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "clean", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "clean", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "clean", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "clean", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "clean", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "clean", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "clean", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "clean", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "seat_checked_before_lock", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "seat_checked_before_lock", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "seat_checked_before_lock", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "seat_checked_before_lock", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "seat_checked_before_lock", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "seat_checked_before_lock", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "seat_checked_before_lock", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "seat_checked_before_lock", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "seat_checked_before_lock", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "seat_checked_before_lock", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "limit_ignores_owned_tickets", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "limit_ignores_owned_tickets", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "limit_ignores_owned_tickets", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "limit_ignores_owned_tickets", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "limit_ignores_owned_tickets", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "limit_ignores_owned_tickets", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "limit_ignores_owned_tickets", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "limit_ignores_owned_tickets", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "limit_ignores_owned_tickets", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "limit_ignores_owned_tickets", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "limit_ignores_owned_tickets", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "timeout_leaves_hold_paying", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "timeout_leaves_hold_paying", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "timeout_leaves_hold_paying", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "timeout_leaves_hold_paying", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "timeout_leaves_hold_paying", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "timeout_leaves_hold_paying", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "timeout_leaves_hold_paying", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "timeout_leaves_hold_paying", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "timeout_leaves_hold_paying", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "timeout_leaves_hold_paying", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "timeout_leaves_hold_paying", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "idempotency_reruns_failed_payment", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "idempotency_reruns_failed_payment", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "client_sets_amount", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "client_sets_amount", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "client_sets_amount", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "client_sets_amount", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "client_sets_amount", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "client_sets_amount", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "client_sets_amount", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "client_sets_amount", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "client_sets_amount", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "client_sets_amount", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "client_sets_amount", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "remove_seat_from_any_hold", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "remove_seat_from_any_hold", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "remove_seat_from_any_hold", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "remove_seat_from_any_hold", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "remove_seat_from_any_hold", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "remove_seat_from_any_hold", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "remove_seat_from_any_hold", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "remove_seat_from_any_hold", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "remove_seat_from_any_hold", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "remove_seat_from_any_hold", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "remove_seat_from_any_hold", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "seat_rate_limit_per_session", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "seat_rate_limit_per_session", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "seat_rate_limit_per_session", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "seat_rate_limit_per_session", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "seat_rate_limit_per_session", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "seat_rate_limit_per_session", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "seat_rate_limit_per_session", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "seat_rate_limit_per_session", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "seat_rate_limit_per_session", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "seat_rate_limit_per_session", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "seat_rate_limit_per_session", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "map_stale_after_failed_seat_change", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "map_stale_after_failed_seat_change", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 1, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "release_hold_leaves_seats_held", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "release_hold_leaves_seats_held", "step": 3, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "release_hold_leaves_seats_held", "step": 4, "action": {"action": "checkout", "as": "A", "card": "success", "key": "k1", "why": "Test payment processing with a successful key"}, "outcome": {"status": 200, "tickets": 1}}
+{"fault": "release_hold_leaves_seats_held", "step": 5, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "release_hold_leaves_seats_held", "step": 6, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": ["C-09"]}}
+{"fault": "release_hold_leaves_seats_held", "step": 7, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "release_hold_leaves_seats_held", "step": 8, "action": {"action": "hold_many", "as": "B", "seats": ["C-03", "C-04", "C-05"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}, {"status": 200, "held": ["C-03", "C-04", "C-05"]}]}}
+{"fault": "release_hold_leaves_seats_held", "step": 9, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 10, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 11, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 12, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 13, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"status": 404, "error": "ticket_not_found"}}
+{"fault": "release_hold_leaves_seats_held", "step": 14, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 15, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 16, "action": {"action": "hold", "as": "A", "seat": "C-09"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 17, "action": {"action": "get_ticket", "as": "A", "ticket_of": "B"}, "outcome": {"note": "B has no tickets yet"}}
+{"fault": "release_hold_leaves_seats_held", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 30}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 19, "action": {"action": "hold_many", "as": "C", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "release_hold_leaves_seats_held", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 21, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 22, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 23, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 1}, "outcome": {"fans": 2, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 24, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 25, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 26, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 27, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 3}, "outcome": {"fans": 3, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 28, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 30, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "clean", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "clean", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "clean", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "clean", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "clean", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "clean", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "clean", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "clean", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "clean", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "clean", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "clean", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "clean", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "clean", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "clean", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "clean", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "clean", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "clean", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "clean", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "clean", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "clean", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "clean", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "clean", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "clean", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "clean", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "clean", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "clean", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "clean", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "clean", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "clean", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "clean", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "clean", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "clean", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "clean", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "clean", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "clean", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "clean", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "clean", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "clean", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "clean", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "seat_checked_before_lock", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "seat_checked_before_lock", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "seat_checked_before_lock", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "seat_checked_before_lock", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "seat_checked_before_lock", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "seat_checked_before_lock", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "seat_checked_before_lock", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "seat_checked_before_lock", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "seat_checked_before_lock", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "seat_checked_before_lock", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 20, "codes": [200]}}
+{"fault": "seat_checked_before_lock", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 16, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A", "why": "Test if another account can see or read another account's held or owned tickets"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 17, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A", "why": "Test if another account can see or read another account's held or owned tickets"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 18, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 500, "why": "Test what happens when many fans try to hold the same seat at the same time after the seat map has changed"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 19, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released again"}, "outcome": {"status": 204}}
+{"fault": "seat_checked_before_lock", "step": 20, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "seat_checked_before_lock", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 10, "why": "Test rapid repeated seat changes from one account"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "seat_checked_before_lock", "step": 22, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A", "why": "Test if another account can see or read another account's held or owned tickets after rapid repeated seat changes from one account"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 23, "action": {"action": "my_tickets", "as": "B", "why": "Verify account B's tickets after rapid repeated seat changes from account A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 24, "action": {"action": "my_tickets", "as": "B", "why": "Verify account B's tickets after rapid repeated seat changes from account A to ensure the rate limiting works as expected"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 25, "action": {"action": "my_tickets", "as": "B", "why": "Verify account B's tickets after rapid repeated seat changes from account A to ensure the rate limiting works as expected"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 26, "action": {"action": "my_tickets", "as": "B", "why": "Verify that account B's tickets are not affected by account A's rapid repeated seat changes and ensure rate limiting works as expected"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 27, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A", "why": "Test if another account can see or read another account's held or owned tickets after rapid repeated seat changes from one account and verify that rate limiting works as expected"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 28, "action": {"action": "my_tickets", "as": "B", "why": "Verify account B's tickets after multiple attempts to ensure rate limiting works as expected and prevent excessive requests"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 29, "action": {"action": "wait", "seconds": 30}, "outcome": {"waited_seconds": 30, "sale_open": true}}
+{"fault": "seat_checked_before_lock", "step": 30, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 30}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429, 429, 200, 429, 429, 429, 429, 429, 429, 429, 429, 429, 200, 429]}}
+{"fault": "seat_checked_before_lock", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "seat_checked_before_lock", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "seat_checked_before_lock", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "seat_checked_before_lock", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "seat_checked_before_lock", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "seat_checked_before_lock", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "seat_checked_before_lock", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "seat_checked_before_lock", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_checked_before_lock", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "seat_checked_before_lock", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_checked_before_lock", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "seat_checked_before_lock", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_checked_before_lock", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "seat_checked_before_lock", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "seat_checked_before_lock", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "seat_checked_before_lock", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "seat_checked_before_lock", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_checked_before_lock", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "limit_ignores_owned_tickets", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "limit_ignores_owned_tickets", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "limit_ignores_owned_tickets", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "limit_ignores_owned_tickets", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "limit_ignores_owned_tickets", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "limit_ignores_owned_tickets", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "limit_ignores_owned_tickets", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "limit_ignores_owned_tickets", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "limit_ignores_owned_tickets", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "limit_ignores_owned_tickets", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "limit_ignores_owned_tickets", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "limit_ignores_owned_tickets", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "limit_ignores_owned_tickets", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "limit_ignores_owned_tickets", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "limit_ignores_owned_tickets", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "limit_ignores_owned_tickets", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "limit_ignores_owned_tickets", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "limit_ignores_owned_tickets", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "limit_ignores_owned_tickets", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "limit_ignores_owned_tickets", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "limit_ignores_owned_tickets", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "limit_ignores_owned_tickets", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "limit_ignores_owned_tickets", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "limit_ignores_owned_tickets", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "limit_ignores_owned_tickets", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "limit_ignores_owned_tickets", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "limit_ignores_owned_tickets", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "limit_ignores_owned_tickets", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "limit_ignores_owned_tickets", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "limit_ignores_owned_tickets", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "limit_ignores_owned_tickets", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "limit_ignores_owned_tickets", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "limit_ignores_owned_tickets", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "limit_ignores_owned_tickets", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "hold_expiry_boundary_exclusive", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "timeout_leaves_hold_paying", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "timeout_leaves_hold_paying", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "timeout_leaves_hold_paying", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "timeout_leaves_hold_paying", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "timeout_leaves_hold_paying", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "timeout_leaves_hold_paying", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "timeout_leaves_hold_paying", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "timeout_leaves_hold_paying", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "timeout_leaves_hold_paying", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "timeout_leaves_hold_paying", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "timeout_leaves_hold_paying", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "timeout_leaves_hold_paying", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "timeout_leaves_hold_paying", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "timeout_leaves_hold_paying", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "timeout_leaves_hold_paying", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "timeout_leaves_hold_paying", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "timeout_leaves_hold_paying", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "timeout_leaves_hold_paying", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "timeout_leaves_hold_paying", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "timeout_leaves_hold_paying", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "timeout_leaves_hold_paying", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "timeout_leaves_hold_paying", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "timeout_leaves_hold_paying", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "timeout_leaves_hold_paying", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "timeout_leaves_hold_paying", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "timeout_leaves_hold_paying", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "timeout_leaves_hold_paying", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "timeout_leaves_hold_paying", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "timeout_leaves_hold_paying", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "timeout_leaves_hold_paying", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "timeout_leaves_hold_paying", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "timeout_leaves_hold_paying", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "timeout_leaves_hold_paying", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "timeout_leaves_hold_paying", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "idempotency_reruns_failed_payment", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "idempotency_reruns_failed_payment", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "idempotency_reruns_failed_payment", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "idempotency_reruns_failed_payment", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "idempotency_reruns_failed_payment", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "idempotency_reruns_failed_payment", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "idempotency_reruns_failed_payment", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "idempotency_reruns_failed_payment", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "idempotency_reruns_failed_payment", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "idempotency_reruns_failed_payment", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "idempotency_reruns_failed_payment", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "client_sets_amount", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "client_sets_amount", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "client_sets_amount", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "client_sets_amount", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "client_sets_amount", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "client_sets_amount", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "client_sets_amount", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "client_sets_amount", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "client_sets_amount", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "client_sets_amount", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "client_sets_amount", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "client_sets_amount", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "client_sets_amount", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "client_sets_amount", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "client_sets_amount", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "client_sets_amount", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "client_sets_amount", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "client_sets_amount", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "client_sets_amount", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "client_sets_amount", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "client_sets_amount", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "client_sets_amount", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "client_sets_amount", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "client_sets_amount", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "client_sets_amount", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "client_sets_amount", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "client_sets_amount", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "client_sets_amount", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "client_sets_amount", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "client_sets_amount", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "client_sets_amount", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "client_sets_amount", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "client_sets_amount", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "client_sets_amount", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "client_sets_amount", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "client_sets_amount", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "client_sets_amount", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "client_sets_amount", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "client_sets_amount", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "remove_seat_from_any_hold", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "remove_seat_from_any_hold", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "remove_seat_from_any_hold", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "remove_seat_from_any_hold", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "remove_seat_from_any_hold", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "remove_seat_from_any_hold", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "remove_seat_from_any_hold", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "remove_seat_from_any_hold", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "remove_seat_from_any_hold", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "remove_seat_from_any_hold", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "remove_seat_from_any_hold", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "remove_seat_from_any_hold", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "remove_seat_from_any_hold", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "remove_seat_from_any_hold", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "remove_seat_from_any_hold", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "remove_seat_from_any_hold", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "remove_seat_from_any_hold", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "remove_seat_from_any_hold", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "remove_seat_from_any_hold", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "remove_seat_from_any_hold", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "remove_seat_from_any_hold", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "remove_seat_from_any_hold", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "remove_seat_from_any_hold", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "remove_seat_from_any_hold", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "remove_seat_from_any_hold", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "remove_seat_from_any_hold", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "remove_seat_from_any_hold", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "remove_seat_from_any_hold", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "remove_seat_from_any_hold", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "remove_seat_from_any_hold", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "remove_seat_from_any_hold", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 21, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "remove_seat_from_any_hold", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 23, "action": {"action": "hold", "as": "B", "seat": "C-04"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 24, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "remove_seat_from_any_hold", "step": 25, "action": {"action": "hold_many", "as": "C", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "remove_seat_from_any_hold", "step": 26, "action": {"action": "hold", "as": "A", "seat": "C-05"}, "outcome": {"status": 200, "held": ["C-01", "C-03", "C-04", "C-05"]}}
+{"fault": "remove_seat_from_any_hold", "step": 27, "action": {"action": "crowd_hold", "seat": "C-05", "fans": 5}, "outcome": {"fans": 5, "succeeded": 0, "codes": [409]}}
+{"fault": "remove_seat_from_any_hold", "step": 28, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "remove_seat_from_any_hold", "step": 29, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "remove_seat_from_any_hold", "step": 30, "action": {"action": "hold", "as": "C", "seat": "C-04"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "seat_rate_limit_per_session", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "seat_rate_limit_per_session", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "seat_rate_limit_per_session", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "seat_rate_limit_per_session", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_rate_limit_per_session", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "seat_rate_limit_per_session", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "seat_rate_limit_per_session", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "seat_rate_limit_per_session", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "seat_rate_limit_per_session", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "seat_rate_limit_per_session", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "seat_rate_limit_per_session", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "seat_rate_limit_per_session", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "seat_rate_limit_per_session", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "seat_rate_limit_per_session", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "seat_rate_limit_per_session", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "seat_rate_limit_per_session", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "seat_rate_limit_per_session", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_rate_limit_per_session", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "seat_rate_limit_per_session", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "seat_rate_limit_per_session", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "seat_rate_limit_per_session", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "seat_rate_limit_per_session", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "seat_rate_limit_per_session", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "seat_rate_limit_per_session", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_rate_limit_per_session", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "seat_rate_limit_per_session", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "seat_rate_limit_per_session", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "seat_rate_limit_per_session", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "seat_rate_limit_per_session", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_rate_limit_per_session", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "seat_rate_limit_per_session", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "seat_rate_limit_per_session", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "seat_rate_limit_per_session", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "seat_rate_limit_per_session", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "seat_rate_limit_per_session", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "seat_rate_limit_per_session", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "seat_rate_limit_per_session", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "seat_rate_limit_per_session", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "seat_rate_limit_per_session", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "map_stale_after_failed_seat_change", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "map_stale_after_failed_seat_change", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "map_stale_after_failed_seat_change", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "map_stale_after_failed_seat_change", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "map_stale_after_failed_seat_change", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "map_stale_after_failed_seat_change", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "map_stale_after_failed_seat_change", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "map_stale_after_failed_seat_change", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "map_stale_after_failed_seat_change", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "map_stale_after_failed_seat_change", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "map_stale_after_failed_seat_change", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 1, "action": {"action": "seat_map", "as": "A", "why": "Verify seat map shows all seats as available before any actions"}, "outcome": {"status": 200, "available_count": 510, "some_available": ["A-01", "A-02", "A-03", "A-04", "A-05", "A-06"], "mine": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 2, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "release_hold_leaves_seats_held", "step": 3, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "release_hold_leaves_seats_held", "step": 4, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 200, "held": ["C-01"]}}
+{"fault": "release_hold_leaves_seats_held", "step": 5, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after holding a seat"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 6, "action": {"action": "get_ticket", "as": "A", "ticket_of": "C-01"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "release_hold_leaves_seats_held", "step": 7, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10, "why": "Test rate limiting of rapid repeated seat changes"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200]}}
+{"fault": "release_hold_leaves_seats_held", "step": 8, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success"}, "outcome": {"codes": [200, 200]}}
+{"fault": "release_hold_leaves_seats_held", "step": 9, "action": {"action": "double_pay", "as": "A", "times": 3, "why": "Test that repeating a checkout with the same key doesn't charge again"}, "outcome": {"times": 3, "codes": [409, 409, 409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 10, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 1, "why": "Test rate limiting of rapid repeated seat changes after initial success and subsequent 'decline'"}, "outcome": {"codes": [200, 200]}}
+{"fault": "release_hold_leaves_seats_held", "step": 11, "action": {"action": "release_all", "as": "A", "why": "Test what happens when all seats are released"}, "outcome": {"status": 204}}
+{"fault": "release_hold_leaves_seats_held", "step": 12, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after releasing all seats"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 13, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "release_hold_leaves_seats_held", "step": 14, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 1, "codes": [200, 409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 15, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 16, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 50, "why": "Test what happens when many fans try to hold the same seat at the same time after the initial crowd hold"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 17, "action": {"action": "crowd_hold", "seat": "C-09", "fans": 100, "why": "Test what happens when many fans try to hold the same seat at the same time after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 18, "action": {"action": "double_pay", "as": "A", "times": 2, "why": "Test what happens when pressing Pay several times at once after initial success"}, "outcome": {"times": 2, "codes": [409, 409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 19, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "release_hold_leaves_seats_held", "step": 20, "action": {"action": "release_all", "as": "A", "why": "Release all seats to test what happens when there are no holds on any seat"}, "outcome": {"status": 204}}
+{"fault": "release_hold_leaves_seats_held", "step": 21, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 5, "why": "Test rate limiting after a short initial hold"}, "outcome": {"codes": [200, 200, 200, 200, 200]}}
+{"fault": "release_hold_leaves_seats_held", "step": 22, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01"]}, {"status": 200, "held": ["C-01", "C-02"]}]}}
+{"fault": "release_hold_leaves_seats_held", "step": 23, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 24, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and before any seats are released"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 25, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after many fans try to hold the same seat at the same time and after the sale opens"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 26, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "release_hold_leaves_seats_held", "step": 27, "action": {"action": "wait", "seconds": 300}, "outcome": {"waited_seconds": 300, "sale_open": true}}
+{"fault": "release_hold_leaves_seats_held", "step": 28, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after the sale opens and before any seats are released again"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 29, "action": {"action": "rapid_changes", "as": "A", "seat": "C-09", "times": 15, "why": "Test rate limiting after the sale opens and many fans try to hold the same seat at the same time"}, "outcome": {"codes": [200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 200, 429, 429, 429, 429]}}
+{"fault": "release_hold_leaves_seats_held", "step": 30, "action": {"action": "my_tickets", "as": "A", "why": "Verify account A's tickets after rapid changes and rate limiting"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 1, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 409, "error": "sale_not_open"}}
+{"fault": "release_hold_leaves_seats_held", "step": 2, "action": {"action": "wait", "seconds": 60}, "outcome": {"waited_seconds": 60, "sale_open": true}}
+{"fault": "release_hold_leaves_seats_held", "step": 3, "action": {"action": "hold", "as": "B", "seat": "C-09"}, "outcome": {"status": 200, "held": ["C-09"]}}
+{"fault": "release_hold_leaves_seats_held", "step": 4, "action": {"action": "hold_many", "as": "B", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 200, "held": ["C-01", "C-09"]}, {"status": 200, "held": ["C-01", "C-02", "C-09"]}]}}
+{"fault": "release_hold_leaves_seats_held", "step": 5, "action": {"action": "my_tickets", "as": "B"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 6, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "release_hold_leaves_seats_held", "step": 7, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 8, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 9, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "release_hold_leaves_seats_held", "step": 10, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 11, "action": {"action": "hold", "as": "A", "seat": "C-01"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 12, "action": {"action": "crowd_hold", "seat": "C-01", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 13, "action": {"action": "wait", "seconds": 1}, "outcome": {"waited_seconds": 1, "sale_open": true}}
+{"fault": "release_hold_leaves_seats_held", "step": 14, "action": {"action": "hold", "as": "A", "seat": "C-02"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 15, "action": {"action": "hold_many", "as": "A", "seats": ["C-03", "C-04"]}, "outcome": {"results": [{"status": 200, "held": ["C-03"]}, {"status": 200, "held": ["C-03", "C-04"]}]}}
+{"fault": "release_hold_leaves_seats_held", "step": 16, "action": {"action": "my_tickets", "as": "A"}, "outcome": {"status": 200, "tickets": []}}
+{"fault": "release_hold_leaves_seats_held", "step": 17, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 18, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "release_hold_leaves_seats_held", "step": 19, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 10}, "outcome": {"codes": [409, 404, 409, 404, 409, 404, 409, 404, 409, 404]}}
+{"fault": "release_hold_leaves_seats_held", "step": 20, "action": {"action": "hold", "as": "C", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 21, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 22, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 20}, "outcome": {"fans": 20, "succeeded": 0, "codes": [409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 23, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "release_hold_leaves_seats_held", "step": 24, "action": {"action": "get_ticket", "as": "B", "ticket_of": "A"}, "outcome": {"note": "A has no tickets yet"}}
+{"fault": "release_hold_leaves_seats_held", "step": 25, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 5}, "outcome": {"codes": [409, 404, 409, 404, 409]}}
+{"fault": "release_hold_leaves_seats_held", "step": 26, "action": {"action": "hold_many", "as": "A", "seats": ["C-01", "C-02"]}, "outcome": {"results": [{"status": 409, "error": "seat_taken"}, {"status": 409, "error": "seat_taken"}]}}
+{"fault": "release_hold_leaves_seats_held", "step": 27, "action": {"action": "hold", "as": "A", "seat": "C-03"}, "outcome": {"status": 200, "held": ["C-03", "C-04"]}}
+{"fault": "release_hold_leaves_seats_held", "step": 28, "action": {"action": "rapid_changes", "as": "A", "seat": "C-01", "times": 6}, "outcome": {"codes": [409, 404, 409, 404, 409, 404]}}
+{"fault": "release_hold_leaves_seats_held", "step": 29, "action": {"action": "hold", "as": "B", "seat": "C-03"}, "outcome": {"status": 409, "error": "seat_taken"}}
+{"fault": "release_hold_leaves_seats_held", "step": 30, "action": {"action": "crowd_hold", "seat": "C-03", "fans": 10}, "outcome": {"fans": 10, "succeeded": 0, "codes": [409]}}

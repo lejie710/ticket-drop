@@ -1,0 +1,103 @@
+# Verification and release assessment
+
+What was actually run, what it showed, and what it does not show. Every figure here comes from a saved file under `evidence/` or from a command that can be re-run. The plan these checks follow is [TEST_PLAN.md](TEST_PLAN.md).
+
+## 1. Environment actually exercised
+
+| Item | Value |
+|---|---|
+| Machine | The development laptop: Windows 11 Enterprise, 16 logical processors |
+| Python | 3.12.10, packages pinned in `requirements-lock.txt` |
+| Browser | Installed Google Chrome, driven headless by Playwright 1.64.1 |
+| Server | One uvicorn process on 127.0.0.1, one SQLite file in WAL mode |
+| Language model (AI tools only) | Ollama with `llama3.2` (3B), local CPU |
+| Not exercised | Other browsers, other operating systems, hosted CI, any deployment |
+
+## 2. Automated tests
+
+Final full run on the final code: `.venv\Scripts\python.exe -m pytest`, 4 November 2026 02:37 to 02:39 (+08:00), **159 passed in 131 s**.
+
+| Suite | Tests | What it checks |
+|---|---|---|
+| `tests/api` | 124 | Rules, boundaries, payment recovery, 52 generated inputs |
+| `tests/security` | 20 | Cross-account access, abuse limits, headers, hardening of the real server |
+| `tests/concurrency` | 5 | Parallel requests against a live server, checked in the database |
+| `tests/e2e` | 10 | Browser journeys in headless Chrome |
+| **Total** | **159** | |
+
+Every new regression test was also run against the code before its fix, to confirm it can fail: the settle-recovery test failed on the old checkout (first a plain-text 500, then a 409 where 200 was expected), and the double-submit browser test counted 2 payment requests on the old page and 1 on the fixed one. See [DEFECTS.md](DEFECTS.md) DEF-007 and DEF-008.
+
+## 3. Load
+
+Three runs of `tools/run_load_test.py`: 200 simulated fans started within one second, 60 seconds, sale opening five seconds after start, one server process sharing the laptop with the load generator.
+
+| Run (UTC, 3 Nov) | Code | Requests | Server errors | Median ms | p95 ms | Avg req/s | Integrity checks | Tickets |
+|---|---|---|---|---|---|---|---|---|
+| 15:08 | before the read-path change | 1245 | 0 | 970 | 3000 | 20.8 | all passed | 92 |
+| 15:11 | after the read-path change | 1557 | 0 | 2100 | 5100 | 25.9 | all passed | 123 |
+| 17:07 | final code (checkout recovery) | 1160 | 0 | 2900 | 5400 | 19.3 | all passed | 60 |
+
+The first and last runs are saved under [evidence/load/before-read-path-fix](../evidence/load/before-read-path-fix/SUMMARY.md) and [evidence/load](../evidence/load/SUMMARY.md). The middle run's figures are transcribed from its console output; its files were overwritten by the final run.
+
+**What it shows.** In every run: zero server errors, no seat sold twice, no sold seat without a ticket, no ticket on an unsold seat, no account over four seats, no payment left pending, and money charged exactly equal to the value of the tickets issued.
+
+**What it does not show.** A capacity or latency figure for production. Latency varied by a factor of three between runs on the same laptop, which also ran the load generator and, at times, other work. The throughput ceiling is CPU in one Python process (DEF-002).
+
+## 4. Static security scans
+
+From `tools/security_scan.py`, saved in [evidence/security/SUMMARY.md](../evidence/security/SUMMARY.md).
+
+| Scan | Result | Triage |
+|---|---|---|
+| bandit on `app/` | 2 findings, both low severity | B105 `demo-pass`: the documented demo password, accepted for demo accounts only. B311 `random`: used only to choose sample sales, not for anything secret. Tokens and salts use `secrets` and `os.urandom` |
+| pip-audit on `requirements-lock.txt` | 95 packages, 0 known vulnerabilities | Result is for the day of the run; the database of known vulnerabilities changes |
+
+## 5. Generated test data
+
+From `ai/datagen.py`, saved in [evidence/ai/datagen_report.md](../evidence/ai/datagen_report.md). 52 unique inputs proposed by the local model across four fields, all new compared with the hand-written cases. The model's own valid or invalid label was right for 44 of 52; it is never used as the expected result. The application agreed with the written input rules on all 52, and the inputs are replayed by `tests/api/test_generated_inputs.py`.
+
+## 6. Seeded faults
+
+Full method and per-fault details: [FAULT_INJECTION.md](FAULT_INJECTION.md) and [evidence/faults/REPORT.md](../evidence/faults/REPORT.md).
+
+- Ten faults, planted by a separate agent that never read the tests.
+- Scripted suite on the final code: caught **8 of 10**, with 0 failures on the clean application (158 tests at the time).
+- The two escaped faults were then closed with one new test each; a follow-up run shows both caught and the clean suite at 159 passing ([scripted-after-gap-tests.json](../evidence/faults/scripted-after-gap-tests.json)).
+- Exploratory testing, 30 actions per run, the same rule checks for both explorers, 0 false alarms on the clean application: the random explorer caught 2 of 10 and the local model explorer 1 of 10, each with three seeds per fault. The model's transcript shows why: it repeated actions on a seat it had already bought and did not use the refusals it received. See [FAULT_INJECTION.md](FAULT_INJECTION.md).
+
+## 7. Defects
+
+Real defects and investigations are in [DEFECTS.md](DEFECTS.md): eleven entries. Nine are fixed or worked around, one (throughput, DEF-002) is partly improved with its limit recorded, and one (DEF-010) records four minor review observations that were accepted. DEF-007, the only high-severity defect, was found by independent review and is fixed. None remains open against R2 or R5 to R9.
+
+## 8. Status of each kind of claim
+
+| Behaviour | Status |
+|---|---|
+| Booking rules R1 to R13 | Implemented and tested automatically |
+| Behaviour under a 200-fan burst on one laptop (R14) | Tested; latency is an observation |
+| Browser journeys in Chrome on Windows | Tested |
+| Keyboard operation of the seat map | Tested for one path; no screen-reader testing |
+| Payment | Simulated by a mock gateway; no real provider was integrated |
+| AI-generated data and exploration | Measured on one small local model: one seed for data generation, three seeds per fault for exploration; not a general claim about language models |
+| Hosted CI (`.github/workflows/ci.yml`) | Prepared, not run |
+| Showcase page on GitHub Pages | Prepared, not published |
+| Production readiness, capacity, accessibility compliance | Not claimed |
+
+## 9. Release assessment
+
+**Recommendation: ready for review and for publication as a private repository. Making it public is the owner's decision. Not production software.**
+
+Basis:
+
+- All 159 automated tests pass on the final code (run recorded in section 2).
+- Every requirement R1 to R14 has automated checks; the riskiest ones (R2, R5 to R9, R14) have several kinds.
+- The load runs show no server errors and no data damage under a 200-fan burst.
+- The one high-severity defect found (DEF-007) is fixed, with a regression test proven to fail on the old code.
+- Static scans are triaged; no known vulnerable dependency on the day of the scan.
+
+Open items, none blocking a private release:
+
+- Throughput is limited to roughly 20 to 26 requests per second on the laptop (DEF-002).
+- No reconciliation for a process crash between the gateway charge and recording its outcome (DEF-007, remaining limit).
+- Hosted CI and the showcase page are prepared but not run or published.
+- Only Chrome on Windows was exercised.

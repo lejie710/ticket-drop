@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Ticket Drop checkout sequence</title>
+<style>
+  body { margin: 0; background: #f5f6f8; }
+</style>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" width="1200" height="760" role="img" aria-labelledby="seq-title seq-desc" font-family="Segoe UI, system-ui, sans-serif">
+  <title id="seq-title">Checkout in three steps</title>
+  <desc id="seq-desc">The checkout records a pending payment and marks the hold paying in a first transaction, calls the mock gateway with no lock held, then settles in a second transaction. A repeated request with the same idempotency key returns the stored response.</desc>
+  <defs>
+    <marker id="seq-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#18233a"/>
+    </marker>
+    <marker id="seq-arrow-reply" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0,0 L10,5 L0,10" fill="none" stroke="#4f5d75" stroke-width="1.5"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="1200" height="760" fill="#f5f6f8"/>
+  <text x="40" y="44" font-size="22" font-weight="700" fill="#18233a">Checkout: pay for the held seats</text>
+  <text x="40" y="70" font-size="14" fill="#55607a">The slow gateway call happens with no database lock held. Solid arrows are calls, open arrows are replies.</text>
+
+  <!-- Participants -->
+  <g font-size="15" font-weight="700" fill="#18233a" text-anchor="middle">
+    <rect x="70" y="96" width="160" height="44" rx="8" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+    <text x="150" y="124">Browser</text>
+    <rect x="320" y="96" width="180" height="44" rx="8" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+    <text x="410" y="124">main.py route</text>
+    <rect x="590" y="96" width="180" height="44" rx="8" fill="#fbecec" stroke="#b3261e" stroke-width="2"/>
+    <text x="680" y="124">service.checkout</text>
+    <rect x="850" y="96" width="140" height="44" rx="8" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+    <text x="920" y="124">SQLite</text>
+    <rect x="1030" y="96" width="140" height="44" rx="8" fill="#ffffff" stroke="#18233a" stroke-width="1.5"/>
+    <text x="1100" y="124">Gateway</text>
+  </g>
+  <g stroke="#a3acbd" stroke-width="1.5" stroke-dasharray="5 5">
+    <line x1="150" y1="140" x2="150" y2="740"/>
+    <line x1="410" y1="140" x2="410" y2="740"/>
+    <line x1="680" y1="140" x2="680" y2="740"/>
+    <line x1="920" y1="140" x2="920" y2="740"/>
+    <line x1="1100" y1="140" x2="1100" y2="740"/>
+  </g>
+
+  <!-- 1 request -->
+  <line x1="150" y1="180" x2="406" y2="180" stroke="#18233a" stroke-width="1.8" marker-end="url(#seq-arrow)"/>
+  <text x="162" y="156" font-size="13" fill="#18233a">1. POST /api/checkout</text><text x="162" y="172" font-size="13" fill="#18233a">card, Idempotency-Key</text>
+  <line x1="410" y1="214" x2="676" y2="214" stroke="#18233a" stroke-width="1.8" marker-end="url(#seq-arrow)"/>
+  <text x="422" y="204" font-size="13" fill="#18233a">2. validated body and key</text>
+
+  <!-- Txn 1 -->
+  <rect x="660" y="238" width="290" height="150" rx="6" fill="#ffffff" fill-opacity="0.6" stroke="#18233a" stroke-width="1.2"/>
+  <text x="672" y="258" font-size="12" font-weight="700" fill="#18233a">Transaction 1 (write lock)</text>
+  <line x1="680" y1="282" x2="916" y2="282" stroke="#18233a" stroke-width="1.8" marker-end="url(#seq-arrow)"/>
+  <text x="690" y="276" font-size="12" fill="#18233a">3. find payment with this key</text>
+  <line x1="680" y1="330" x2="916" y2="330" stroke="#18233a" stroke-width="1.8" marker-end="url(#seq-arrow)"/>
+  <text x="690" y="306" font-size="12" fill="#18233a">4. none: expire overdue holds,</text>
+  <text x="690" y="318" font-size="12" fill="#18233a">sum seat prices on the server</text>
+  <line x1="680" y1="374" x2="916" y2="374" stroke="#18233a" stroke-width="1.8" marker-end="url(#seq-arrow)"/>
+  <text x="690" y="348" font-size="12" fill="#18233a">5. insert payment 'pending',</text>
+  <text x="690" y="360" font-size="12" fill="#18233a">hold status = 'paying'</text>
+
+  <!-- Gateway call -->
+  <line x1="680" y1="428" x2="1096" y2="428" stroke="#18233a" stroke-width="1.8" marker-end="url(#seq-arrow)"/>
+  <text x="692" y="404" font-size="13" fill="#18233a">6. charge(card, amount)</text><text x="692" y="420" font-size="13" fill="#18233a">no lock held</text>
+  <line x1="1100" y1="476" x2="684" y2="476" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#seq-arrow-reply)"/>
+  <text x="692" y="452" font-size="13" fill="#4f5d75">7. succeeded, declined</text><text x="692" y="468" font-size="13" fill="#4f5d75">or timeout, recorded at once</text>
+
+  <!-- Txn 2 -->
+  <rect x="660" y="490" width="290" height="146" rx="6" fill="#ffffff" fill-opacity="0.6" stroke="#18233a" stroke-width="1.2"/>
+  <text x="672" y="510" font-size="12" font-weight="700" fill="#18233a">Transaction 2 (write lock)</text>
+  <line x1="680" y1="556" x2="916" y2="556" stroke="#18233a" stroke-width="1.8" marker-end="url(#seq-arrow)"/>
+  <text x="690" y="532" font-size="12" fill="#18233a">8a. success: one ticket per seat,</text>
+  <text x="690" y="544" font-size="12" fill="#18233a">seats sold, hold 'paid'</text>
+  <line x1="680" y1="600" x2="916" y2="600" stroke="#18233a" stroke-width="1.8" marker-end="url(#seq-arrow)"/>
+  <text x="690" y="576" font-size="12" fill="#18233a">8b. failure: hold back to 'active',</text>
+  <text x="690" y="588" font-size="12" fill="#18233a">seats stay held until expiry</text>
+  <text x="690" y="624" font-size="12" fill="#18233a">9. store response with the payment</text>
+
+  <!-- Replies -->
+  <line x1="680" y1="660" x2="414" y2="660" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#seq-arrow-reply)"/>
+  <text x="424" y="652" font-size="13" fill="#4f5d75">10. status and body</text>
+  <line x1="410" y1="700" x2="154" y2="700" stroke="#4f5d75" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#seq-arrow-reply)"/>
+  <text x="164" y="692" font-size="13" fill="#4f5d75">11. 200 tickets, 402 declined, 504 timeout</text>
+
+  <!-- Replay note -->
+  <rect x="40" y="250" width="330" height="150" rx="8" fill="#ffffff" stroke="#8a94a8" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="56" y="274" font-size="13" font-weight="700" fill="#18233a">Same key sent again</text>
+  <text x="56" y="296" font-size="12" fill="#18233a">Step 3 finds the earlier payment and returns</text>
+  <text x="56" y="314" font-size="12" fill="#18233a">its stored status and body. No new charge.</text>
+  <text x="56" y="340" font-size="12" fill="#18233a">If that payment is still 'pending', the reply</text>
+  <text x="56" y="358" font-size="12" fill="#18233a">is 409 checkout_in_progress. If the gateway</text><text x="56" y="376" font-size="12" fill="#18233a">answered but settling failed, steps 8 and 9</text><text x="56" y="394" font-size="12" fill="#18233a">run now: the tickets, with no second charge.</text>
+
+  <rect x="40" y="420" width="330" height="96" rx="8" fill="#ffffff" stroke="#8a94a8" stroke-width="1.2" stroke-dasharray="5 4"/>
+  <text x="56" y="444" font-size="13" font-weight="700" fill="#18233a">Why 'paying'</text>
+  <text x="56" y="466" font-size="12" fill="#18233a">Expiry skips a hold in 'paying', so seats cannot</text>
+  <text x="56" y="484" font-size="12" fill="#18233a">be resold while the gateway decides. Seat changes</text>
+  <text x="56" y="502" font-size="12" fill="#18233a">and a second checkout are refused meanwhile.</text>
+</svg>
+</body>
+</html>
