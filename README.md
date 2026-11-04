@@ -69,7 +69,7 @@ Open http://127.0.0.1:8000 and sign in as `lejie`, `arjun`, `siti` or `wei`, pas
   <img src="docs/screenshots/phone.png" width="20.5%" alt="Phone layout: the seat map scrolls sideways and the hold and payment panel docks at the bottom">
 </p>
 
-The image at the top shows a declined card: the seats stay held for the rest of the five minutes. After a successful payment, each seat becomes a ticket under My tickets. On a phone, the map scrolls sideways and the payment panel docks at the bottom of the screen.
+The image at the top shows a declined card: the seats stay held for the rest of the five minutes. After a successful payment, each seat becomes a ticket under My tickets. On a phone, the map scrolls sideways and the payment panel docks at the bottom of the screen. The [walkthrough](docs/WALKTHROUGH.md) goes through every screen in order.
 
 ## Test it
 
@@ -85,6 +85,7 @@ The AI tools need [Ollama](https://ollama.com) with `llama3.2`; nothing else doe
 
 | Document | Contents |
 |---|---|
+| [Walkthrough](docs/WALKTHROUGH.md) | Every screen of the app in order, with what each one does |
 | [Brief](docs/BRIEF.md) | Scope and the requirements R1 to R14 |
 | [Design](docs/DESIGN.md) | Architecture, one request end to end, the API, the data model, known limits |
 | [Test plan](docs/TEST_PLAN.md) | Risk assessment, techniques, coverage by requirement |
