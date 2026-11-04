@@ -49,7 +49,7 @@ Impact: what happens to a fan or to money if the requirement fails. Likelihood: 
 |---|---|---|
 | Boundary value analysis | R1, R3, R4 | Hold valid at 299 999 ms, ended at exactly 300 000 ms; sale closed at opening minus 1 ms, open at the opening instant; 4 seats allowed, the fifth refused |
 | Equivalence partitioning | R12 | Seat IDs: valid, wrong row letter, lower case, wrong digit count, injection-shaped text, wrong JSON type |
-| Decision table | R6, R7 | Card outcome (pay, decline, timeout) by key (new, repeated) by hold (open, expired, none) |
+| Decision table | R6, R7 | Card outcome (pay, decline, timeout) by key (new, repeated) by hold (open, expired, none). Covered: every outcome with a new key on an open hold; repeated keys for all three outcomes on an open hold; a repeated paid key after expiry. Not covered: a repeated declined or timed-out key after the hold has expired |
 | State transition | R4 to R7, R13 | Hold states below |
 | Error guessing and negative testing | R8, R9, R12 | A client-sent price, another account's ticket ID, a key reused across accounts |
 | Concurrency testing | R2, R3, R7 | 50 fans on one seat; 10 parallel claims by one fan; 5 parallel Pay clicks |
@@ -67,6 +67,7 @@ Impact: what happens to a fan or to money if the requirement fails. Likelihood: 
 | active | checkout starts | paying | still held, protected from expiry |
 | paying | gateway succeeds | paid | sold, tickets issued |
 | paying | gateway declines or times out | active | still held until the original expiry |
+| paying | gateway declines or times out after the expiry instant | expired | available; the answer says the hold has expired |
 
 Each row has at least one API test. The rows on error paths also have browser tests.
 
@@ -77,16 +78,16 @@ Each row has at least one API test. The rows on error paths also have browser te
 | R1 | `test_time_rules` (3) | | | `test_before_the_sale_opens` | sale opens during the spike | hold before opening |
 | R2 | `test_holds` | | 50 fans, crowd | `test_seat_taken_while_the_map_was_open` | integrity check | crowd hold |
 | R3 | `test_limits` (7) | | parallel claims | `test_fifth_seat_shows_the_limit` | integrity check | over-limit |
-| R4 | `test_time_rules` (5) | | | `test_expired_hold_is_explained_and_seats_return` | | overdue hold |
+| R4 | `test_time_rules` (5), a `paying` hold survives another fan's expiry sweep (`test_checkout_recovery`) | | | `test_expired_hold_is_explained_and_seats_return` | | overdue hold |
 | R5 | `test_checkout`, `test_tickets`, `test_checkout_recovery` | | crowd | `test_fan_holds_two_seats_and_pays` | money matches tickets | money matches tickets |
 | R6 | `test_checkout` (4), `test_checkout_recovery` (2) | | | `test_declined_card_keeps_the_seats`, `test_pressing_enter_twice_sends_one_payment` | | seats kept after failure |
-| R7 | `test_checkout` (2), settle recovery | key scoped to account | double click, parallel retries | | | repeated key |
+| R7 | `test_checkout` (6: success, decline and timeout replays, replay after the expiry, a key refused for a different hold twice), settle recovery | key scoped to account | double click, parallel retries | `test_retry_after_a_server_error_reuses_the_payment_key`, `test_a_kept_payment_key_is_not_reused_for_different_seats` | | repeated key |
 | R8 | `test_the_client_cannot_set_the_price` | | | | money matches tickets | money matches tickets |
-| R9 | `test_auth`, `test_tickets` | `test_access_control` (7) | | | | cross-account access |
-| R10 | | `test_abuse_and_headers` (4) | | | 429 counted as correct | rapid changes |
+| R9 | `test_auth` (every account route, missing and made-up token), `test_tickets` | `test_access_control` (5 cross-account tests), foreign `Host` refused on the real server | | | | cross-account access |
+| R10 | | `test_abuse_and_headers` (5) | | | 429 counted as correct | rapid changes |
 | R11 | `test_holds` | | | map states in every journey | | map versus database |
-| R12 | `test_validation`, generated inputs | | | `test_wrong_password_is_explained` | no 5xx | no 5xx |
-| R13 | `test_holds` (4) | release only own hold | | | | seats stuck under closed hold |
+| R12 | `test_validation` (bodies, address IDs, cards, keys, error shape for unknown addresses), generated inputs | | | | no 5xx | no 5xx |
+| R13 | `test_holds` (3) | release only own hold | | | | seats stuck under closed hold |
 | R14 | | | | | `tools/run_load_test.py` | |
 
 ## 6. Entry and exit criteria

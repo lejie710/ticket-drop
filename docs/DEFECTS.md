@@ -14,11 +14,13 @@ Each entry records what was observed, the hypothesis, the evidence, and the outc
 | DEF-006 | Tooling | The test-data generator crashed when printing a generated Unicode character | Fixed |
 | DEF-007 | Checkout | A failure while settling left the fan charged, without tickets, and locked out | Fixed, regression test |
 | DEF-008 | UI | Enter in the card field sent a second payment request while one was in flight | Fixed, regression test |
-| DEF-009 | UI | A kept payment key could be reused for a different set of seats | Fixed |
+| DEF-009 | UI, checkout | A kept payment key could be reused for a different set of seats | Fixed in the page and on the server, regression tests |
 | DEF-010 | Review notes | Four minor observations | Recorded, not fixed |
 | DEF-011 | UI | On a phone the header wrapped and the payment strip covered almost half the screen | Fixed |
+| DEF-012 | UI, checkout | After a 500 the page dropped its payment key, so DEF-007's recovery could not be reached from the browser | Fixed, regression test |
+| DEF-013 | UI | Six smaller front-end faults: keyboard, focus, stale notice, Release while paying, phone summary, contrast | Fixed, regression tests for four |
 
-DEF-007 to DEF-010 were found by an independent review: a separate agent that read the requirements, design, code and tests without seeing the author's reasoning, and reported findings without editing anything.
+DEF-007 to DEF-010 were found by a separate review agent that read the requirements, design, code and tests without seeing the author's reasoning, and reported findings without editing anything. DEF-012 and DEF-013 were found later by a multi-agent review (separate agents per area, each finding then checked by another agent trying to disprove it) and reproduced before fixing.
 
 ## DEF-001: race tests were slow, and the first explanation was wrong
 
@@ -51,7 +53,7 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 
 **Change.** Read endpoints now check for an overdue hold with a plain read and take the write lock only when something actually needs expiring (`expire_if_due` in `app/service.py`), then read inside a snapshot transaction. Indexes were added for the overdue-hold check.
 
-**Result.** Throughput rose only from about 21 to 26 requests per second, and median latency did not improve. Evidence: [evidence/load/SUMMARY.md](../evidence/load/SUMMARY.md). The change is kept because reads no longer queue behind writes, but it was not the main limit.
+**Result.** Throughput rose only from about 21 to 26 requests per second, and median latency did not improve. The 26 requests per second (25.9) is from the run straight after the change; its figures are transcribed from console output in [VERIFICATION.md](VERIFICATION.md) section 3, because its files were overwritten by a later run. The saved run, [evidence/load/SUMMARY.md](../evidence/load/SUMMARY.md), is the final code after the checkout recovery change: 19.3 requests per second, median 2.9 s, p95 5.4 s, on the same laptop. The change is kept because reads no longer queue behind writes, but it was not the main limit.
 
 **Where the time actually goes.** Unloaded, one seat-map request costs about 16 ms of server time, a hold read about 7 ms, and a sign-in about 74 ms (deliberately slow password hashing). All of it runs in one Python process that shares this laptop's CPU with Locust itself. The ceiling is CPU in a single process, not lock contention.
 
@@ -73,7 +75,9 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 
 **Observed** in the rendered UI: after a click, Chrome drew its rectangular focus outline around the circular seat, overlapping its neighbours.
 
-**Fix.** Seats hide the default outline and show keyboard focus with a ring that follows the circle (`.seat.focused`). Keyboard focus remains visible, which `test_seats_can_be_chosen_with_the_keyboard_only` exercises.
+**Fix.** Seats hide the default outline and show keyboard focus with a ring that follows the circle (`.seat.focused`).
+
+**Correction.** This entry used to say `test_seats_can_be_chosen_with_the_keyboard_only` showed that focus stays visible. It did not: it checks which seat has focus, not what is drawn. A later review found that tabbing into the map drew no ring at all, because the ring was added only on arrow keys (DEF-013). `test_tabbing_into_the_map_shows_a_focus_ring` now checks the class within one second and that the focused seat's computed stroke differs from an unfocused seat of the same category (A-02), which has no stroke of its own.
 
 ## DEF-006: generator crashed printing its own report
 
@@ -99,10 +103,10 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 - The gateway's outcome is written to the payment row immediately after the call, in its own statement, retried briefly if the database is busy.
 - Settling became `settle_payment`, which reads the recorded outcome and is safe to run more than once: it returns the stored response if another request already settled.
 - Settling retries up to three times when the database is busy.
-- If settling still fails, a retry with the same idempotency key finishes the settle and issues the tickets without charging again.
+- If settling still fails, a retry with the same idempotency key finishes the settle and issues the tickets without charging again. This recovery needs the client to resend the same key after a 500. The page did not do that until DEF-012 was fixed; it now does.
 - `app/main.py` gained a catch-all handler that returns the normal JSON error shape for unexpected errors, with no internal detail.
 
-**Remaining limit.** If the process dies between the gateway charge and recording its outcome, the payment stays `pending`. That needs a reconciliation job against the gateway, which version 1 does not have.
+**Remaining limit.** If the process dies, or the database stays locked for about 30 seconds, between the gateway charge and recording its outcome, the payment stays `pending` and every retry with that key answers 409 `checkout_in_progress`, although the 500 told the fan to try again. That needs a reconciliation job against the gateway, which version 1 does not have.
 
 **Related decisions made while fixing.**
 
@@ -124,6 +128,8 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 
 **Fix.** The key is remembered together with the hold and the exact seats, reused only when both are unchanged, and cleared on sign-out.
 
+**Enforced on the server too** (after a later multi-agent review). The page fix relied on every client behaving. The server now refuses a stored key when the account's current open hold is a different hold from the one that key paid for: 409 `idempotency_key_reused`, no charge, the new hold untouched. Replaying the same hold, or a completed payment when no new hold is open, still returns the stored result exactly. Tests: `test_a_paid_key_cannot_be_reused_for_new_seats` and `test_a_declined_key_cannot_be_reused_after_choosing_seats_again` (both fail on the previous server, which replayed the old 200 or 402), and in the browser `test_a_kept_payment_key_is_not_reused_for_different_seats`, which fails when the page's basket check is removed.
+
 ## DEF-010: minor review observations, recorded
 
 | Observation | Assessment |
@@ -137,4 +143,29 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 
 **Found by** looking at the real screenshots taken for the documentation, not by a test: at 390 px wide the wordmark broke onto two lines, and the docked payment strip covered about 45 percent of the screen, hiding most of the seat map.
 
-**Fix.** On phones the "Signed in as" text and the timer note are hidden, the test-card help is smaller, and the timer sits beside the card field. The strip now covers about 29 percent of the screen. `test_phone_layout_docks_the_payment_strip` still checks that the strip is docked to the bottom edge and the Pay button is visible; a test cannot judge "crowded", which is why screenshots are reviewed by eye.
+**Fix.** On phones the "Signed in as" text and the timer note are hidden, the test-card help is smaller, and the timer sits beside the card field. The strip covered about 29 percent of the screen after this fix; the held-seat summary added later (DEF-013) makes it about 34 percent. `test_phone_layout_docks_the_payment_strip` still checks that the strip is docked to the bottom edge and the Pay button is visible; a test cannot judge "crowded", which is why screenshots are reviewed by eye.
+
+## DEF-012: the page dropped its payment key after a server error
+
+**Severity.** High, because it made DEF-007's fix unreachable for a real fan.
+
+**Scenario.** DEF-007's recovery works only if the client repeats the same idempotency key. After a 500 the page treated the answer as final and threw its key away, so the next click on Pay sent a new key. The first attempt had already been charged and its hold stayed `paying`, so the fan was charged, got no tickets, and every new attempt was refused with 409 `checkout_in_progress`.
+
+**Found by** the multi-agent review and reproduced by forcing a 500 on the first checkout in the browser.
+
+**Fix** (`app/static/app.js`, commit 6eb5db0). The page keeps its key after any 5xx other than the gateway's 504, as it already did when there was no answer at all. The kept key is still tied to the same hold and seats (DEF-009).
+
+**Test.** `test_retry_after_a_server_error_reuses_the_payment_key` answers the first checkout with a 500, clicks Pay again and expects the same `Idempotency-Key` and one ticket. It fails on the old page, which sent a different key.
+
+## DEF-013: smaller front-end faults from the same review
+
+All fixed in commit 6eb5db0. Each new browser test fails on the previous page.
+
+| Fault | Fix | Test |
+|---|---|---|
+| Enter after clicking a seat acted on the old tab stop, a different seat | The key handler uses the seat that has focus, and the tab stop follows clicks | `test_enter_after_a_click_acts_on_the_clicked_seat` |
+| Tabbing into the map showed no focus ring (see the DEF-005 correction) | The focus listener adds the ring; the ring is blue, so it differs from a held seat even with reduced motion | `test_tabbing_into_the_map_shows_a_focus_ring` |
+| A decline or expiry notice stayed on screen after the fan picked new seats | A successful seat change clears the notice | `test_a_new_seat_clears_an_old_payment_message` |
+| On a phone the held seats and total were hidden | The docked strip names the held seats and the total | `test_phone_layout_docks_the_payment_strip` (now asserts the text) |
+| Release seats stayed clickable while a payment was in flight | Hidden while paying, and ignored if clicked | None; checked by reading the code |
+| Some text, the tier-3 seats and the input border were below WCAG contrast | Darker text teal (#146B68, about 5.6:1), a darker tier-3 stroke, a darker input border | None; ratios computed by hand. Accessibility compliance is still not claimed |

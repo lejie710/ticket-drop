@@ -130,8 +130,12 @@ def test_crowd_on_a_few_hot_seats_never_double_sells(server):
     assert all(code < 500 for code in all_codes), all_codes
 
     sold = rows(server.db_path, "SELECT seat_id FROM tickets")
+    assert len(sold) >= 1, "nothing was sold, so the checks below would prove nothing"
     assert len(sold) == len({s for (s,) in sold}), "a seat was sold twice"
     assert len(sold) <= len(hot)
+    paid = sum(1 for result in outcomes if result[-1] == 200)
+    charged_payments = rows(server.db_path, "SELECT COUNT(DISTINCT payment_id) FROM charges")[0][0]
+    assert paid == charged_payments, "every successful checkout is one charged payment, and no other"
     per_user = rows(server.db_path, "SELECT user_id, COUNT(*) FROM tickets GROUP BY user_id")
     assert all(n <= 4 for _, n in per_user)
     charged = rows(server.db_path, "SELECT COALESCE(SUM(amount_cents), 0) FROM charges")[0][0]

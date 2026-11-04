@@ -27,19 +27,19 @@
     <aside class="stub" aria-label="Results">
       <h2>What the checks found</h2>
       <dl>
-        <dt>159</dt><dd>automated tests passing: API, security, races, browser</dd>
+        <dt>197</dt><dd>automated tests passing: API, security, races, browser</dd>
         <dt>1 of 50</dt><dd>parallel requests for one seat got it; 49 were refused</dd>
         <dt>0</dt><dd>seats sold twice in a 200-fan burst at the sale opening</dd>
         <dt>0</dt><dd>difference between money charged and tickets issued</dd>
         <dt><!-- FAULTS_CAUGHT -->8 of 10</dt><dd>planted bugs caught by the test suite</dd>
       </dl>
       <div class="tear" aria-hidden="true"></div>
-      <small>Measured on one laptop. Latency figures are observations, not a promise.</small>
+      <small>Measured on one laptop. Burst latency (median 2.9 s, p95 5.4 s) is an observation, not a promise.</small>
     </aside>
   </section>
 
   <figure class="shot">
-    <img src="assets/seat-map-hold.png" alt="The seat map with two seats in row C held, and a ticket stub on the right showing the seats, the total and a countdown of 4 minutes 50 seconds" width="1366" height="860">
+    <img src="assets/seat-map-hold.png" alt="The seat map signed in as Le Jie, with two seats in row C held, and a ticket stub on the right showing the seats, a total of RM 776 and a countdown at 5:00" width="1366" height="944">
     <figcaption>Two seats held. The timer counts down on the server's clock; grey seats are taken, about half of them by sample accounts.</figcaption>
   </figure>
 
@@ -58,7 +58,7 @@
 
   <section class="block pair">
     <figure>
-      <img src="assets/payment-declined.png" alt="The page after a declined card: a red message says the card was declined and the seats are still held" width="1366" height="860">
+      <img src="assets/payment-declined.png" alt="The page after a declined card: a red message says the card was declined and the seats are still held" width="1366" height="1024">
       <figcaption>A declined card charges nothing and keeps the seats until the hold ends.</figcaption>
     </figure>
     <figure class="phone">
@@ -87,20 +87,20 @@
 <tr><td>Releasing all seats closed the hold but never freed the seats</td><td class="yes">caught</td><td class="yes">1 of 3 runs</td><td class="no">0 of 3 runs</td></tr>
 </tbody>
 </table>
-<p>The two bugs the suite missed were then covered by one new test each; both are now caught.</p>
+<p>The two bugs the suite missed were then covered by one new test and one tightened assertion; both are now caught.</p>
 <!-- /FAULT_TABLE -->
     </div>
   </section>
 
   <section class="block" id="code">
     <h2>Read the code and the evidence</h2>
-    <p>The repository holds the application, every test, the saved results, a test plan, and a defect log that includes a first guess measurement proved wrong.</p>
+    <p>The repository holds the application, every test, the <a href="https://github.com/lejie710/ticket-drop/tree/main/evidence">saved results</a>, a <a href="https://github.com/lejie710/ticket-drop/blob/main/docs/TEST_PLAN.md">test plan</a>, and a <a href="https://github.com/lejie710/ticket-drop/blob/main/docs/DEFECTS.md">defect log</a> that includes a first guess measurement proved wrong.</p>
     <p><a href="https://github.com/lejie710/ticket-drop">github.com/lejie710/ticket-drop</a></p>
   </section>
 </main>
 
 <footer class="wrap">
-  Ticket Drop by Le Jie Tan. Developed with assistance from AI tools. Runs locally; this page shows saved results and screenshots of the real application.
+  Ticket Drop by Le Jie Tan. Runs locally; this page shows saved results and screenshots of the real application.
 </footer>
 
 </body>

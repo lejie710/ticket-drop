@@ -24,8 +24,8 @@ def server(start_server):
 
 @pytest.fixture
 def signed_in(page, server):
-    """A browser page signed in as Mei, on the seat map."""
-    def _signed_in(username="mei", srv=None):
+    """A browser page signed in as Le Jie, on the seat map."""
+    def _signed_in(username="lejie", srv=None):
         srv = srv or server
         page.goto(srv.url)
         page.get_by_label("Username").fill(username)

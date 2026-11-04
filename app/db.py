@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS tickets (
 ROWS = [chr(ord("A") + i) for i in range(20)]
 PRICES_CENTS = {1: 38800, 2: 26800, 3: 16800}
 DEMO_PASSWORD = "demo-pass"
-NAMED_USERS = [("mei", "Mei"), ("arjun", "Arjun"), ("siti", "Siti"), ("wei", "Wei")]
+NAMED_USERS = [("lejie", "Le Jie"), ("arjun", "Arjun"), ("siti", "Siti"), ("wei", "Wei")]
 LOAD_TEST_USERS = 500
 
 

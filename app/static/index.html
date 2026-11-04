@@ -23,7 +23,7 @@
   <!-- Sign in -->
   <section class="signin" id="signinView" hidden aria-labelledby="signinTitle">
     <h1 id="signinTitle">Sign in to buy tickets</h1>
-    <p class="muted">This is a demo. Use one of the demo accounts: mei, arjun, siti or wei. The password for all of them is demo-pass.</p>
+    <p class="muted">This is a demo. Use one of the demo accounts: lejie, arjun, siti or wei. The password for all of them is demo-pass.</p>
     <form id="signinForm" novalidate>
       <label for="username">Username</label>
       <input id="username" name="username" autocomplete="username" required>
@@ -68,10 +68,11 @@
         <div class="stub-top" id="stubTop">
           <h2>Held for you</h2>
           <ul class="seat-list" id="seatList"></ul>
-          <div class="total"><span>Total</span><span id="total">RM 0.00</span></div>
+          <div class="total"><span>Total</span><span id="total">RM 0</span></div>
         </div>
         <div class="stub-bottom">
           <p class="notice" id="notice" role="alert" hidden></p>
+          <p class="phone-held" id="phoneHeld" aria-live="polite" hidden></p>
           <p class="timer" id="timer">5:00</p>
           <p class="timer-note" id="timerNote"></p>
           <form id="payForm" hidden>

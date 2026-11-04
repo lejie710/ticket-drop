@@ -65,7 +65,8 @@ def main() -> int:
                     f"{cell(rnd)}{cell(llm)}</tr>")
     table = ("<table>\n<thead><tr><th>Planted bug</th><th>Test suite</th><th>Random explorer</th>"
              "<th>Local AI explorer (llama3.2)</th></tr></thead>\n<tbody>\n" + "\n".join(rows) + "\n</tbody>\n</table>\n"
-             "<p>The two bugs the suite missed were then covered by one new test each; both are now caught.</p>")
+             "<p>The two bugs the suite missed were then covered by one new test and one tightened assertion; "
+             "both are now caught.</p>")
 
     page = (SITE / "index.html").read_text(encoding="utf-8")
     page = re.sub(r"<!-- FAULT_TABLE -->.*?<!-- /FAULT_TABLE -->|<!-- FAULT_TABLE -->",

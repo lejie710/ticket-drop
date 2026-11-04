@@ -4,6 +4,8 @@ The charges table is the mock gateway's ledger. Checking it, not just the
 HTTP response, is how these tests know whether money actually moved.
 """
 
+import pytest
+
 from tests.conftest import DECLINE, SUCCESS, TIMEOUT
 
 
@@ -12,120 +14,161 @@ def charges(query):
 
 
 def test_successful_payment_issues_one_ticket_per_seat(sign_in, query):
-    mei = sign_in("mei")
-    mei.hold("C-09")
-    mei.hold("H-03")
-    response = mei.checkout(SUCCESS)
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    lejie.hold("H-03")
+    response = lejie.checkout(SUCCESS)
     assert response.status_code == 200
     body = response.json()
     assert sorted(t["seat_id"] for t in body["tickets"]) == ["C-09", "H-03"]
     assert body["payment"]["amount_cents"] == 38800 + 26800
     assert charges(query) == [{"payment_id": body["payment"]["id"], "amount_cents": 65600}]
-    assert mei.current_hold() is None
-    assert {s for s, state in mei.seat_states().items() if state == "mine"} == {"C-09", "H-03"}
+    assert lejie.current_hold() is None
+    assert {s for s, state in lejie.seat_states().items() if state == "mine"} == {"C-09", "H-03"}
     assert query("SELECT status FROM seats WHERE id IN ('C-09', 'H-03')") == [{"status": "sold"}] * 2
 
 
 def test_sold_seats_stay_taken_for_everyone_else(sign_in, clock):
-    mei, arjun = sign_in("mei"), sign_in("arjun")
-    mei.hold("C-09")
-    mei.checkout()
+    lejie, arjun = sign_in("lejie"), sign_in("arjun")
+    lejie.hold("C-09")
+    lejie.checkout()
     clock.advance(10 * 60_000)  # Long after the hold would have expired.
     assert arjun.seat_states()["C-09"] == "taken"
     assert arjun.hold("C-09").json()["error"]["code"] == "seat_taken"
 
 
 def test_declined_card_charges_nothing_and_keeps_the_seats(sign_in, query):
-    mei = sign_in("mei")
-    mei.hold("C-09")
-    response = mei.checkout(DECLINE)
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    response = lejie.checkout(DECLINE)
     assert response.status_code == 402
     assert response.json()["error"]["code"] == "payment_declined"
     assert charges(query) == []
-    assert mei.tickets() == []
-    assert [s["id"] for s in mei.current_hold()["seats"]] == ["C-09"]
+    assert lejie.tickets() == []
+    assert [s["id"] for s in lejie.current_hold()["seats"]] == ["C-09"]
 
 
 def test_retry_after_a_decline_succeeds(sign_in):
-    mei = sign_in("mei")
-    mei.hold("C-09")
-    assert mei.checkout(DECLINE).status_code == 402
-    assert mei.checkout(SUCCESS).status_code == 200
-    assert [t["seat_id"] for t in mei.tickets()] == ["C-09"]
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    assert lejie.checkout(DECLINE).status_code == 402
+    assert lejie.checkout(SUCCESS).status_code == 200
+    assert [t["seat_id"] for t in lejie.tickets()] == ["C-09"]
 
 
 def test_gateway_timeout_charges_nothing_and_keeps_the_seats(sign_in, query):
-    mei = sign_in("mei")
-    mei.hold("C-09")
-    response = mei.checkout(TIMEOUT)
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    response = lejie.checkout(TIMEOUT)
     assert response.status_code == 504
     assert response.json()["error"]["code"] == "payment_timeout"
     assert charges(query) == []
-    assert mei.current_hold()["status"] == "active"
+    assert lejie.current_hold()["status"] == "active"
 
 
 def test_a_declined_hold_still_expires_on_time(sign_in, clock):
-    mei, arjun = sign_in("mei"), sign_in("arjun")
-    mei.hold("C-09")
-    mei.checkout(DECLINE)
+    lejie, arjun = sign_in("lejie"), sign_in("arjun")
+    lejie.hold("C-09")
+    lejie.checkout(DECLINE)
     clock.advance(300_000)
     assert arjun.hold("C-09").status_code == 200
 
 
 def test_repeating_a_checkout_with_the_same_key_charges_once(sign_in, query):
-    mei = sign_in("mei")
-    mei.hold("C-09")
-    first = mei.checkout(SUCCESS, key="order-attempt-1")
-    second = mei.checkout(SUCCESS, key="order-attempt-1")
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    first = lejie.checkout(SUCCESS, key="order-attempt-1")
+    second = lejie.checkout(SUCCESS, key="order-attempt-1")
     assert first.status_code == second.status_code == 200
     assert first.json() == second.json()  # The stored result, not a new payment.
     assert len(charges(query)) == 1
-    assert len(mei.tickets()) == 1
+    assert len(lejie.tickets()) == 1
 
 
-def test_repeating_a_declined_checkout_returns_the_same_decline(sign_in, query):
-    mei = sign_in("mei")
-    mei.hold("C-09")
-    first = mei.checkout(DECLINE, key="order-attempt-2")
+@pytest.mark.parametrize("card,status", [(DECLINE, 402), (TIMEOUT, 504)], ids=["declined", "timed-out"])
+def test_repeating_a_failed_checkout_returns_the_same_failure(sign_in, query, card, status):
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    first = lejie.checkout(card, key="order-attempt-2")
     # Same key, different card: the key identifies the original attempt, so its result is returned.
-    second = mei.checkout(SUCCESS, key="order-attempt-2")
-    assert first.status_code == second.status_code == 402
+    second = lejie.checkout(SUCCESS, key="order-attempt-2")
+    assert first.status_code == second.status_code == status
+    assert first.json() == second.json()
     assert charges(query) == []
+    assert query("SELECT COUNT(*) AS n FROM payments") == [{"n": 1}]
+
+
+def test_a_paid_key_still_replays_after_the_hold_would_have_expired(sign_in, clock, query):
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    first = lejie.checkout(SUCCESS, key="order-attempt-3")
+    clock.advance(400_000)
+    again = lejie.checkout(SUCCESS, key="order-attempt-3")
+    assert again.status_code == 200
+    assert again.json() == first.json()
+    assert len(charges(query)) == 1
+
+
+def test_a_paid_key_cannot_be_reused_for_new_seats(sign_in, query):
+    """DEF-009 on the server: a key belongs to one basket, so it must not answer for another."""
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    assert lejie.checkout(SUCCESS, key="order-attempt-4").status_code == 200
+    lejie.hold("C-10")
+    reused = lejie.checkout(SUCCESS, key="order-attempt-4")
+    assert reused.status_code == 409
+    assert reused.json()["error"]["code"] == "idempotency_key_reused"
+    assert len(charges(query)) == 1
+    assert [s["id"] for s in lejie.current_hold()["seats"]] == ["C-10"]  # Still held, still unpaid.
+    assert lejie.checkout(SUCCESS).status_code == 200  # A new key pays for the new seats.
+
+
+def test_a_declined_key_cannot_be_reused_after_choosing_seats_again(sign_in, clock, query):
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    assert lejie.checkout(DECLINE, key="order-attempt-5").status_code == 402
+    clock.advance(300_000)  # The hold expires; the fan picks again.
+    lejie.hold("D-01")
+    reused = lejie.checkout(SUCCESS, key="order-attempt-5")
+    assert reused.status_code == 409
+    assert reused.json()["error"]["code"] == "idempotency_key_reused"
+    assert charges(query) == []
+    assert lejie.current_hold()["status"] == "active"
 
 
 def test_checkout_needs_an_idempotency_key(sign_in, client):
-    mei = sign_in("mei")
-    mei.hold("C-09")
-    response = client.post("/api/checkout", json={"card_number": SUCCESS}, headers=mei.headers)
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    response = client.post("/api/checkout", json={"card_number": SUCCESS}, headers=lejie.headers)
     assert response.status_code == 400
     assert response.json()["error"]["code"] == "invalid_idempotency_key"
 
 
 def test_checkout_without_a_hold(sign_in):
-    response = sign_in("mei").checkout()
+    response = sign_in("lejie").checkout()
     assert response.status_code == 409
     assert response.json()["error"]["code"] == "no_hold"
 
 
 def test_the_client_cannot_set_the_price(sign_in, client, query):
-    mei = sign_in("mei")
-    mei.hold("C-09")
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
     response = client.post("/api/checkout", json={"card_number": SUCCESS, "amount_cents": 1},
-                           headers={**mei.headers, "Idempotency-Key": "cheap-attempt"})
+                           headers={**lejie.headers, "Idempotency-Key": "cheap-attempt"})
     assert response.status_code == 422
     assert charges(query) == []
-    paid = mei.checkout(SUCCESS).json()
+    paid = lejie.checkout(SUCCESS).json()
     assert paid["payment"]["amount_cents"] == 38800
 
 
 def test_seats_cannot_change_while_a_payment_is_in_flight(sign_in, client, query):
     """A hold marked 'paying' refuses changes. Simulated by setting the status directly."""
-    mei = sign_in("mei")
-    mei.hold("C-09")
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
     import sqlite3
     conn = sqlite3.connect(client.app.state.settings.db_path)
     conn.execute("UPDATE holds SET status = 'paying'")
     conn.commit()
     conn.close()
-    assert mei.hold("C-10").json()["error"]["code"] == "checkout_in_progress"
-    assert mei.release_all().json()["error"]["code"] == "checkout_in_progress"
+    assert lejie.hold("C-10").json()["error"]["code"] == "checkout_in_progress"
+    assert lejie.release_all().json()["error"]["code"] == "checkout_in_progress"

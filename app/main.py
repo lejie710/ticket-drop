@@ -2,13 +2,19 @@
 
 import re
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, Header, Path as PathParam, Request
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
+from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.middleware.trustedhost import TrustedHostMiddleware
+from starlette.routing import Match
 
 from . import auth, db, faults, service
 from .clock import Clock
@@ -18,6 +24,9 @@ from .ratelimit import FailureWindow, TokenBucket
 SEAT_ID_PATTERN = r"^[A-T]-\d{2}$"
 IDEMPOTENCY_KEY = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 STATIC_DIR = Path(__file__).parent / "static"
+# Host names the server answers to. Any other Host header gets 400, which stops a
+# DNS-rebinding page from talking to the local server through a name it controls.
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver"]
 
 EVENT = {
     "artist": "Halcyon Static",
@@ -74,7 +83,9 @@ class ApiError(Exception):
         self.status, self.code, self.message, self.headers = status, code, message, headers
 
 
-def create_app(settings: Settings | None = None, clock: Clock | None = None) -> FastAPI:
+def create_app(settings: Settings | None = None, clock: Clock | None = None,
+               monotonic: Callable[[], float] = time.monotonic) -> FastAPI:
+    """monotonic: the time source for the rate limiters. Tests pass a controllable one."""
     settings = settings or Settings.from_env()
     clock = clock or Clock()
     db.initialise(settings.db_path)
@@ -84,6 +95,10 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     app.state.clock = clock
     hold_limiter = TokenBucket(settings.hold_rate_per_second, settings.hold_burst)
     login_failures = FailureWindow(settings.failed_logins_per_minute, 60)
+
+    # Added before the header middleware, so the header middleware wraps it and
+    # its 400 answers carry the security headers too.
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=ALLOWED_HOSTS)
 
     @app.middleware("http")
     async def security_headers(request: Request, call_next):
@@ -104,8 +119,30 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     @app.exception_handler(Exception)
     async def unexpected_error(request, exc: Exception):
         # Same error shape as every other answer, and no internals in the message.
+        # This answer is built outside the middleware stack, so it adds the headers itself.
         return error(500, "server_error", "Something went wrong on the server. Try again; "
-                                          "repeating a payment with the same attempt never charges twice.")
+                                          "repeating a payment with the same attempt never charges twice.",
+                     {**SECURITY_HEADERS, "Cache-Control": "no-store"})
+
+    def api_route_for_other_method(scope) -> list[str]:
+        """The methods an API route accepts at this path, or [] if no API route has this path."""
+        allowed = []
+        for route in app.router.routes:
+            if isinstance(route, APIRoute) and route.matches(scope)[0] == Match.PARTIAL:
+                allowed += sorted(route.methods)
+        return allowed
+
+    @app.exception_handler(StarletteHTTPException)
+    async def http_error(request: Request, exc: StarletteHTTPException):
+        # Unknown /api addresses fall through to the static files, which answer 404 or 405
+        # in FastAPI's own shape. Under /api, answer in the single error shape instead.
+        if not request.url.path.startswith("/api/") or exc.status_code not in (404, 405):
+            return await http_exception_handler(request, exc)
+        allowed = api_route_for_other_method(request.scope)
+        if allowed:
+            return error(405, "method_not_allowed", "This address does not accept that method.",
+                         {"Allow": ", ".join(allowed)})
+        return error(404, "not_found", "There is nothing at this address.")
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request, exc: RequestValidationError):
@@ -131,7 +168,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         key = str(user["id"])
         if faults.on(settings, "seat_rate_limit_per_session"):
             key = request.headers.get("authorization", "")
-        wait = hold_limiter.take(key, time.monotonic())
+        wait = hold_limiter.take(key, monotonic())
         if wait:
             raise ApiError(429, "too_many_requests", "Too many seat changes. Wait a moment and try again.",
                            {"Retry-After": str(max(1, round(wait + 0.5)))})
@@ -157,13 +194,13 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     @app.post("/api/login")
     def login(body: LoginIn, request: Request, conn=Depends(connection)):
         address = request.client.host if request.client else "unknown"
-        wait = login_failures.retry_after(address, time.monotonic())
+        wait = login_failures.retry_after(address, monotonic())
         if wait:
             raise ApiError(429, "too_many_attempts", "Too many failed sign-in attempts. Try again later.",
                            {"Retry-After": str(wait)})
         result = auth.login(conn, body.username, body.password, clock.now_ms())
         if result is None:
-            login_failures.record(address, time.monotonic())
+            login_failures.record(address, monotonic())
             raise ApiError(401, "wrong_credentials", "The username or password is wrong.")
         return result
 

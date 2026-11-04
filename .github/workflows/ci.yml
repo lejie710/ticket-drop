@@ -1,9 +1,16 @@
-# Prepared for GitHub Actions. Not yet run on GitHub: the repository has not been published.
+# Runs the full test suite and the static security scan on GitHub Actions.
+# Results of hosted runs are not recorded in this repository.
 name: tests
 
 on:
   push:
+    branches: [main]
   pull_request:
+
+# A newer push to the same branch or pull request cancels the run it supersedes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   test:

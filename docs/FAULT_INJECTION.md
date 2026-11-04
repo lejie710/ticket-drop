@@ -23,11 +23,11 @@ The table and per-fault details are generated from the saved runs into [evidence
 | Approach | Faults caught (at least once) | False alarms on the clean app |
 |---|---|---|
 | Scripted suite (158 tests at the time) | 8 of 10 | 0 |
-| Scripted suite after two gap-closing tests (159) | 10 of 10 | 0 |
+| Scripted suite after closing the two gaps (159 tests at the time) | 10 of 10 | 0 |
 | Random explorer, 3 seeds | 2 of 10 | 0 |
 | Local model explorer (llama3.2), 3 seeds | 1 of 10 | 0 |
 
-The per-fault table is in [evidence/faults/REPORT.md](../evidence/faults/REPORT.md); the follow-up for the two gap-closing tests is in [scripted-after-gap-tests.json](../evidence/faults/scripted-after-gap-tests.json).
+The per-fault table is in [evidence/faults/REPORT.md](../evidence/faults/REPORT.md); the follow-up for the two gap-closing changes is in [scripted-after-gap-tests.json](../evidence/faults/scripted-after-gap-tests.json).
 
 ### What the results mean
 
@@ -36,7 +36,7 @@ The per-fault table is in [evidence/faults/REPORT.md](../evidence/faults/REPORT.
 - `seat_rate_limit_per_session` keyed the rate limit on the session instead of the account. The rate-limit test used one session, so a fan who signs in twice was never tried.
 - `map_stale_after_failed_seat_change` stopped the map refreshing after a failed click. The browser test did check the map, but it waited up to five seconds, longer than the page's own four-second refresh, so the refresh quietly repaired the bug before the check gave up.
 
-Both gaps were closed after the experiment, with one test each: a fan signed in twice must still hit the limit, and the map must correct itself within 1.5 seconds. Each new test fails with its fault switched on and passes without it. The experiment's result stays 8 of 10; the follow-up is recorded separately.
+Both gaps were closed after the experiment with one new test and one tightened assertion: a new test checks that a fan signed in twice still hits the limit (158 to 159 tests), and the existing browser test now requires the page to re-read the map within 1.5 seconds of the refusal instead of waiting up to the default 5 seconds. Each changed test fails with its fault switched on and passes without it. The experiment's result stays 8 of 10; the follow-up is recorded separately.
 
 **One fault was caught for an unexpected reason.** `seat_checked_before_lock` was meant to be a race: it reads the seat outside the lock and adds a 50 ms pause. The concurrency tests caught it as intended, but so did an ordinary one-at-a-time test about expiry, because the early read happens before overdue holds are released, so a seat whose hold had just expired still looked taken. Real bugs often break more than their author intended.
 
@@ -55,4 +55,4 @@ Both gaps were closed after the experiment, with one test each: a fan signed in 
 - The race fault includes a 50 ms sleep in its faulty branch to make the race window reliably reachable. Without it, the bug is real but would be caught less often.
 - Each explorer had three seeds per fault. With a fixed seed the model repeats itself whenever the application answers the same way, so three seeds gave about five distinct paths, not 33.
 - The explorers act only through the API. A fault that exists only in the browser cannot be found by them.
-- The scripted suite was written before the faults existed, by an author who had not seen them, and was not changed during the experiment. The two gap-closing tests were added afterwards and are reported separately.
+- The scripted suite was written before the faults existed, by an author who had not seen them, and was not changed during the experiment. The gap-closing test and assertion were added afterwards and are reported separately.
