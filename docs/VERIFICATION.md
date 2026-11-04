@@ -11,21 +11,21 @@ What was actually run, what it showed, and what it does not show. Every figure h
 | Browser | Installed Google Chrome, driven headless by Playwright 1.64.1 |
 | Server | One uvicorn process on 127.0.0.1, one SQLite file in WAL mode |
 | Language model (AI tools only) | Ollama with `llama3.2` (3B), local CPU |
-| Not exercised | Other browsers, other operating systems, hosted CI, any deployment |
+| Not exercised | Other browsers, other operating systems, any deployment. Hosted CI results are not recorded here |
 
 ## 2. Automated tests
 
-Final full run on the final code: `.venv\Scripts\python.exe -m pytest`, 4 November 2026 02:37 to 02:39 (+08:00), **159 passed in 131 s**.
+Final full run on the final code, in a fresh virtual environment built in `%TEMP%` from `requirements.txt` alone, which is what `requirements-lock.txt` was frozen from (Python 3.12.10, Playwright 1.64.1): `python -m pytest`, 4 November 2026 11:20 to 11:24 (+08:00), **197 passed in 185 s**. An earlier run in the same environment, before the documentation changes, also passed 197 in 180 s.
 
 | Suite | Tests | What it checks |
 |---|---|---|
-| `tests/api` | 124 | Rules, boundaries, payment recovery, 52 generated inputs |
-| `tests/security` | 20 | Cross-account access, abuse limits, headers, hardening of the real server |
+| `tests/api` | 155 | Rules, boundaries, payment recovery, every account route without a valid token, error shapes, 52 generated inputs |
+| `tests/security` | 22 | Cross-account access, abuse limits, headers (also on a 500), hardening of the real server with test hooks off |
 | `tests/concurrency` | 5 | Parallel requests against a live server, checked in the database |
-| `tests/e2e` | 10 | Browser journeys in headless Chrome |
-| **Total** | **159** | |
+| `tests/e2e` | 15 | Browser journeys in headless Chrome |
+| **Total** | **197** | |
 
-Every new regression test was also run against the code before its fix, to confirm it can fail: the settle-recovery test failed on the old checkout (first a plain-text 500, then a 409 where 200 was expected), and the double-submit browser test counted 2 payment requests on the old page and 1 on the fixed one. See [DEFECTS.md](DEFECTS.md) DEF-007 and DEF-008.
+Every new regression test was also run against the code before its fix, to confirm it can fail: the settle-recovery test failed on the old checkout (first a plain-text 500, then a 409 where 200 was expected), and the double-submit browser test counted 2 payment requests on the old page and 1 on the fixed one. See [DEFECTS.md](DEFECTS.md) DEF-007 and DEF-008. The same was done for the fixes from the multi-agent review (DEF-012, DEF-013, and the server changes for headers on a 500, the `/api` error shape, foreign host names, the rate-limit clock, late decline messages, a reused payment key and the limit message); each commit body records its before and after result.
 
 ## 3. Load
 
@@ -45,12 +45,12 @@ The first and last runs are saved under [evidence/load/before-read-path-fix](../
 
 ## 4. Static security scans
 
-From `tools/security_scan.py`, saved in [evidence/security/SUMMARY.md](../evidence/security/SUMMARY.md).
+From `tools/security_scan.py`, saved in [evidence/security/SUMMARY.md](../evidence/security/SUMMARY.md). Last run 4 November 2026 with a fresh virtual environment built from `requirements-lock.txt`; the script exits non-zero if a scan does not run, a dependency is vulnerable, or bandit reports anything beyond the two triaged findings.
 
 | Scan | Result | Triage |
 |---|---|---|
 | bandit on `app/` | 2 findings, both low severity | B105 `demo-pass`: the documented demo password, accepted for demo accounts only. B311 `random`: used only to choose sample sales, not for anything secret. Tokens and salts use `secrets` and `os.urandom` |
-| pip-audit on `requirements-lock.txt` | 95 packages, 0 known vulnerabilities | Result is for the day of the run; the database of known vulnerabilities changes |
+| pip-audit on `requirements-lock.txt` | 84 packages, 0 known vulnerabilities | Result is for the day of the run; the database of known vulnerabilities changes |
 
 ## 5. Generated test data
 
@@ -62,12 +62,12 @@ Full method and per-fault details: [FAULT_INJECTION.md](FAULT_INJECTION.md) and 
 
 - Ten faults, planted by a separate agent that never read the tests.
 - Scripted suite on the final code: caught **8 of 10**, with 0 failures on the clean application (158 tests at the time).
-- The two escaped faults were then closed with one new test each; a follow-up run shows both caught and the clean suite at 159 passing ([scripted-after-gap-tests.json](../evidence/faults/scripted-after-gap-tests.json)).
+- The two escaped faults were then closed with one new test (a fan signed in twice is still rate limited) and one tightened assertion (the page re-reads the map within 1.5 s of a refusal); a follow-up run shows both caught and the clean suite at 159 passing ([scripted-after-gap-tests.json](../evidence/faults/scripted-after-gap-tests.json)).
 - Exploratory testing, 30 actions per run, the same rule checks for both explorers, 0 false alarms on the clean application: the random explorer caught 2 of 10 and the local model explorer 1 of 10, each with three seeds per fault. The model's transcript shows why: it repeated actions on a seat it had already bought and did not use the refusals it received. See [FAULT_INJECTION.md](FAULT_INJECTION.md).
 
 ## 7. Defects
 
-Real defects and investigations are in [DEFECTS.md](DEFECTS.md): eleven entries. Nine are fixed or worked around, one (throughput, DEF-002) is partly improved with its limit recorded, and one (DEF-010) records four minor review observations that were accepted. DEF-007, the only high-severity defect, was found by independent review and is fixed. None remains open against R2 or R5 to R9.
+Real defects and investigations are in [DEFECTS.md](DEFECTS.md): thirteen entries. Eleven are fixed or worked around, one (throughput, DEF-002) is partly improved with its limit recorded, and one (DEF-010) records four minor review observations that were accepted. The two high-severity defects are fixed: DEF-007 was found by a separate review agent, and DEF-012, which made DEF-007's recovery unreachable from the page, by a later multi-agent review. None remains open against R2 or R5 to R9.
 
 ## 8. Status of each kind of claim
 
@@ -79,25 +79,25 @@ Real defects and investigations are in [DEFECTS.md](DEFECTS.md): eleven entries.
 | Keyboard operation of the seat map | Tested for one path; no screen-reader testing |
 | Payment | Simulated by a mock gateway; no real provider was integrated |
 | AI-generated data and exploration | Measured on one small local model: one seed for data generation, three seeds per fault for exploration; not a general claim about language models |
-| Hosted CI (`.github/workflows/ci.yml`) | Prepared, not run |
-| Showcase page on GitHub Pages | Prepared, not published |
+| Hosted CI (`.github/workflows/ci.yml`) | Published as a private repository; hosted CI results are not recorded here |
+| Showcase page on GitHub Pages | Prepared; whether it has been published is not recorded here |
 | Production readiness, capacity, accessibility compliance | Not claimed |
 
 ## 9. Release assessment
 
-**Recommendation: ready for review and for publication as a private repository. Making it public is the owner's decision. Not production software.**
+**Recommendation: ready for review. Published as a private repository; making it public is the owner's decision. Not production software.**
 
 Basis:
 
-- All 159 automated tests pass on the final code (run recorded in section 2).
+- All 197 automated tests pass on the final code (run recorded in section 2).
 - Every requirement R1 to R14 has automated checks; the riskiest ones (R2, R5 to R9, R14) have several kinds.
 - The load runs show no server errors and no data damage under a 200-fan burst.
-- The one high-severity defect found (DEF-007) is fixed, with a regression test proven to fail on the old code.
+- Both high-severity defects found (DEF-007, DEF-012) are fixed, each with a regression test proven to fail on the old code.
 - Static scans are triaged; no known vulnerable dependency on the day of the scan.
 
 Open items, none blocking a private release:
 
 - Throughput is limited to roughly 20 to 26 requests per second on the laptop (DEF-002).
-- No reconciliation for a process crash between the gateway charge and recording its outcome (DEF-007, remaining limit).
-- Hosted CI and the showcase page are prepared but not run or published.
+- No reconciliation for a process crash, or a database locked for about 30 s, between the gateway charge and recording its outcome (DEF-007, remaining limit).
+- Hosted CI results and the showcase page's publication are not recorded here; the owner confirms them.
 - Only Chrome on Windows was exercised.

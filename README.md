@@ -6,7 +6,7 @@ A concert ticket sale app built to be tested: seat holds, payment failure, concu
 
 ## The question
 
-When thousands of fans press Buy in the same second, can anyone be sold the same seat twice, lose the seats they were holding, or pay without getting tickets?
+When hundreds of fans press Buy in the same second, can anyone be sold the same seat twice, lose the seats they were holding, or pay without getting tickets?
 
 Ticket Drop is small on purpose: one concert, 510 seats, four tickets per account, a five-minute hold and a mock payment gateway. The work is in specifying that behaviour precisely and proving it, under normal use, at exact time boundaries, under parallel requests, under a burst of 200 fans, and against an attacker with an account of their own.
 
@@ -15,13 +15,13 @@ Ticket Drop is small on purpose: one concert, 510 seats, four tickets per accoun
 <!-- RESULTS:START -->
 | Check | Result |
 |---|---|
-| Automated tests (API, security, concurrency, browser) | 159 passed |
+| Automated tests (API, security, concurrency, browser) | 197 passed |
 | 50 fans requesting one seat at the same instant | exactly 1 hold, 49 refused |
-| 200-fan burst at the sale opening, 60 s | 0 server errors, 0 seats sold twice, money charged = ticket value |
-| Static scans | bandit: 2 low findings, triaged; pip-audit: 0 known vulnerabilities in 95 packages |
-| Ten planted bugs, scripted suite | 8 caught; the 2 gaps were then closed with one test each ([fault report](evidence/faults/REPORT.md)) |
+| 200-fan burst at the sale opening, 60 s | 0 server errors, 0 seats sold twice, money charged = ticket value; median 2.9 s, p95 5.4 s on one laptop ([DEF-002](docs/DEFECTS.md)) |
+| Static scans | bandit: 2 low findings, triaged; pip-audit: 0 known vulnerabilities in 84 packages |
+| Ten planted bugs, scripted suite | 8 caught; the 2 gaps were then closed with one new test and one tightened assertion ([fault report](evidence/faults/REPORT.md)) |
 | Same bugs, random explorer and local AI explorer (3 runs each) | random 2 of 10, local llama3.2 1 of 10; 0 false alarms |
-| Highest-severity real defect | charged but no tickets after a failed settle step; found by independent review, fixed, regression test proven to fail on the old code |
+| Highest-severity real defect | charged but no tickets after a failed settle step; found by a separate review agent that never saw the author's reasoning, fixed, regression test proven to fail on the old code |
 <!-- RESULTS:END -->
 
 Latency figures are from one laptop running both the server and the load generator. They are observations, not a service level. See [the verification record](docs/VERIFICATION.md) for what each result does and does not show.
