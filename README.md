@@ -2,13 +2,21 @@
 
 A concert ticket sale app built to be tested: seat holds, payment failure, concurrency, load and security.
 
-![Seat map with two seats held](docs/screenshots/seat-map-hold.png)
+![Seat map with two seats held after a declined card: the seats stay held and the five-minute timer keeps running](docs/screenshots/payment-declined.png)
 
 ## The question
 
 When hundreds of fans press Buy in the same second, can anyone be sold the same seat twice, lose the seats they were holding, or pay without getting tickets?
 
 Ticket Drop is small on purpose: one concert, 510 seats, four tickets per account, a five-minute hold and a mock payment gateway. The work is in specifying that behaviour precisely and proving it, under normal use, at exact time boundaries, under parallel requests, under a burst of 200 fans, and against an attacker with an account of their own.
+
+## How it works
+
+![Runtime architecture: browser, one server process, SQLite](docs/diagrams/ticket-drop-architecture.png)
+
+One server process owns one SQLite file. Every change to seats, holds and payments runs inside `BEGIN IMMEDIATE`, so only one writer acts at a time, and a seat is claimed with `UPDATE ... WHERE status = 'available'`, so a seat someone else already took is refused rather than overwritten. A `UNIQUE` constraint on each ticket's seat is the last line of defence against selling a seat twice.
+
+Checkout calls the slow payment gateway with no database lock held, and a repeated request with the same idempotency key returns the first answer instead of charging again. The [checkout sequence](docs/DESIGN.md#3-checkout) walks through it step by step.
 
 ## What the evidence shows
 
@@ -53,6 +61,15 @@ py -3.12 -m venv .venv
 ```
 
 Open http://127.0.0.1:8000 and sign in as `lejie`, `arjun`, `siti` or `wei`, password `demo-pass`. Test cards: `4242 4242 4242 4242` pays, `4000 0000 0000 0002` is declined, `4000 0000 0000 0408` times out. `--sample-sales` marks about half the seats as sold to sample accounts so the map looks like a sale in progress.
+
+## What it looks like
+
+<p>
+  <img src="docs/screenshots/my-tickets.png" width="70%" alt="My tickets after a successful payment: one ticket per seat with row, seat, category and price">
+  <img src="docs/screenshots/phone.png" width="20.5%" alt="Phone layout: the seat map scrolls sideways and the hold and payment panel docks at the bottom">
+</p>
+
+The image at the top shows a declined card: the seats stay held for the rest of the five minutes. After a successful payment, each seat becomes a ticket under My tickets. On a phone, the map scrolls sideways and the payment panel docks at the bottom of the screen.
 
 ## Test it
 
