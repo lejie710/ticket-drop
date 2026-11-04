@@ -22,14 +22,22 @@ class LiveServer:
     url: str
     db_path: str
     process: subprocess.Popen
+    # One shared, thread-safe client. A bare httpx.post() builds a new client per
+    # call, which measured about 0.37 s each on the development laptop and made
+    # the race tests slow (DEF-001 in docs/DEFECTS.md).
+    http: httpx.Client = None
+
+    def __post_init__(self):
+        limits = httpx.Limits(max_connections=200, max_keepalive_connections=200)
+        self.http = httpx.Client(base_url=self.url, timeout=30, limits=limits)
 
     def login(self, username: str) -> dict:
-        r = httpx.post(f"{self.url}/api/login", json={"username": username, "password": "demo-pass"}, timeout=10)
+        r = self.http.post("/api/login", json={"username": username, "password": "demo-pass"})
         r.raise_for_status()
         return {"Authorization": f"Bearer {r.json()['token']}"}
 
     def advance_clock(self, ms: int) -> None:
-        httpx.post(f"{self.url}/api/_test/clock", json={"advance_ms": ms}, timeout=10).raise_for_status()
+        self.http.post("/api/_test/clock", json={"advance_ms": ms}).raise_for_status()
 
 
 def free_port() -> int:
@@ -70,6 +78,7 @@ def start(db_path: str, faults: str = "", sale_opens_in: float | None = None, sa
 
 
 def stop(server: LiveServer) -> None:
+    server.http.close()
     server.process.terminate()
     try:
         server.process.wait(timeout=10)

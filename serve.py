@@ -35,7 +35,8 @@ def main() -> None:
         if sold:
             print(f"Sample data: marked {sold} seats as sold to sample accounts.")
     print(f"Ticket Drop is running at http://127.0.0.1:{args.port} (press Ctrl+C to stop)")
-    uvicorn.run(app, host="127.0.0.1", port=args.port, log_level="warning")
+    # server_header=False: do not advertise the server software and version.
+    uvicorn.run(app, host="127.0.0.1", port=args.port, log_level="warning", server_header=False)
 
 
 if __name__ == "__main__":

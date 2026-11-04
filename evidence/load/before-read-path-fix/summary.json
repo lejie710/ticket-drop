@@ -1,0 +1,72 @@
+{
+  "run_at": "2026-11-03 15:08 UTC",
+  "users": 200,
+  "spawn_rate_per_second": 200,
+  "duration_seconds": 60,
+  "wall_seconds": 63.3,
+  "locust_exit_code": 0,
+  "endpoints": [
+    {
+      "name": "GET /api/seats",
+      "requests": 524,
+      "failures": 0,
+      "median_ms": 890.0,
+      "p95_ms": 3300.0,
+      "p99_ms": 6100.0,
+      "max_ms": 9412.421099999847,
+      "rps": 39.3
+    },
+    {
+      "name": "POST /api/checkout",
+      "requests": 66,
+      "failures": 0,
+      "median_ms": 740.0,
+      "p95_ms": 1100.0,
+      "p99_ms": 2000.0,
+      "max_ms": 1976.696699999593,
+      "rps": 4.9
+    },
+    {
+      "name": "POST /api/hold/seats",
+      "requests": 456,
+      "failures": 0,
+      "median_ms": 1000.0,
+      "p95_ms": 2200.0,
+      "p99_ms": 5400.0,
+      "max_ms": 8481.131300000925,
+      "rps": 34.2
+    },
+    {
+      "name": "login",
+      "requests": 199,
+      "failures": 0,
+      "median_ms": 1500.0,
+      "p95_ms": 4200.0,
+      "p99_ms": 6400.0,
+      "max_ms": 7660.318700000062,
+      "rps": 14.9
+    },
+    {
+      "name": "Aggregated",
+      "requests": 1245,
+      "failures": 0,
+      "median_ms": 970.0,
+      "p95_ms": 3000.0,
+      "p99_ms": 6100.0,
+      "max_ms": 9412.421099999847,
+      "rps": 93.3
+    }
+  ],
+  "integrity": {
+    "tickets_issued": 92,
+    "seats_sold_twice": 0,
+    "sold_seats_without_ticket": 0,
+    "tickets_on_unsold_seats": 0,
+    "accounts_over_limit": 0,
+    "charged_cents": 2719600,
+    "ticket_value_cents": 2719600,
+    "payments_left_pending": 0,
+    "money_matches_tickets": true,
+    "passed": true
+  }
+}
