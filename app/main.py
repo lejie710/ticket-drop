@@ -101,6 +101,12 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     async def api_error(request, exc: ApiError):
         return error(exc.status, exc.code, exc.message, exc.headers)
 
+    @app.exception_handler(Exception)
+    async def unexpected_error(request, exc: Exception):
+        # Same error shape as every other answer, and no internals in the message.
+        return error(500, "server_error", "Something went wrong on the server. Try again; "
+                                          "repeating a payment with the same attempt never charges twice.")
+
     @app.exception_handler(RequestValidationError)
     async def validation_error(request, exc: RequestValidationError):
         fields = [".".join(str(p) for p in e["loc"]) for e in exc.errors()]

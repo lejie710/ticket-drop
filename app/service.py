@@ -8,6 +8,7 @@ the first one's result. The seat update itself is also conditional
 """
 
 import json
+import sqlite3
 import time
 import uuid
 from contextlib import contextmanager
@@ -175,7 +176,9 @@ def remove_seat(conn, settings, clock, user_id: int, seat_id: str) -> dict | Non
     with write_transaction(conn):
         expire_due_holds(conn, clock.now_ms(), settings)
         hold = _open_hold(conn, user_id)
-        if hold is None or hold["status"] != "active":
+        if hold is not None and hold["status"] == "paying":
+            raise BookingError("checkout_in_progress", "A payment for your seats is in progress.")
+        if hold is None:
             raise BookingError("seat_not_held", f"Seat {seat_id} is not in your hold.", 404)
         if faults.on(settings, "remove_seat_from_any_hold"):
             freed = conn.execute(
@@ -237,9 +240,11 @@ def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_num
 
     Three steps, so the slow gateway call never holds the database lock:
     1. Record a pending payment and mark the hold 'paying' (expiry skips it).
-    2. Call the gateway outside any transaction.
+    2. Call the gateway outside any transaction, then record its outcome at once.
     3. Settle: issue tickets on success, or put the hold back to 'active'.
     A repeated request with the same idempotency key returns the stored result.
+    If step 3 failed earlier, the repeated request finishes it instead of
+    charging again (DEF-007 in docs/DEFECTS.md).
     """
     with write_transaction(conn):
         now = clock.now_ms()
@@ -254,36 +259,78 @@ def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_num
         if previous is not None:
             if previous["outcome"] == "pending":
                 raise BookingError("checkout_in_progress", "This payment is still being processed.")
-            return previous["response_status"], json.loads(previous["response_body"])
+            if previous["response_status"] is not None:
+                return previous["response_status"], json.loads(previous["response_body"])
+            payment_id = previous["id"]  # The gateway answered but settling failed: finish it below.
+        else:
+            expire_due_holds(conn, now, settings)
+            hold = _open_hold(conn, user_id)
+            if hold is None:
+                raise BookingError("no_hold", "You have no seats on hold. Your hold may have expired.")
+            if hold["status"] == "paying":
+                raise BookingError("checkout_in_progress", "A payment for your seats is in progress.")
+            amount = conn.execute(
+                "SELECT COALESCE(SUM(price_cents), 0) FROM seats WHERE hold_id = ?", (hold["id"],)
+            ).fetchone()[0]
+            if client_amount_cents is not None and faults.on(settings, "client_sets_amount"):
+                amount = client_amount_cents
+            payment_id = uuid.uuid4().hex
+            conn.execute(
+                "INSERT INTO payments (id, user_id, hold_id, idempotency_key, amount_cents, outcome, created_ms)"
+                " VALUES (?, ?, ?, ?, ?, 'pending', ?)",
+                (payment_id, user_id, hold["id"], idempotency_key, amount, now),
+            )
+            conn.execute("UPDATE holds SET status = 'paying' WHERE id = ?", (hold["id"],))
 
-        expire_due_holds(conn, now, settings)
-        hold = _open_hold(conn, user_id)
-        if hold is None:
-            raise BookingError("no_hold", "You have no seats on hold. Your hold may have expired.")
-        if hold["status"] == "paying":
-            raise BookingError("checkout_in_progress", "A payment for your seats is in progress.")
-        amount = conn.execute(
-            "SELECT COALESCE(SUM(price_cents), 0) FROM seats WHERE hold_id = ?", (hold["id"],)
-        ).fetchone()[0]
-        if client_amount_cents is not None and faults.on(settings, "client_sets_amount"):
-            amount = client_amount_cents
-        payment_id = uuid.uuid4().hex
-        conn.execute(
-            "INSERT INTO payments (id, user_id, hold_id, idempotency_key, amount_cents, outcome, created_ms)"
-            " VALUES (?, ?, ?, ?, ?, 'pending', ?)",
-            (payment_id, user_id, hold["id"], idempotency_key, amount, now),
-        )
-        conn.execute("UPDATE holds SET status = 'paying' WHERE id = ?", (hold["id"],))
+    if previous is None:
+        try:
+            outcome = payments.charge(conn, payment_id, card_number, amount, clock.now_ms(),
+                                      settings.payment_timeout_seconds)
+        except Exception:
+            outcome = "timeout"
+        # Record what the gateway said before anything else can fail, so a retry
+        # with the same key can finish the job instead of paying again.
+        for attempt in range(1, SETTLE_ATTEMPTS + 1):
+            try:
+                conn.execute("UPDATE payments SET outcome = ? WHERE id = ?", (outcome, payment_id))
+                break
+            except sqlite3.OperationalError:
+                if attempt == SETTLE_ATTEMPTS:
+                    raise
+                time.sleep(0.05 * attempt)
 
-    try:
-        outcome = payments.charge(conn, payment_id, card_number, amount, clock.now_ms(), settings.payment_timeout_seconds)
-    except Exception:
-        outcome = "timeout"
+    return settle_payment(conn, settings, clock, payment_id)
 
+
+SETTLE_ATTEMPTS = 3
+
+
+def settle_payment(conn, settings, clock, payment_id: str) -> tuple[int, dict]:
+    """Step 3 of checkout: act on the gateway's recorded outcome. Safe to run again.
+
+    Retried a few times if the database is busy. If it still fails, the
+    payment keeps its outcome with no stored response, and the next request
+    with the same idempotency key calls this again.
+    """
+    for attempt in range(1, SETTLE_ATTEMPTS + 1):
+        try:
+            return _settle_once(conn, settings, clock, payment_id)
+        except sqlite3.OperationalError:
+            if attempt == SETTLE_ATTEMPTS:
+                raise
+            time.sleep(0.05 * attempt)
+    raise AssertionError("unreachable")
+
+
+def _settle_once(conn, settings, clock, payment_id: str) -> tuple[int, dict]:
     with write_transaction(conn):
+        payment = conn.execute("SELECT * FROM payments WHERE id = ?", (payment_id,)).fetchone()
+        if payment["response_status"] is not None:  # Another request settled it first.
+            return payment["response_status"], json.loads(payment["response_body"])
         now = clock.now_ms()
+        outcome, hold_id, user_id = payment["outcome"], payment["hold_id"], payment["user_id"]
         if outcome == "succeeded":
-            seats = [r["id"] for r in conn.execute("SELECT id FROM seats WHERE hold_id = ?", (hold["id"],))]
+            seats = [r["id"] for r in conn.execute("SELECT id FROM seats WHERE hold_id = ?", (hold_id,))]
             tickets = []
             for seat_id in seats:
                 ticket_id = uuid.uuid4().hex
@@ -292,10 +339,10 @@ def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_num
                     (ticket_id, user_id, seat_id, payment_id, now),
                 )
                 tickets.append(ticket_id)
-            conn.execute("UPDATE seats SET status = 'sold', hold_id = NULL WHERE hold_id = ?", (hold["id"],))
-            conn.execute("UPDATE holds SET status = 'paid' WHERE id = ?", (hold["id"],))
+            conn.execute("UPDATE seats SET status = 'sold', hold_id = NULL WHERE hold_id = ?", (hold_id,))
+            conn.execute("UPDATE holds SET status = 'paid' WHERE id = ?", (hold_id,))
             status, body = 200, {
-                "payment": {"id": payment_id, "outcome": outcome, "amount_cents": amount},
+                "payment": {"id": payment_id, "outcome": outcome, "amount_cents": payment["amount_cents"]},
                 "tickets": [ticket_view(conn, t) for t in tickets],
             }
         else:
@@ -303,15 +350,15 @@ def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_num
             if outcome == "timeout" and faults.on(settings, "timeout_leaves_hold_paying"):
                 pass  # The hold is never put back to 'active' after a timeout.
             else:
-                conn.execute("UPDATE holds SET status = 'active' WHERE id = ?", (hold["id"],))
+                conn.execute("UPDATE holds SET status = 'active' WHERE id = ? AND status = 'paying'", (hold_id,))
             expire_due_holds(conn, now, settings)
             if outcome == "declined":
                 status, body = 402, {"error": {"code": "payment_declined", "message": "The card was declined. Your seats are still held."}}
             else:
                 status, body = 504, {"error": {"code": "payment_timeout", "message": "The payment service did not answer. You were not charged."}}
         conn.execute(
-            "UPDATE payments SET outcome = ?, response_status = ?, response_body = ? WHERE id = ?",
-            (outcome, status, json.dumps(body), payment_id),
+            "UPDATE payments SET response_status = ?, response_body = ? WHERE id = ?",
+            (status, json.dumps(body), payment_id),
         )
     return status, body
 

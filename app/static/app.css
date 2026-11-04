@@ -267,10 +267,18 @@ svg.map:focus { outline: none; }
     overflow-y: auto;
   }
   .stub-top { display: none; }
+  .wordmark { white-space: nowrap; }
+  #whoami { display: none; }
+  .bar { padding-top: 0.8rem; padding-bottom: 0.8rem; }
+  .timer-note { display: none; }
+  .card-help { font-size: 0.75rem; margin: 0.25rem 0 0.5rem; }
+  #payForm label { margin-top: 0.4rem; }
+  .release { padding: 0.25rem; margin-top: 0.3rem; }
   .stub-bottom { border-top: 0; padding: 0.8rem 1rem 1rem; display: grid; grid-template-columns: auto 1fr; gap: 0 1rem; align-items: center; }
   .timer { font-size: 2.6rem; grid-row: span 1; }
   .timer-note { margin: 0; }
-  .notice, #payForm, .pay, .release { grid-column: 1 / -1; }
+  .notice, .pay, .release { grid-column: 1 / -1; }
+  #payForm { grid-column: 2; }
   .pay { margin-top: 0.6rem; }
   .map-scroll { overflow-x: auto; margin: 0 -1rem; padding: 0 1rem; }
   .map-scroll svg.map { min-width: 680px; max-height: none; }
