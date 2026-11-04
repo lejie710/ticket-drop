@@ -1,6 +1,6 @@
 # Ticket Drop: approved brief
 
-Approved by the owner on 3 November 2026. This file records the agreed product contract. Implementation detail lives in [DESIGN.md](DESIGN.md); test strategy lives in [TEST_PLAN.md](TEST_PLAN.md).
+This file records the agreed product contract. Implementation detail lives in [DESIGN.md](DESIGN.md); test strategy lives in [TEST_PLAN.md](TEST_PLAN.md).
 
 ## Purpose
 
@@ -22,9 +22,28 @@ A fan buying up to four seats for one concert on a laptop or phone. A second aud
 - A scheduled sale opening time and request rate limits.
 - A My tickets page.
 
-## Excluded from version 1
+## Non-goals for version 1
 
-Real payment, registration and password reset, multiple events, a waiting-room queue, email, a native mobile app, an admin console, and public hosting of the application.
+Each of these could reasonably be expected from a ticketing site. None is promised, because none adds testing depth to the question the project answers.
+
+| Non-goal | Reason |
+|---|---|
+| Real payment provider | A mock gateway gives every outcome (success, decline, timeout) on demand, which a real provider's test mode cannot do as reliably, and needs no account or keys |
+| Registration and password reset | Seeded demo accounts are enough to test one account against another; sign-up flows would add code without adding a new risk |
+| Multiple events and venues | One sale already exercises every booking rule; more events multiply data, not behaviour |
+| A waiting-room queue | It changes the product to avoid the burst; the point is to show the booking rules survive the burst |
+| Email confirmations | Delivery to an outside service cannot be verified locally, and tickets are already visible in My tickets |
+| An admin console | The event is seed data; nobody needs to edit it during a test |
+| Public hosting of the application | Load tests must never be aimed at a free host, and the evidence lives in the repository |
+
+## Rabbit holes, decided up front
+
+| Unknown that could have consumed the build | Decision |
+|---|---|
+| Choosing and wiring a hosted AI model, with keys and cost | Use the local `llama3.2` through Ollama behind a small provider interface |
+| Distributed locking and a real database server | One process and one SQLite file; the write lock is the concurrency guarantee, and its limits are documented |
+| Testing time rules by waiting five minutes | An injectable clock, plus a test-only route on the live server, switched off by default |
+| Downloading and pinning a separate browser for Playwright | Drive the installed Google Chrome |
 
 ## Requirements
 
