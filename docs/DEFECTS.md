@@ -153,13 +153,13 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 
 **Found by** the multi-agent review and reproduced by forcing a 500 on the first checkout in the browser.
 
-**Fix** (`app/static/app.js`, commit 6eb5db0). The page keeps its key after any 5xx other than the gateway's 504, as it already did when there was no answer at all. The kept key is still tied to the same hold and seats (DEF-009).
+**Fix** (`app/static/app.js`, commit 5f968e2). The page keeps its key after any 5xx other than the gateway's 504, as it already did when there was no answer at all. The kept key is still tied to the same hold and seats (DEF-009).
 
 **Test.** `test_retry_after_a_server_error_reuses_the_payment_key` answers the first checkout with a 500, clicks Pay again and expects the same `Idempotency-Key` and one ticket. It fails on the old page, which sent a different key.
 
 ## DEF-013: smaller front-end faults from the same review
 
-All fixed in commit 6eb5db0. Each new browser test fails on the previous page.
+All fixed in commit 5f968e2. Each new browser test fails on the previous page.
 
 | Fault | Fix | Test |
 |---|---|---|
