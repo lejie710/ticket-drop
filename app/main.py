@@ -2,6 +2,7 @@
 
 import re
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, Header, Path as PathParam, Request
@@ -78,7 +79,9 @@ class ApiError(Exception):
         self.status, self.code, self.message, self.headers = status, code, message, headers
 
 
-def create_app(settings: Settings | None = None, clock: Clock | None = None) -> FastAPI:
+def create_app(settings: Settings | None = None, clock: Clock | None = None,
+               monotonic: Callable[[], float] = time.monotonic) -> FastAPI:
+    """monotonic: the time source for the rate limiters. Tests pass a controllable one."""
     settings = settings or Settings.from_env()
     clock = clock or Clock()
     db.initialise(settings.db_path)
@@ -157,7 +160,7 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
         key = str(user["id"])
         if faults.on(settings, "seat_rate_limit_per_session"):
             key = request.headers.get("authorization", "")
-        wait = hold_limiter.take(key, time.monotonic())
+        wait = hold_limiter.take(key, monotonic())
         if wait:
             raise ApiError(429, "too_many_requests", "Too many seat changes. Wait a moment and try again.",
                            {"Retry-After": str(max(1, round(wait + 0.5)))})
@@ -183,13 +186,13 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     @app.post("/api/login")
     def login(body: LoginIn, request: Request, conn=Depends(connection)):
         address = request.client.host if request.client else "unknown"
-        wait = login_failures.retry_after(address, time.monotonic())
+        wait = login_failures.retry_after(address, monotonic())
         if wait:
             raise ApiError(429, "too_many_attempts", "Too many failed sign-in attempts. Try again later.",
                            {"Retry-After": str(wait)})
         result = auth.login(conn, body.username, body.password, clock.now_ms())
         if result is None:
-            login_failures.record(address, time.monotonic())
+            login_failures.record(address, monotonic())
             raise ApiError(401, "wrong_credentials", "The username or password is wrong.")
         return result
 

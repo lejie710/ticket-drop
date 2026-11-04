@@ -1,4 +1,8 @@
-"""R10 rate limits, and the protective HTTP headers every response carries."""
+"""R10 rate limits, and the protective HTTP headers every response carries.
+
+The rate limiters read a test-controlled monotonic clock (the monotonic
+fixture), so "ten quick requests" means exactly that on any machine.
+"""
 
 import sqlite3
 
@@ -10,7 +14,7 @@ from app.main import SECURITY_HEADERS
 pytestmark = pytest.mark.security
 
 
-def test_rapid_seat_changes_are_limited(sign_in):
+def test_rapid_seat_changes_are_limited(sign_in, monotonic):
     """Burst of 10 allowed, then 429 with Retry-After. Each request toggles the same seat."""
     lejie = sign_in("lejie")
     codes = []
@@ -21,7 +25,9 @@ def test_rapid_seat_changes_are_limited(sign_in):
             assert int(response.headers["Retry-After"]) >= 1
             assert response.json()["error"]["code"] == "too_many_requests"
     assert codes[:10] == [200] * 10
-    assert 429 in codes[10:]
+    assert codes[10] == 429, codes
+    monotonic.advance(1)  # Five tokens a second refill the bucket.
+    assert lejie.hold("C-09").status_code == 200
 
 
 def test_signing_in_again_does_not_reset_the_rate_limit(sign_in):
@@ -32,7 +38,8 @@ def test_signing_in_again_does_not_reset_the_rate_limit(sign_in):
         fan = first if i % 2 == 0 else second
         response = fan.hold("C-09") if (i // 2) % 2 == 0 else fan.unhold("C-09")
         codes.append(response.status_code)
-    assert 429 in codes, codes
+    assert 429 not in codes[:10], codes  # Ten changes across both sessions spend the account's burst...
+    assert codes[10] == 429, codes  # ...so the eleventh is refused, whichever session sends it.
 
 
 def test_one_fans_rate_limit_does_not_affect_another(sign_in):
@@ -42,14 +49,16 @@ def test_one_fans_rate_limit_does_not_affect_another(sign_in):
     assert arjun.hold("D-01").status_code == 200
 
 
-def test_repeated_failed_sign_ins_are_slowed_down(client):
+def test_repeated_failed_sign_ins_are_slowed_down(client, monotonic):
     for _ in range(10):
         assert client.post("/api/login", json={"username": "lejie", "password": "guess"}).status_code == 401
     blocked = client.post("/api/login", json={"username": "lejie", "password": "guess"})
     assert blocked.status_code == 429
-    assert int(blocked.headers["Retry-After"]) >= 1
+    assert int(blocked.headers["Retry-After"]) == 60
     # The right password is also refused while blocked: the limit protects the account from guessing.
     assert client.post("/api/login", json={"username": "lejie", "password": "demo-pass"}).status_code == 429
+    monotonic.advance(60)  # The one-minute window has passed.
+    assert client.post("/api/login", json={"username": "lejie", "password": "demo-pass"}).status_code == 200
 
 
 def test_successful_sign_ins_are_not_limited(client):

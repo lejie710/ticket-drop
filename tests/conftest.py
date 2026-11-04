@@ -59,9 +59,31 @@ class Fan:
         return self.client.get("/api/tickets", headers=self.headers).json()["tickets"]
 
 
+class Monotonic:
+    """A stand-in for time.monotonic() that only moves when a test moves it.
+
+    The rate limiters read this instead of the real clock, so a burst of requests
+    is a burst no matter how fast or slow the test machine is.
+    """
+
+    def __init__(self):
+        self.now = 1000.0
+
+    def __call__(self) -> float:
+        return self.now
+
+    def advance(self, seconds: float) -> None:
+        self.now += seconds
+
+
 @pytest.fixture
 def clock():
     return Clock(frozen_at_ms=T0)
+
+
+@pytest.fixture
+def monotonic():
+    return Monotonic()
 
 
 @pytest.fixture
@@ -70,10 +92,10 @@ def db_path(tmp_path):
 
 
 @pytest.fixture
-def make_client(db_path, clock):
+def make_client(db_path, clock, monotonic):
     def make(raise_server_exceptions=True, **overrides):
         settings = Settings(db_path=db_path, payment_timeout_seconds=0, faults=FAULTS, **overrides)
-        return TestClient(create_app(settings, clock), raise_server_exceptions=raise_server_exceptions)
+        return TestClient(create_app(settings, clock, monotonic), raise_server_exceptions=raise_server_exceptions)
     return make
 
 
