@@ -14,7 +14,7 @@ Each entry records what was observed, the hypothesis, the evidence, and the outc
 | DEF-006 | Tooling | The test-data generator crashed when printing a generated Unicode character | Fixed |
 | DEF-007 | Checkout | A failure while settling left the fan charged, without tickets, and locked out | Fixed, regression test |
 | DEF-008 | UI | Enter in the card field sent a second payment request while one was in flight | Fixed, regression test |
-| DEF-009 | UI | A kept payment key could be reused for a different set of seats | Fixed |
+| DEF-009 | UI, checkout | A kept payment key could be reused for a different set of seats | Fixed in the page and on the server, regression tests |
 | DEF-010 | Review notes | Four minor observations | Recorded, not fixed |
 | DEF-011 | UI | On a phone the header wrapped and the payment strip covered almost half the screen | Fixed |
 
@@ -123,6 +123,8 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 **Scenario.** After a request that got no answer, the page keeps its idempotency key so a retry cannot charge twice. Nothing cleared that key if the fan then changed seats, so a later payment for a different basket could replay the old result: either "Payment complete" while the new seats stayed unpaid, or an old decline.
 
 **Fix.** The key is remembered together with the hold and the exact seats, reused only when both are unchanged, and cleared on sign-out.
+
+**Enforced on the server too** (after a later multi-agent review). The page fix relied on every client behaving. The server now refuses a stored key when the account's current open hold is a different hold from the one that key paid for: 409 `idempotency_key_reused`, no charge, the new hold untouched. Replaying the same hold, or a completed payment when no new hold is open, still returns the stored result exactly. Tests: `test_a_paid_key_cannot_be_reused_for_new_seats` and `test_a_declined_key_cannot_be_reused_after_choosing_seats_again` (both fail on the previous server, which replayed the old 200 or 402), and in the browser `test_a_kept_payment_key_is_not_reused_for_different_seats`, which fails when the page's basket check is removed.
 
 ## DEF-010: minor review observations, recorded
 

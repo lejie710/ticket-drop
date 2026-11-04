@@ -93,6 +93,33 @@ def test_repeating_a_declined_checkout_returns_the_same_decline(sign_in, query):
     assert charges(query) == []
 
 
+def test_a_paid_key_cannot_be_reused_for_new_seats(sign_in, query):
+    """DEF-009 on the server: a key belongs to one basket, so it must not answer for another."""
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    assert lejie.checkout(SUCCESS, key="order-attempt-4").status_code == 200
+    lejie.hold("C-10")
+    reused = lejie.checkout(SUCCESS, key="order-attempt-4")
+    assert reused.status_code == 409
+    assert reused.json()["error"]["code"] == "idempotency_key_reused"
+    assert len(charges(query)) == 1
+    assert [s["id"] for s in lejie.current_hold()["seats"]] == ["C-10"]  # Still held, still unpaid.
+    assert lejie.checkout(SUCCESS).status_code == 200  # A new key pays for the new seats.
+
+
+def test_a_declined_key_cannot_be_reused_after_choosing_seats_again(sign_in, clock, query):
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    assert lejie.checkout(DECLINE, key="order-attempt-5").status_code == 402
+    clock.advance(300_000)  # The hold expires; the fan picks again.
+    lejie.hold("D-01")
+    reused = lejie.checkout(SUCCESS, key="order-attempt-5")
+    assert reused.status_code == 409
+    assert reused.json()["error"]["code"] == "idempotency_key_reused"
+    assert charges(query) == []
+    assert lejie.current_hold()["status"] == "active"
+
+
 def test_checkout_needs_an_idempotency_key(sign_in, client):
     lejie = sign_in("lejie")
     lejie.hold("C-09")

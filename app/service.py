@@ -259,6 +259,13 @@ def checkout(conn, settings, clock, user_id: int, idempotency_key: str, card_num
         if previous is not None:
             if previous["outcome"] == "pending":
                 raise BookingError("checkout_in_progress", "This payment is still being processed.")
+            # A key belongs to one basket. If the fan now has a different open hold, replaying the
+            # old result would answer for seats this request is not about (DEF-009).
+            expire_due_holds(conn, now, settings)
+            current = _open_hold(conn, user_id)
+            if current is not None and current["id"] != previous["hold_id"]:
+                raise BookingError("idempotency_key_reused",
+                                   "This payment attempt was for different seats. Pay again to start a new attempt.")
             if previous["response_status"] is not None:
                 return previous["response_status"], json.loads(previous["response_body"])
             payment_id = previous["id"]  # The gateway answered but settling failed: finish it below.
