@@ -1,6 +1,6 @@
 {
   "errors": [],
-  "generated_at": "2026-11-03T18:40:02Z",
+  "generated_at": "2026-11-04T03:14:11Z",
   "metrics": {
     "_totals": {
       "CONFIDENCE.HIGH": 1,
@@ -11,7 +11,7 @@
       "SEVERITY.LOW": 2,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 864,
+      "loc": 904,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -102,7 +102,7 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 187,
+      "loc": 214,
       "nosec": 0,
       "skipped_tests": 0
     },
@@ -141,14 +141,14 @@
       "SEVERITY.LOW": 0,
       "SEVERITY.MEDIUM": 0,
       "SEVERITY.UNDEFINED": 0,
-      "loc": 320,
+      "loc": 333,
       "nosec": 0,
       "skipped_tests": 0
     }
   },
   "results": [
     {
-      "code": "83 PRICES_CENTS = {1: 38800, 2: 26800, 3: 16800}\n84 DEMO_PASSWORD = \"demo-pass\"\n85 NAMED_USERS = [(\"mei\", \"Mei\"), (\"arjun\", \"Arjun\"), (\"siti\", \"Siti\"), (\"wei\", \"Wei\")]\n",
+      "code": "83 PRICES_CENTS = {1: 38800, 2: 26800, 3: 16800}\n84 DEMO_PASSWORD = \"demo-pass\"\n85 NAMED_USERS = [(\"lejie\", \"Le Jie\"), (\"arjun\", \"Arjun\"), (\"siti\", \"Siti\"), (\"wei\", \"Wei\")]\n",
       "col_offset": 16,
       "end_col_offset": 27,
       "filename": "app\\db.py",
