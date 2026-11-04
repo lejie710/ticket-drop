@@ -17,7 +17,7 @@ Ticket Drop is small on purpose: one concert, 510 seats, four tickets per accoun
 |---|---|
 | Automated tests (API, security, concurrency, browser) | 197 passed |
 | 50 fans requesting one seat at the same instant | exactly 1 hold, 49 refused |
-| 200-fan burst at the sale opening, 60 s | 0 server errors, 0 seats sold twice, money charged = ticket value; median 2.9 s, p95 5.4 s on one laptop ([DEF-002](docs/DEFECTS.md)) |
+| 200-fan burst at the sale opening, 60 s | 0 server errors, 0 seats sold twice, money charged = ticket value; median 2.9 s, p95 4.7 s on one laptop ([DEF-002](docs/DEFECTS.md)) |
 | Static scans | bandit: 2 low findings, triaged; pip-audit: 0 known vulnerabilities in 84 packages |
 | Ten planted bugs, scripted suite | 8 caught; the 2 gaps were then closed with one new test and one tightened assertion ([fault report](evidence/faults/REPORT.md)) |
 | Same bugs, random explorer and local AI explorer (3 runs each) | random 2 of 10, local llama3.2 1 of 10; 0 false alarms |
@@ -45,6 +45,8 @@ Latency figures are from one laptop running both the server and the load generat
 Windows, Python 3.12 and Google Chrome.
 
 ```powershell
+git clone https://github.com/lejie710/ticket-drop.git
+cd ticket-drop
 py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements-lock.txt
 .\.venv\Scripts\python.exe serve.py --sample-sales 0.55
