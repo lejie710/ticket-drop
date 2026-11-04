@@ -2,8 +2,6 @@
 
 A concert ticket sale app built to be tested: seat holds, payment failure, concurrency, load and security.
 
-Developed with assistance from AI tools.
-
 ![Seat map with two seats held](docs/screenshots/seat-map-hold.png)
 
 ## The question
