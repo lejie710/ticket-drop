@@ -155,12 +155,14 @@
   async function loadEvent() {
     state.event = await api("GET", "/api/event");
     const starts = new Date(state.event.starts_at);
-    const day = new Intl.DateTimeFormat("en-GB", {
-      weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Kuala_Lumpur",
-    }).format(starts);
+    const zone = { timeZone: "Asia/Kuala_Lumpur" };
+    const day = new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric", ...zone }).format(starts);
+    const time = new Intl.DateTimeFormat("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, ...zone })
+      .format(starts).replace(":00", "");
+    state.eventWhen = `${new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric", ...zone }).format(starts)}, ${time}`;
     $("eventTitle").innerHTML = "";
     $("eventTitle").append(state.event.artist, document.createElement("br"), state.event.tour);
-    $("eventMeta").textContent = `${day}, 8 pm, ${state.event.venue}`;
+    $("eventMeta").textContent = `${day}, ${time}, ${state.event.venue}`;
     for (const el of document.querySelectorAll("[data-price]")) {
       el.textContent = money(state.event.prices_cents[el.dataset.price]);
     }
@@ -251,7 +253,13 @@
         c.dataset.seat = seat.id;
         c.addEventListener("click", () => toggleSeat(seat.id));
         c.addEventListener("mouseenter", () => describeSeat(seat.id));
-        c.addEventListener("focus", () => describeSeat(seat.id));
+        c.addEventListener("focus", () => {
+          // Keep the roving tab stop on the seat that really has focus (a click moves focus too).
+          setFocusSeat(seat.id, false);
+          // Show the ring for keyboard focus only, as :focus-visible does for ordinary elements.
+          if (c.matches(":focus-visible")) c.classList.add("focused");
+          describeSeat(seat.id);
+        });
         c.addEventListener("keydown", onSeatKey);
         map.append(c);
         state.circles.set(seat.id, c);
@@ -307,7 +315,7 @@
   }
 
   function onSeatKey(event) {
-    const seat = seatById(state.focusId);
+    const seat = seatById(event.currentTarget.dataset.seat);
     if (!seat) return;
     const rowSeats = state.byRow.get(seat.row);
     const index = rowSeats.findIndex((s) => s.id === seat.id);
@@ -358,6 +366,7 @@
         ? await api("DELETE", `/api/hold/seats/${id}`)
         : await api("POST", "/api/hold/seats", { seat_id: id });
       applyHold(data.hold);
+      setNotice($("notice"), "");
     } catch (err) {
       failed = true;
       if (err.status !== 401) setNotice($("mapError"), err.message);
@@ -429,8 +438,13 @@
     }
     const total = hold ? hold.total_cents : 0;
     $("total").textContent = money(total);
+    // On a phone the list above is hidden, so the docked strip says what is held.
+    $("phoneHeld").textContent = seats.length
+      ? `Held: ${seats.map((s) => `${s.row}${s.number}`).join(", ")}. Total ${money(total)}. Tap a seat again to release it.`
+      : "";
+    show($("phoneHeld"), seats.length > 0);
     show($("payForm"), seats.length > 0);
-    show($("release"), seats.length > 0);
+    show($("release"), seats.length > 0 && !state.paying);
     $("pay").disabled = seats.length === 0 || state.paying;
     $("pay").textContent = state.paying ? "Paying" : seats.length ? `Pay ${money(total)}` : "Pay";
     $("timerNote").textContent = seats.length
@@ -489,8 +503,9 @@
       setNotice($("ticketsNotice"), `Payment complete. ${n} ${n === 1 ? "ticket is" : "tickets are"} below.`, true);
       location.hash = "#tickets";
     } catch (err) {
-      // No answer at all: keep the key so retrying cannot charge twice. Any answer: the next attempt is new.
-      if (err.code !== "network") state.payKey = null;
+      // No answer, or a server error: the first attempt may have charged, so keep the key and let a
+      // retry finish it (DEF-007, DEF-012). A definite answer (declined, timeout, refused) ends the attempt.
+      if (err.code !== "network" && !(err.status >= 500 && err.status !== 504)) state.payKey = null;
       state.paying = false;
       if (err.status !== 401) setNotice($("notice"), err.message);
       await refreshSeats();
@@ -498,6 +513,7 @@
   }
 
   async function releaseAll() {
+    if (state.paying) return;
     try {
       await api("DELETE", "/api/hold");
       setNotice($("notice"), "");
@@ -536,7 +552,7 @@
         const meta = document.createElement("span");
         meta.textContent = `${state.event.artist}, ${state.event.tour}`;
         const when = document.createElement("span");
-        when.textContent = `${state.event.venue}, 13 March 2027, 8 pm`;
+        when.textContent = `${state.event.venue}, ${state.eventWhen}`;
         main.append(strong, meta, document.createElement("br"), when);
         const side = document.createElement("div");
         side.className = "side";

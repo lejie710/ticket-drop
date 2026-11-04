@@ -10,7 +10,9 @@
   --stub: #FFFFFF;
   --alert: #B3261E;
   --alert-bg: #F8E7E6;
-  --ok: #1F8A87;
+  /* Text-safe teal: the seat teal is 3.9:1 on the page, this is 5.6:1. */
+  --ok: #146B68;
+  --focus: #2E5AA8;
   --type: "Bahnschrift", "DIN Alternate", "Arial Narrow", Arial, sans-serif;
 }
 
@@ -80,7 +82,7 @@ button.primary[disabled] { background: var(--sold); color: var(--ink-soft); curs
 input {
   width: 100%;
   padding: 0.6rem 0.7rem;
-  border: 1px solid #A9B2BF;
+  border: 1px solid #7D8796;
   border-radius: 4px;
   background: #fff;
 }
@@ -133,13 +135,14 @@ svg.map:focus { outline: none; }
 .seat { cursor: pointer; transition: transform 120ms ease-out; transform-box: fill-box; transform-origin: center; }
 .seat.tier1 { fill: var(--cat1); }
 .seat.tier2 { fill: var(--cat2); }
-.seat.tier3 { fill: var(--cat3); }
+.seat.tier3 { fill: var(--cat3); stroke: #9A7412; stroke-width: 1; }
 .seat.taken { fill: var(--sold); cursor: not-allowed; }
 .seat.mine { fill: var(--paper); stroke: var(--ink); stroke-width: 3; }
 .seat:not(.taken):hover { transform: scale(1.35); }
 /* Keyboard focus is shown by the .focused ring, which follows the seat's shape. */
 .seat:focus, .seat:focus-visible { outline: none; }
-.seat.focused { stroke: var(--ink); stroke-width: 3; transform: scale(1.35); }
+/* Blue, so a focused seat differs from a held one (navy ring) even with reduced motion. */
+.seat.focused { stroke: var(--focus); stroke-width: 4; transform: scale(1.35); }
 .seat.pending { opacity: 0.5; }
 
 .row-label { font-size: 11px; fill: var(--ink-soft); font-family: var(--type); }
@@ -228,6 +231,7 @@ svg.map:focus { outline: none; }
 .timer-note { margin: 0.4rem 0 0.75rem; color: var(--ink-soft); font-size: 0.95rem; }
 .card-help { font-size: 0.85rem; margin: 0.4rem 0 0.9rem; }
 .pay { width: 100%; font-size: 1.1rem; }
+.phone-held { display: none; }
 .release { display: block; margin: 0.6rem auto 0; padding: 0.5rem; }
 
 /* Tickets */
@@ -248,7 +252,7 @@ svg.map:focus { outline: none; }
 .ticket .side { border-left: 2px dashed #CBD1D9; padding: 1rem 0.9rem; display: flex; flex-direction: column; justify-content: space-between; text-align: right; }
 .ticket .side .tier { font-weight: 700; }
 .ticket.tier1 .side .tier { color: var(--cat1); }
-.ticket.tier2 .side .tier { color: var(--cat2); }
+.ticket.tier2 .side .tier { color: var(--ok); }
 .ticket.tier3 .side .tier { color: #8F6C0E; }
 
 /* Phone: the stub becomes a docked strip */
@@ -267,6 +271,7 @@ svg.map:focus { outline: none; }
     overflow-y: auto;
   }
   .stub-top { display: none; }
+  .phone-held:not([hidden]) { display: block; grid-column: 1 / -1; margin: 0 0 0.4rem; font-size: 0.9rem; font-weight: 600; }
   .wordmark { white-space: nowrap; }
   #whoami { display: none; }
   .bar { padding-top: 0.8rem; padding-bottom: 0.8rem; }
