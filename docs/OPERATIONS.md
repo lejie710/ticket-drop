@@ -55,11 +55,14 @@ Screenshots of failed browser tests go to `.local/playwright`.
 | Command | What it does | Time | Output |
 |---|---|---|---|
 | `.\.venv\Scripts\python.exe tools\run_load_test.py` | 200-fan spike at the sale opening, then a database integrity check | about 70 s | `evidence/load/` |
-| `.\.venv\Scripts\python.exe tools\security_scan.py` | bandit and pip-audit (pip-audit needs internet) | under 1 min | `evidence/security/` |
+| `.\.venv\Scripts\python.exe tools\security_scan.py` | bandit and pip-audit (pip-audit needs internet). Exits 1 if a scan did not run, a dependency is vulnerable, or bandit finds anything beyond the triaged B105 and B311. Add `--offline` to run bandit only | under 1 min | `evidence/security/` |
 | `.\.venv\Scripts\python.exe tools\fault_matrix.py` | The whole suite once per seeded fault | about 35 min | `evidence/faults/scripted.json` |
 | `.\.venv\Scripts\python.exe -m ai.datagen` | Generate unusual inputs with the local model and judge them | about 2 min | `tests/data/generated_inputs.json`, `evidence/ai/` |
-| `.\.venv\Scripts\python.exe tools\run_explorers.py` | Model-driven and random exploration against each fault | about 40 min | `evidence/faults/explorers.json` |
+| `.\.venv\Scripts\python.exe tools\run_explorers.py` | Random explorer (seeds 1 to 3) and model explorer (seed 5) against the clean app and each fault | about 45 min | `evidence/faults/explorers.json`, and it **empties** `evidence/ai/explorer_transcripts.jsonl` first |
+| `.\.venv\Scripts\python.exe tools\run_explorers.py --llm-seeds 6,7 --random-seeds 0 --out explorers-llm-seeds.json` | Model explorer seeds 6 and 7 only; appends to the transcripts | about 90 min | `evidence/faults/explorers-llm-seeds.json` |
 | `.\.venv\Scripts\python.exe tools\build_reports.py` | Rebuild the fault comparison report from the saved results | seconds | `evidence/faults/REPORT.md` |
+
+The reported result (three seeds for each explorer) needs both explorer commands, in that order. Running the default command again resets the transcripts, so the saved seed 6 and 7 transcripts are lost unless the second command is run again afterwards. Together the two runs made 990 model calls and used 7095 s of model time (about 2 hours) on the laptop CPU, 2176 s and 4919 s respectively, as recorded in the two result files.
 
 To try one seeded fault by hand: `$env:TICKET_DROP_FAULTS = "limit_ignores_owned_tickets"; .\.venv\Scripts\python.exe serve.py`. Remove it afterwards with `Remove-Item Env:TICKET_DROP_FAULTS`. Never run a demo with a fault switched on.
 
@@ -80,4 +83,4 @@ All local data is in `.local\`. To start again with a fresh sale, stop the serve
 
 ## 7. Deployment
 
-Not prepared. Version 1 runs on 127.0.0.1 only. The static showcase page in `site/` is prepared for GitHub Pages but not published.
+Not prepared. Version 1 runs on 127.0.0.1 only. The code is published as a private repository on GitHub; hosted CI results are not recorded here. The static showcase page in `site/` is prepared for GitHub Pages; its workflow runs only when started by hand, and whether it has been published is not recorded here.

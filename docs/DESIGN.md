@@ -11,16 +11,16 @@ How version 1 of Ticket Drop actually works. The product contract is in [BRIEF.m
 | Component | File | Responsibility |
 |---|---|---|
 | Browser page | `app/static/index.html`, `app.css`, `app.js` | Sign-in, seat map, hold timer, payment form, My tickets. No framework |
-| HTTP API | `app/main.py` | Routes, request validation, authentication, rate limits, security headers, error format, static files |
+| HTTP API | `app/main.py` | Routes, request validation, authentication, rate limits, allowed host names, security headers, error format, static files |
 | Booking rules | `app/service.py` | Hold, release, expiry, checkout and tickets, each inside a database transaction |
 | Sign-in | `app/auth.py` | Password check for seeded demo accounts, random session tokens stored as SHA-256 hashes |
-| Rate limits | `app/ratelimit.py` | Token bucket per account for seat changes, sliding window per address for failed sign-ins |
+| Rate limits | `app/ratelimit.py` | Token bucket per account for seat changes, sliding window per address for failed sign-ins. Time comes from a monotonic source passed to `create_app`, so tests control it |
 | Mock gateway | `app/payments.py` | Decides the payment outcome from the test card and records successful charges |
 | Clock | `app/clock.py` | The only source of time, so tests can stand on an exact millisecond |
 | Database | `app/db.py` | Schema, connections, seed data, optional sample sales |
 | Seeded faults | `app/faults.py` | Named deliberate bugs, all off unless enabled for an experiment |
 
-The server listens on 127.0.0.1 only. One process owns one SQLite file in WAL mode.
+The server listens on 127.0.0.1 only and answers only to the host names `127.0.0.1` and `localhost` (plus `testserver` for the in-process tests); any other `Host` header gets 400, so a page that rebinds its own DNS name to 127.0.0.1 cannot use the API. One process owns one SQLite file in WAL mode.
 
 ## 2. One operation end to end: holding a seat
 
@@ -43,19 +43,19 @@ Why two protections against double booking: the write lock makes check-then-clai
 
 The gateway can be slow (the timeout card waits two seconds by default). Holding the write lock across that call would stop every other fan from claiming seats, so checkout runs in three steps:
 
-1. **Reserve.** In one transaction: return the stored result if this account already used the idempotency key; otherwise compute the amount from the server's seat prices, insert a `pending` payment and set the hold to `paying`. Expiry skips `paying` holds.
+1. **Reserve.** In one transaction: if this account already used the idempotency key, return the stored result, unless the account now has a different open hold, which is refused with 409 `idempotency_key_reused` (a key belongs to one basket, DEF-009); otherwise compute the amount from the server's seat prices, insert a `pending` payment and set the hold to `paying`. Expiry skips `paying` holds.
 2. **Charge.** Call the gateway with no transaction open, then immediately record its outcome on the payment row.
 3. **Settle** (`settle_payment`). In a second transaction: on success, insert one ticket per seat, mark the seats sold and the hold paid; on decline or timeout, set the hold back to `active` so the seats stay held until their original expiry. Store the HTTP status and body on the payment row, so a repeated request with the same key returns exactly the same answer.
 
-Settling is safe to repeat and retries briefly when the database is busy. If it still fails, the payment keeps its recorded outcome without a stored response, and the next request with the same key finishes the settle instead of charging again (DEF-007). A payment that began before the hold's expiry is honoured even if the gateway answers after it, because the seats were protected as `paying` throughout; a decline that arrives after the expiry frees the seats at once.
+Settling is safe to repeat and retries briefly when the database is busy. If it still fails, the payment keeps its recorded outcome without a stored response, and the next request with the same key finishes the settle instead of charging again (DEF-007). A payment that began before the hold's expiry is honoured even if the gateway answers after it, because the seats were protected as `paying` throughout; a decline or timeout that arrives after the expiry frees the seats at once, and its message says the hold has expired instead of saying the seats are still held.
 
 Idempotency keys are unique per account (`UNIQUE (user_id, idempotency_key)`), so one fan's key means nothing for another.
 
-The browser generates a new key for each payment attempt but reuses it when a request gets no answer at all, because in that case it cannot know whether the first attempt was charged.
+The browser generates a new key for each payment attempt but reuses it when a request gets no answer at all or a server error (5xx other than the gateway's 504), because in those cases it cannot know whether the first attempt was charged (DEF-012). A kept key is reused only for the same hold and seats (DEF-009).
 
 ## 4. API
 
-All responses are JSON, including unexpected server errors (500 `server_error`). Errors have one shape: `{"error": {"code": "...", "message": "..."}}`; `message` is written for the fan.
+Every answer under `/api/` is JSON. Errors have one shape: `{"error": {"code": "...", "message": "..."}}`; `message` is written for the fan. That includes unexpected server errors (500 `server_error`, with the same security and `Cache-Control: no-store` headers as every other answer), an unknown `/api/` address (404 `not_found`) and a known address with the wrong method (405 `method_not_allowed`, with an `Allow` header). Static pages outside `/api/` keep the framework's own 404. A request with a host name other than `127.0.0.1` or `localhost` gets 400 before any route runs.
 
 | Method and path | Auth | Success | Notable errors |
 |---|---|---|---|
@@ -65,13 +65,14 @@ All responses are JSON, including unexpected server errors (500 `server_error`).
 | `GET /api/me` | yes | username, display name | 401 |
 | `GET /api/seats` | yes | 510 seats with `state` available, taken or mine | 401 |
 | `GET /api/hold` | yes | the open hold or null | 401 |
-| `POST /api/hold/seats` | yes | the hold | 409 `sale_not_open`, `seat_taken`, `limit_reached`, `checkout_in_progress`; 404 `seat_not_found`; 422; 429 |
+| `POST /api/hold/seats` | yes | the hold | 409 `sale_not_open`, `seat_taken`, `limit_reached` (the message counts owned and held seats), `checkout_in_progress`; 404 `seat_not_found`; 422; 429 |
 | `DELETE /api/hold/seats/{seat_id}` | yes | the hold, or null if it was the last seat | 404 `seat_not_held`; 409 `checkout_in_progress`; 422; 429 |
 | `DELETE /api/hold` | yes | 204 | 409 `checkout_in_progress`; 429 |
-| `POST /api/checkout` + `Idempotency-Key` | yes | 200 payment and tickets | 400 `invalid_idempotency_key`; 402 `payment_declined`; 504 `payment_timeout`; 409 `no_hold`, `checkout_in_progress`; 422 |
+| `POST /api/checkout` + `Idempotency-Key` | yes | 200 payment and tickets | 400 `invalid_idempotency_key`; 402 `payment_declined`; 504 `payment_timeout`; 409 `no_hold`, `checkout_in_progress`, `idempotency_key_reused`; 422; 500 `server_error` (retry with the same key) |
 | `GET /api/tickets` | yes | the fan's tickets | 401 |
 | `GET /api/tickets/{id}` | yes | one ticket | 404 `ticket_not_found`, also for another fan's ticket |
-| `POST /api/_test/clock` | no | new server time | exists only when `TICKET_DROP_TEST_HOOKS=1` |
+| `POST /api/_test/clock` | no | new server time | exists only when `TICKET_DROP_TEST_HOOKS=1`; otherwise 404 `not_found` |
+| any other `/api/` address | | | 404 `not_found`; 405 `method_not_allowed` for a known address and the wrong method |
 
 The machine-readable schema is served at `/api/openapi.json`. The interactive documentation pages are switched off.
 
@@ -101,9 +102,9 @@ The visual design follows the approved mockup: a cool grey page, navy ink, the t
 
 ## 8. Known limits
 
-- One server process. The rate limiter keeps its counts in memory, so several processes would each allow the full rate.
+- One server process. The rate limiter keeps its counts in memory, so several processes would each allow the full rate. At most four tickets per account: held seats and owned tickets count together.
 - The seeded demo accounts share one password and one salt, so the expensive hash is computed once at seed time. Acceptable for demo accounts, not for real ones; bandit flags the hard-coded demo password, which is documented here on purpose.
-- A process crash between the gateway charge and recording its outcome would leave a payment `pending` and a hold `paying`. Version 1 has no reconciliation job against the gateway. A failure after the outcome is recorded is recovered by a retry with the same key.
+- A process crash, or the database staying locked for about 30 seconds, between the gateway charge and recording its outcome would leave a payment `pending` and a hold `paying`; every retry with that key then answers 409 `checkout_in_progress`, although the 500 said to try again. Version 1 has no reconciliation job against the gateway. A failure after the outcome is recorded is recovered by a retry with the same key.
 - Session tokens never expire. Acceptable for demo accounts only.
 - Throughput is limited by CPU in one Python process; see DEF-002 in [DEFECTS.md](DEFECTS.md).
 - Bahnschrift exists on Windows only. Other systems fall back to DIN Alternate, Arial Narrow or Arial.
