@@ -2,7 +2,7 @@
 
 One fan's journey through Ticket Drop, screen by screen. The app has three views: sign-in, the seat map and My tickets. Most of the behaviour happens on the seat map, so most of this page is about its states.
 
-To follow along, start the app as described in [Run it](../README.md#run-it). The screenshots were taken in Chrome at 1366 pixels wide, with about half the seats sold to sample accounts (`--sample-sales 0.55`), and the phone view at 390 pixels wide. `tools/capture_screenshots.py` recreates them.
+To follow along, start the app as described in [Run it](../README.md#run-it). The screenshots were taken in Chrome at 1366 pixels wide, with about half the seats sold to sample accounts (`--sample-sales 0.55`; the before-the-sale screen used `0.2`), and the phone view at 390 pixels wide. `tools/capture_screenshots.py` recreates them.
 
 ## 1. Sign in
 
@@ -14,7 +14,7 @@ Use one of the demo accounts, `lejie`, `arjun`, `siti` or `wei`, with the passwo
 
 ![Seat map with a countdown: the sale opens in 59:57, and trying to hold a seat shows "The sale has not opened yet."](screenshots/before-sale-opens.png)
 
-Started with `--sale-opens-in 3600`, the page counts down to the opening. The map can be explored, but picking a seat is refused with "The sale has not opened yet." The server makes that decision, not the page, so a fan cannot get ahead by changing the page.
+Started with `--sale-opens-in 3600 --sample-sales 0.2`, the page counts down to the opening. The map can be explored, but picking a seat is refused with "The sale has not opened yet." The server makes that decision, not the page, so a fan cannot get ahead by changing the page.
 
 ## 3. Hold seats
 
