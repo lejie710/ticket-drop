@@ -11,7 +11,7 @@ What was actually run, what it showed, and what it does not show. Every figure h
 | Browser | Installed Google Chrome, driven headless by Playwright 1.64.1 |
 | Server | One uvicorn process on 127.0.0.1, one SQLite file in WAL mode |
 | Language model (AI tools only) | Ollama with `llama3.2` (3B), local CPU |
-| Not exercised | Other browsers, other operating systems, any deployment. Hosted CI results are not recorded here |
+| Not exercised | Other browsers, other operating systems, any deployment. Hosted CI results are shown on GitHub, not recorded here |
 
 ## 2. Automated tests
 
@@ -82,13 +82,13 @@ Real defects and investigations are in [DEFECTS.md](DEFECTS.md): thirteen entrie
 | Keyboard operation of the seat map | Tested for one path; no screen-reader testing |
 | Payment | Simulated by a mock gateway; no real provider was integrated |
 | AI-generated data and exploration | Measured on one small local model: one seed for data generation, three seeds per fault for exploration; not a general claim about language models |
-| Hosted CI (`.github/workflows/ci.yml`) | Runs on GitHub for pull requests and pushes to main; its results are not recorded in this document |
+| Hosted CI (`.github/workflows/ci.yml`) | Runs on GitHub for pull requests and pushes to main; its results are shown on GitHub, not recorded in this document |
 | Showcase page on GitHub Pages | Prepared; whether it has been published is not recorded here |
 | Production readiness, capacity, accessibility compliance | Not claimed |
 
 ## 9. Release assessment
 
-**Recommendation: ready for review. Published as a private repository; making it public is the owner's decision. Not production software.**
+**Recommendation: ready for review. Published as source code on GitHub. Not production software.**
 
 Basis:
 
@@ -98,9 +98,9 @@ Basis:
 - Both high-severity defects found (DEF-007, DEF-012) are fixed, each with a regression test proven to fail on the old code.
 - Static scans are triaged; no known vulnerable dependency on the day of the scan.
 
-Open items, none blocking a private release:
+Open items, none blocking release:
 
 - Throughput is limited to roughly 20 to 26 requests per second on the laptop (DEF-002).
 - No reconciliation for a process crash, or a database locked for about 30 s, between the gateway charge and recording its outcome (DEF-007, remaining limit).
-- Hosted CI results and the showcase page's publication are not recorded here; the owner confirms them.
+- Hosted CI results and the showcase page's publication are shown on GitHub, not recorded here.
 - Only Chrome on Windows was exercised.
