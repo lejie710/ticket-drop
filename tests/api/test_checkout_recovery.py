@@ -12,7 +12,7 @@ from fastapi.testclient import TestClient
 from app import payments, service
 from app.config import Settings
 from app.main import create_app
-from tests.conftest import DECLINE, FAULTS, SUCCESS, Fan
+from tests.conftest import DECLINE, FAULTS, SUCCESS, TIMEOUT, Fan
 
 
 def test_settle_failure_is_finished_by_a_retry_without_charging_again(db_path, clock, query, monkeypatch):
@@ -79,9 +79,29 @@ def test_hold_expiring_during_a_declined_payment_frees_the_seats_at_once(sign_in
         return real_charge(*args)
 
     monkeypatch.setattr(payments, "charge", slow_decline)
-    assert lejie.checkout(DECLINE).status_code == 402
+    declined = lejie.checkout(DECLINE)
+    assert declined.status_code == 402
+    # The seats are already free, so the answer must not say they are still held.
+    assert declined.json()["error"]["message"] == "The card was declined and your hold has expired. Choose seats again."
     assert lejie.current_hold() is None
     assert arjun.hold("C-09").status_code == 200
+
+
+def test_a_timeout_after_the_expiry_says_the_hold_has_ended(sign_in, clock, monkeypatch):
+    lejie = sign_in("lejie")
+    lejie.hold("C-09")
+    real_charge = payments.charge
+
+    def slow_timeout(*args):
+        clock.advance(400_000)
+        return real_charge(*args)
+
+    monkeypatch.setattr(payments, "charge", slow_timeout)
+    response = lejie.checkout(TIMEOUT)
+    assert response.status_code == 504
+    assert response.json()["error"]["message"] == (
+        "The payment service did not answer. You were not charged. Your hold has expired. Choose seats again.")
+    assert lejie.current_hold() is None
 
 
 def test_a_payment_started_in_time_is_honoured_after_the_expiry(sign_in, clock, monkeypatch):

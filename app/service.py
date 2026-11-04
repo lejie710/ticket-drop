@@ -352,10 +352,18 @@ def _settle_once(conn, settings, clock, payment_id: str) -> tuple[int, dict]:
             else:
                 conn.execute("UPDATE holds SET status = 'active' WHERE id = ? AND status = 'paying'", (hold_id,))
             expire_due_holds(conn, now, settings)
+            # The gateway may answer after the hold's expiry, which has just freed the seats.
+            still_held = conn.execute("SELECT status FROM holds WHERE id = ?", (hold_id,)).fetchone()["status"] in (
+                "active", "paying")
             if outcome == "declined":
-                status, body = 402, {"error": {"code": "payment_declined", "message": "The card was declined. Your seats are still held."}}
+                message = ("The card was declined. Your seats are still held." if still_held else
+                           "The card was declined and your hold has expired. Choose seats again.")
+                status, body = 402, {"error": {"code": "payment_declined", "message": message}}
             else:
-                status, body = 504, {"error": {"code": "payment_timeout", "message": "The payment service did not answer. You were not charged."}}
+                message = "The payment service did not answer. You were not charged."
+                if not still_held:
+                    message += " Your hold has expired. Choose seats again."
+                status, body = 504, {"error": {"code": "payment_timeout", "message": message}}
         conn.execute(
             "UPDATE payments SET response_status = ?, response_body = ? WHERE id = ?",
             (status, json.dumps(body), payment_id),
