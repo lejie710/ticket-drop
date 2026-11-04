@@ -15,7 +15,9 @@ What was actually run, what it showed, and what it does not show. Every figure h
 
 ## 2. Automated tests
 
-Final full run on the final code, in a fresh virtual environment built in `%TEMP%` from `requirements.txt` alone, which is what `requirements-lock.txt` was frozen from (Python 3.12.10, Playwright 1.64.1): `python -m pytest`, 4 November 2026 11:20 to 11:24 (+08:00), **197 passed in 185 s**. An earlier run in the same environment, before the documentation changes, also passed 197 in 180 s. After the last checker fixes (a stronger focus-ring comparison and recaptured screenshots), the suite was run again in the project environment: 4 November 2026 11:49 to 11:52 (+08:00), **197 passed in 155 s**.
+Final full run on the final code, in a fresh virtual environment built in `%TEMP%` from `requirements.txt` alone, which is what `requirements-lock.txt` was frozen from (Python 3.12.10, Playwright 1.64.1): `python -m pytest`: **197 passed in 185 s**. After the last checker fixes (a stronger focus-ring comparison and recaptured screenshots), the suite was run again in the project environment: **197 passed in 155 s**.
+
+**Fresh clone, following the README.** The repository was cloned into a new folder and the README's commands were run as written, in Windows PowerShell 5.1 on Windows 11 (build 26100) with Python 3.12.10: the virtual environment and `pip install -r requirements-lock.txt` installed cleanly (`pip check`: no broken requirements); `serve.py --sample-sales 0.55` answered, signed in as Le Jie, with 510 seats of which 275 were sold to sample accounts; `pytest` passed 197 of 197 in 157 s; the load test passed every integrity check (run 4 below); and the security scan passed.
 
 | Suite | Tests | What it checks |
 |---|---|---|
@@ -29,15 +31,16 @@ Every new regression test was also run against the code before its fix, to confi
 
 ## 3. Load
 
-Three runs of `tools/run_load_test.py`: 200 simulated fans started within one second, 60 seconds, sale opening five seconds after start, one server process sharing the laptop with the load generator.
+Four runs of `tools/run_load_test.py`: 200 simulated fans started within one second, 60 seconds, sale opening five seconds after start, one server process sharing the laptop with the load generator.
 
-| Run (UTC, 3 Nov) | Code | Requests | Server errors | Median ms | p95 ms | Avg req/s | Integrity checks | Tickets |
+| Run | Code | Requests | Server errors | Median ms | p95 ms | Avg req/s | Integrity checks | Tickets |
 |---|---|---|---|---|---|---|---|---|
-| 15:08 | before the read-path change | 1245 | 0 | 970 | 3000 | 20.8 | all passed | 92 |
-| 15:11 | after the read-path change | 1557 | 0 | 2100 | 5100 | 25.9 | all passed | 123 |
-| 17:07 | final code (checkout recovery) | 1160 | 0 | 2900 | 5400 | 19.3 | all passed | 60 |
+| 1 | before the read-path change | 1245 | 0 | 970 | 3000 | 20.8 | all passed | 92 |
+| 2 | after the read-path change | 1557 | 0 | 2100 | 5100 | 25.9 | all passed | 123 |
+| 3 | after the checkout recovery change | 1160 | 0 | 2900 | 5400 | 19.3 | all passed | 60 |
+| 4 | final code, from a fresh clone | 1066 | 0 | 2900 | 4700 | 17.8 | all passed | 59 |
 
-The first and last runs are saved under [evidence/load/before-read-path-fix](../evidence/load/before-read-path-fix/SUMMARY.md) and [evidence/load](../evidence/load/SUMMARY.md). The middle run's figures are transcribed from its console output; its files were overwritten by the final run.
+Runs 1 and 4 are saved under [evidence/load/before-read-path-fix](../evidence/load/before-read-path-fix/SUMMARY.md) and [evidence/load](../evidence/load/SUMMARY.md). The figures for runs 2 and 3 are transcribed from their saved output before later runs replaced the files.
 
 **What it shows.** In every run: zero server errors, no seat sold twice, no sold seat without a ticket, no ticket on an unsold seat, no account over four seats, no payment left pending, and money charged exactly equal to the value of the tickets issued.
 
@@ -45,7 +48,7 @@ The first and last runs are saved under [evidence/load/before-read-path-fix](../
 
 ## 4. Static security scans
 
-From `tools/security_scan.py`, saved in [evidence/security/SUMMARY.md](../evidence/security/SUMMARY.md). Last run 4 November 2026 with a fresh virtual environment built from `requirements-lock.txt`; the script exits non-zero if a scan does not run, a dependency is vulnerable, or bandit reports anything beyond the two triaged findings.
+From `tools/security_scan.py`, saved in [evidence/security/SUMMARY.md](../evidence/security/SUMMARY.md). Last run with a fresh virtual environment built from `requirements-lock.txt`; the script exits non-zero if a scan does not run, a dependency is vulnerable, or bandit reports anything beyond the two triaged findings.
 
 | Scan | Result | Triage |
 |---|---|---|

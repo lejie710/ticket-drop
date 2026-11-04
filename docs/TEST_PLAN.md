@@ -43,6 +43,23 @@ Impact: what happens to a fan or to money if the requirement fails. Likelihood: 
 | Exploratory | `ai/explorer.py`, `tools/run_explorers.py` | local model or random choice, shared rule checks | Whether an automated explorer finds planted faults | Completeness: it samples behaviour |
 | Test effectiveness | `tools/fault_matrix.py` | the whole suite against each seeded fault | Which approach catches which kind of bug | Bugs unlike the planted ones |
 
+## Acceptance examples
+
+The question, in concrete cases. Each example is one automated test.
+
+| Given | When | Then | Test |
+|---|---|---|---|
+| 50 signed-in fans and one free seat | they all request it at the same instant | exactly one holds it, 49 are told it is taken, and the database shows one hold | `tests/concurrency/test_races.py::test_fifty_fans_press_the_same_seat_at_once` |
+| 60 fans aiming at 20 front-row seats | they all hold seats and pay | no seat is sold twice and money charged equals ticket value | `tests/concurrency/test_races.py::test_crowd_on_a_few_hot_seats_never_double_sells` |
+| a fan holding one seat | the card is declined | nothing is charged, no ticket is issued, the seat is still held | `tests/api/test_checkout.py::test_declined_card_charges_nothing_and_keeps_the_seats` |
+| a fan whose card was charged but whose order failed to settle | the fan pays again with the same attempt | the tickets are issued and the card is still charged once | `tests/api/test_checkout_recovery.py::test_settle_failure_is_finished_by_a_retry_without_charging_again` |
+| the page got a server error on Pay | the fan presses Pay again | the retry carries the same payment key | `tests/e2e/test_journeys.py::test_retry_after_a_server_error_reuses_the_payment_key` |
+| a fan holding one seat | Pay is pressed five times at once | the card is charged once and one ticket is issued | `tests/concurrency/test_races.py::test_double_clicking_pay_charges_once` |
+| a payment still waiting for the gateway past the hold's expiry | another fan tries to hold that seat | the seat stays taken and the first fan gets exactly one ticket | `tests/api/test_checkout_recovery.py::test_a_paying_hold_is_not_expired_by_another_fans_request` |
+| a seat held 299 999 ms ago | the clock reaches 300 000 ms | the hold has ended and another fan can hold the seat | `tests/api/test_time_rules.py::test_hold_ends_exactly_at_expiry` |
+| a fan holding four seats | they try a fifth | it is refused with the limit message | `tests/api/test_limits.py::test_the_fifth_seat_is_refused` |
+| another fan's ticket ID | a signed-in fan requests it | the answer is identical to a ticket that does not exist | `tests/api/test_tickets.py::test_someone_elses_ticket_looks_like_it_does_not_exist` |
+
 ## 4. Test design techniques used
 
 | Technique | Applied to | Example |
