@@ -43,6 +43,28 @@ def test_malformed_idempotency_keys_are_refused(sign_in, key):
     assert response.status_code == 400
 
 
+def test_an_unknown_api_address_answers_in_the_error_shape(client):
+    response = client.get("/api/no-such-thing")
+    assert response.status_code == 404
+    assert response.json() == {"error": {"code": "not_found", "message": "There is nothing at this address."}}
+    assert response.headers["Cache-Control"] == "no-store"
+
+
+@pytest.mark.parametrize("method,path,allowed", [("post", "/api/event", "GET"), ("get", "/api/checkout", "POST")])
+def test_a_wrong_method_answers_in_the_error_shape(client, method, path, allowed):
+    response = client.request(method.upper(), path)
+    assert response.status_code == 405
+    assert response.json()["error"]["code"] == "method_not_allowed"
+    assert response.headers["Allow"] == allowed
+
+
+def test_an_unknown_page_outside_the_api_is_a_plain_404(client):
+    """Static files keep the framework's own answer; only /api promises the error shape."""
+    response = client.get("/no-such-page.html")
+    assert response.status_code == 404
+    assert "error" not in response.json()
+
+
 def test_errors_never_leak_internals(sign_in):
     lejie = sign_in("lejie")
     response = lejie.client.post("/api/hold/seats", content=b"{not json", headers={**lejie.headers, "Content-Type": "application/json"})

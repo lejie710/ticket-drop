@@ -70,5 +70,6 @@ def test_tokens_are_stored_only_as_hashes(sign_in, db_path):
 def test_test_hooks_are_off_by_default(client):
     """The clock-control route exists only when TICKET_DROP_TEST_HOOKS=1."""
     response = client.post("/api/_test/clock", json={"advance_ms": 600_000})
-    assert response.status_code in (404, 405)
+    assert response.status_code == 404
+    assert response.json()["error"]["code"] == "not_found"
     assert client.get("/api/event").json()["server_now_ms"] < 1_800_000_000_000 + 600_000

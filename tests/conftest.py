@@ -71,9 +71,9 @@ def db_path(tmp_path):
 
 @pytest.fixture
 def make_client(db_path, clock):
-    def make(**overrides):
+    def make(raise_server_exceptions=True, **overrides):
         settings = Settings(db_path=db_path, payment_timeout_seconds=0, faults=FAULTS, **overrides)
-        return TestClient(create_app(settings, clock))
+        return TestClient(create_app(settings, clock), raise_server_exceptions=raise_server_exceptions)
     return make
 
 

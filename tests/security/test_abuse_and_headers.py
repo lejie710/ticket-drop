@@ -1,6 +1,11 @@
 """R10 rate limits, and the protective HTTP headers every response carries."""
 
+import sqlite3
+
 import pytest
+
+from app import service
+from app.main import SECURITY_HEADERS
 
 pytestmark = pytest.mark.security
 
@@ -62,6 +67,23 @@ def test_security_headers_on_every_response(client, path):
     assert headers["X-Content-Type-Options"] == "nosniff"
     assert headers["X-Frame-Options"] == "DENY"
     assert headers["Referrer-Policy"] == "no-referrer"
+
+
+def test_server_errors_carry_the_same_headers(make_client, monkeypatch):
+    """A 500 is answered outside the middleware stack, so it needs the headers added by hand."""
+    client = make_client(raise_server_exceptions=False)
+    token = client.post("/api/login", json={"username": "lejie", "password": "demo-pass"}).json()["token"]
+
+    def locked(conn):
+        raise sqlite3.OperationalError("database is locked")
+
+    monkeypatch.setattr(service, "write_transaction", locked)
+    response = client.post("/api/hold/seats", json={"seat_id": "C-09"}, headers={"Authorization": f"Bearer {token}"})
+    assert response.status_code == 500
+    assert response.json()["error"]["code"] == "server_error"
+    for name, value in SECURITY_HEADERS.items():
+        assert response.headers.get(name) == value, name
+    assert response.headers["Cache-Control"] == "no-store"
 
 
 def test_api_responses_are_not_cached(sign_in):

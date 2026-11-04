@@ -5,10 +5,14 @@ import time
 from pathlib import Path
 
 from fastapi import Depends, FastAPI, Header, Path as PathParam, Request
+from fastapi.exception_handlers import http_exception_handler
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
+from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.routing import Match
 
 from . import auth, db, faults, service
 from .clock import Clock
@@ -104,8 +108,30 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None) -> 
     @app.exception_handler(Exception)
     async def unexpected_error(request, exc: Exception):
         # Same error shape as every other answer, and no internals in the message.
+        # This answer is built outside the middleware stack, so it adds the headers itself.
         return error(500, "server_error", "Something went wrong on the server. Try again; "
-                                          "repeating a payment with the same attempt never charges twice.")
+                                          "repeating a payment with the same attempt never charges twice.",
+                     {**SECURITY_HEADERS, "Cache-Control": "no-store"})
+
+    def api_route_for_other_method(scope) -> list[str]:
+        """The methods an API route accepts at this path, or [] if no API route has this path."""
+        allowed = []
+        for route in app.router.routes:
+            if isinstance(route, APIRoute) and route.matches(scope)[0] == Match.PARTIAL:
+                allowed += sorted(route.methods)
+        return allowed
+
+    @app.exception_handler(StarletteHTTPException)
+    async def http_error(request: Request, exc: StarletteHTTPException):
+        # Unknown /api addresses fall through to the static files, which answer 404 or 405
+        # in FastAPI's own shape. Under /api, answer in the single error shape instead.
+        if not request.url.path.startswith("/api/") or exc.status_code not in (404, 405):
+            return await http_exception_handler(request, exc)
+        allowed = api_route_for_other_method(request.scope)
+        if allowed:
+            return error(405, "method_not_allowed", "This address does not accept that method.",
+                         {"Allow": ", ".join(allowed)})
+        return error(404, "not_found", "There is nothing at this address.")
 
     @app.exception_handler(RequestValidationError)
     async def validation_error(request, exc: RequestValidationError):
