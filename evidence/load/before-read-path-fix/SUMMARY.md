@@ -10,6 +10,8 @@
 | login | 199 | 0 | 1500 | 4200 | 6400 | 7660 | 14.9 |
 | Aggregated | 1245 | 0 | 970 | 3000 | 6100 | 9412 | 93.3 |
 
+Req/s is Locust's rate near the end of the run, not the average: 1245 requests in 60 s is 20.8 requests per second. Later runs report the average.
+
 Failures count only server errors and broken connections. Refusals such as seat taken or limit reached are correct answers.
 
 ## Database checked after the run
