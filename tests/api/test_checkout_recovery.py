@@ -115,8 +115,39 @@ def test_a_payment_started_in_time_is_honoured_after_the_expiry(sign_in, clock, 
         return real_charge(*args)
 
     monkeypatch.setattr(payments, "charge", slow_success)
-    assert lejie.checkout(SUCCESS).status_code == 200
+    paid = lejie.checkout(SUCCESS)
+    assert paid.status_code == 200
+    assert [t["seat_id"] for t in paid.json()["tickets"]] == ["C-09"]  # One ticket per held seat.
     assert arjun.hold("C-09").json()["error"]["code"] == "seat_taken"
+
+
+def test_a_paying_hold_is_not_expired_by_another_fans_request(sign_in, clock, query, monkeypatch):
+    """While the gateway is deciding, another fan's request runs the expiry sweep.
+
+    The hold is 'paying', so the sweep must skip it: the other fan is refused,
+    and the payment then issues exactly the ticket that was paid for.
+    """
+    lejie, arjun = sign_in("lejie"), sign_in("arjun")
+    lejie.hold("C-09")
+    real_charge = payments.charge
+    during = {}
+
+    def slow_success(*args):
+        clock.advance(400_000)  # Past the hold's expiry while the gateway is still deciding.
+        during["arjun"] = arjun.hold("C-09")
+        return real_charge(*args)
+
+    monkeypatch.setattr(payments, "charge", slow_success)
+    paid = lejie.checkout(SUCCESS)
+    assert during["arjun"].status_code == 409
+    assert during["arjun"].json()["error"]["code"] == "seat_taken"
+    assert paid.status_code == 200
+    assert [t["seat_id"] for t in paid.json()["tickets"]] == ["C-09"]
+    assert query("SELECT t.seat_id, u.username FROM tickets t JOIN users u ON u.id = t.user_id") == [
+        {"seat_id": "C-09", "username": "lejie"}]
+    charged = query("SELECT COALESCE(SUM(amount_cents), 0) AS n FROM charges")[0]["n"]
+    value = query("SELECT COALESCE(SUM(s.price_cents), 0) AS n FROM tickets t JOIN seats s ON s.id = t.seat_id")[0]["n"]
+    assert charged == value == 38800
 
 
 def test_releasing_one_seat_mid_payment_is_refused_clearly(sign_in, client):
