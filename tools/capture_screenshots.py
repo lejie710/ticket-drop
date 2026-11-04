@@ -22,7 +22,7 @@ from tests.support import live_server  # noqa: E402
 OUT = ROOT / "docs" / "screenshots"
 
 
-def sign_in(page, url, username="mei"):
+def sign_in(page, url, username="lejie"):
     page.goto(url)
     page.get_by_label("Username").fill(username)
     page.get_by_label("Password").fill("demo-pass")
@@ -48,8 +48,8 @@ def main() -> int:
             desk = browser.new_page(viewport={"width": 1366, "height": 860}, device_scale_factor=1)
 
             desk.goto(server.url)
-            desk.get_by_label("Username").fill("mei")
-            desk.screenshot(path=OUT / "sign-in.png")
+            desk.get_by_label("Username").fill("lejie")
+            desk.screenshot(path=OUT / "sign-in.png", full_page=True)
 
             sign_in(desk, server.url)
             row_c = [f"C-{n:02d}" for n in range(6, 14)]
@@ -61,22 +61,22 @@ def main() -> int:
             expect(desk.locator(f'[data-seat="{b}"]')).to_have_attribute("data-state", "mine")
             desk.mouse.move(5, 5)
             desk.get_by_label("Card number").fill("4242 4242 4242 4242")
-            desk.screenshot(path=OUT / "seat-map-hold.png")
+            desk.screenshot(path=OUT / "seat-map-hold.png", full_page=True)
 
             desk.get_by_label("Card number").fill("4000 0000 0000 0002")
             desk.locator("#pay").click()
             expect(desk.locator("#notice")).to_be_visible()
-            desk.screenshot(path=OUT / "payment-declined.png")
+            desk.screenshot(path=OUT / "payment-declined.png", full_page=True)
 
             taken = desk.evaluate("[...document.querySelectorAll('[data-state=taken]')].map(e => e.dataset.seat)")
             desk.locator(f'[data-seat="{taken[0]}"]').click()
             expect(desk.locator("#mapError")).to_be_visible()
-            desk.screenshot(path=OUT / "seat-taken-message.png")
+            desk.screenshot(path=OUT / "seat-taken-message.png", full_page=True)
 
             desk.get_by_label("Card number").fill("4242 4242 4242 4242")
             desk.locator("#pay").click()
             expect(desk.get_by_role("heading", name="My tickets")).to_be_visible()
-            desk.screenshot(path=OUT / "my-tickets.png")
+            desk.screenshot(path=OUT / "my-tickets.png", full_page=True)
 
             phone = browser.new_page(viewport={"width": 390, "height": 844}, device_scale_factor=2,
                                      is_mobile=True, has_touch=True)
@@ -99,7 +99,7 @@ def main() -> int:
             page.locator('[data-seat="A-05"]').click()
             expect(page.locator("#mapError")).to_be_visible()
             page.mouse.move(5, 5)
-            page.screenshot(path=OUT / "before-sale-opens.png")
+            page.screenshot(path=OUT / "before-sale-opens.png", full_page=True)
             browser.close()
     finally:
         live_server.stop(closed)
