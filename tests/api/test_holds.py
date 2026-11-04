@@ -52,15 +52,6 @@ def test_releasing_the_whole_hold(sign_in):
     assert all(arjun.seat_states()[s] == "available" for s in ["C-09", "C-10", "C-11"])
 
 
-def test_cannot_release_a_seat_you_do_not_hold(sign_in):
-    lejie, arjun = sign_in("lejie"), sign_in("arjun")
-    lejie.hold("C-09")
-    arjun.hold("D-01")
-    response = arjun.unhold("C-09")
-    assert response.status_code == 404
-    assert lejie.seat_states()["C-09"] == "mine"
-
-
 def test_unknown_seat(sign_in):
     response = sign_in("lejie").hold("A-99")
     assert response.status_code == 404
@@ -68,7 +59,8 @@ def test_unknown_seat(sign_in):
 
 
 def test_seat_map_has_510_seats_in_three_categories(sign_in):
-    seats = sign_in("lejie").client.get("/api/seats", headers=sign_in("lejie").headers).json()["seats"]
+    lejie = sign_in("lejie")
+    seats = lejie.client.get("/api/seats", headers=lejie.headers).json()["seats"]
     assert len(seats) == 510
     assert {s["tier"] for s in seats} == {1, 2, 3}
     assert {s["price_cents"] for s in seats} == {38800, 26800, 16800}

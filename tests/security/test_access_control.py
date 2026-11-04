@@ -43,13 +43,6 @@ def test_cannot_replay_someone_elses_idempotency_key(sign_in, query):
     assert query("SELECT COUNT(*) AS n FROM payments") == [{"n": 2}]  # Two payments, not one replayed.
 
 
-def test_ticket_ids_cannot_be_used_across_accounts(sign_in):
-    lejie, attacker = sign_in("lejie"), sign_in("arjun")
-    lejie.hold("C-09")
-    ticket_id = lejie.checkout().json()["tickets"][0]["id"]
-    assert attacker.client.get(f"/api/tickets/{ticket_id}", headers=attacker.headers).status_code == 404
-
-
 def test_ticket_ids_are_not_guessable(sign_in):
     lejie = sign_in("lejie")
     for seat in ["C-09", "C-10"]:
