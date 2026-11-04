@@ -13,5 +13,3 @@ locust
 pip-audit
 bandit
 
-# Learning companion generation
-python-docx

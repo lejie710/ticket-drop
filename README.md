@@ -75,7 +75,6 @@ The AI tools need [Ollama](https://ollama.com) with `llama3.2`; nothing else doe
 | [Defects](docs/DEFECTS.md) | Real findings, including a first hypothesis that measurement disproved |
 | [Seeded faults](docs/FAULT_INJECTION.md) | How the faults were planted and what caught them |
 | [Decisions](docs/DECISIONS.md) | Choices, alternatives and trade-offs |
-| [Learning companion](docs/companion/) | A study book in Word and PDF |
 
 ## Repository layout
 
@@ -87,7 +86,7 @@ The AI tools need [Ollama](https://ollama.com) with `llama3.2`; nothing else doe
 | `ai/` | Generated test data and the exploratory tester |
 | `tools/` | Scripts that produce the evidence |
 | `evidence/` | Saved results |
-| `docs/` | Engineering documents, diagrams, screenshots, companion |
+| `docs/` | Engineering documents, diagrams and screenshots |
 
 ## Limits
 

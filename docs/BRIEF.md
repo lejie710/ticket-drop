@@ -54,7 +54,7 @@ Each requirement has an identifier that tests refer to.
 - Seeded faults, off by default, to measure which bugs each testing approach catches.
 - An AI testing layer using a local model: generated test data, and an exploratory agent compared with the scripted suite and a random baseline.
 - A defect log, a verification record and a release sign-off report.
-- A learning companion (Markdown source, Word and PDF) and a static showcase page prepared for GitHub Pages.
+- A static showcase page prepared for GitHub Pages.
 
 ## Constraints
 
