@@ -13,6 +13,7 @@ from fastapi.routing import APIRoute
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict, Field
 from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 from starlette.routing import Match
 
 from . import auth, db, faults, service
@@ -23,6 +24,9 @@ from .ratelimit import FailureWindow, TokenBucket
 SEAT_ID_PATTERN = r"^[A-T]-\d{2}$"
 IDEMPOTENCY_KEY = re.compile(r"^[A-Za-z0-9_-]{8,64}$")
 STATIC_DIR = Path(__file__).parent / "static"
+# Host names the server answers to. Any other Host header gets 400, which stops a
+# DNS-rebinding page from talking to the local server through a name it controls.
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "testserver"]
 
 EVENT = {
     "artist": "Halcyon Static",
@@ -91,6 +95,10 @@ def create_app(settings: Settings | None = None, clock: Clock | None = None,
     app.state.clock = clock
     hold_limiter = TokenBucket(settings.hold_rate_per_second, settings.hold_burst)
     login_failures = FailureWindow(settings.failed_logins_per_minute, 60)
+
+    # Added before the header middleware, so the header middleware wraps it and
+    # its 400 answers carry the security headers too.
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=ALLOWED_HOSTS)
 
     @app.middleware("http")
     async def security_headers(request: Request, call_next):
