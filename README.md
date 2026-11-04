@@ -1,6 +1,10 @@
 # Ticket Drop
 
+[![tests](https://github.com/lejie710/ticket-drop/actions/workflows/ci.yml/badge.svg)](https://github.com/lejie710/ticket-drop/actions/workflows/ci.yml)
+
 A concert ticket sale app built to be tested: seat holds, payment failure, concurrency, load and security.
+
+**Showcase:** [lejie710.github.io/ticket-drop](https://lejie710.github.io/ticket-drop/) | **Status:** complete (version 1.0), not under active development
 
 ![Seat map with two seats held after a declined card: the seats stay held and the five-minute timer keeps running](docs/screenshots/payment-declined.png)
 
@@ -96,8 +100,9 @@ The AI tools need [Ollama](https://ollama.com) with `llama3.2`; nothing else doe
 
 ## Repository layout
 
-| Folder | Contents |
+| Path | Contents |
 |---|---|
+| `serve.py` | Starts the app locally |
 | `app/` | The application: API, booking rules, browser page |
 | `tests/` | API, security, concurrency and browser tests |
 | `load/` | The Locust load test |
@@ -105,6 +110,7 @@ The AI tools need [Ollama](https://ollama.com) with `llama3.2`; nothing else doe
 | `tools/` | Scripts that produce the evidence |
 | `evidence/` | Saved results |
 | `docs/` | Engineering documents, diagrams and screenshots |
+| `site/` | The one-page showcase published to GitHub Pages, built by `tools/build_site.py` |
 
 ## Limits
 
