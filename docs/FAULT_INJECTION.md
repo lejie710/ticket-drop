@@ -29,6 +29,8 @@ The table and per-fault details are generated from the saved runs into [evidence
 
 The per-fault table is in [evidence/faults/REPORT.md](../evidence/faults/REPORT.md); the follow-up for the two gap-closing changes is in [scripted-after-gap-tests.json](../evidence/faults/scripted-after-gap-tests.json).
 
+The report names tests as they were at the time of the run. Two have changed since: `test_checkout::test_repeating_a_declined_checkout_returns_the_same_decline` is now `test_repeating_a_failed_checkout_returns_the_same_failure`, which covers every failure kind, and `test_holds::test_cannot_release_a_seat_you_do_not_hold` was removed as a duplicate of `test_access_control::test_cannot_release_someone_elses_seat`, which caught the same fault.
+
 ### What the results mean
 
 **The scripted suite caught 8 of 10.** The two it missed share a cause: each test checked the rule from only one angle.

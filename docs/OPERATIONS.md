@@ -83,4 +83,4 @@ All local data is in `.local\`. To start again with a fresh sale, stop the serve
 
 ## 7. Deployment
 
-Not prepared. Version 1 runs on 127.0.0.1 only. The code is published as a private repository on GitHub; hosted CI results are not recorded here. The static showcase page in `site/` is prepared for GitHub Pages; its workflow runs only when started by hand, and whether it has been published is not recorded here.
+Not prepared. Version 1 runs on 127.0.0.1 only. The source code is published on GitHub; hosted CI results are shown there, not recorded here. The static showcase page in `site/` is prepared for GitHub Pages; its workflow runs only when started by hand, and whether it has been published is not recorded here.

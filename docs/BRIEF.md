@@ -77,4 +77,4 @@ Each requirement has an identifier that tests refer to.
 
 ## Constraints
 
-Local operation on Windows with Python 3.12. No paid services. The AI layer uses the locally installed Ollama `llama3.2` model. The repository stays private until the owner decides otherwise; nothing is pushed or deployed automatically.
+Local operation on Windows with Python 3.12. No paid services. The AI layer uses the locally installed Ollama `llama3.2` model. Nothing is pushed or deployed automatically; publishing the source is a separate step taken by the owner.
