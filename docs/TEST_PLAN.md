@@ -49,7 +49,7 @@ Impact: what happens to a fan or to money if the requirement fails. Likelihood: 
 |---|---|---|
 | Boundary value analysis | R1, R3, R4 | Hold valid at 299 999 ms, ended at exactly 300 000 ms; sale closed at opening minus 1 ms, open at the opening instant; 4 seats allowed, the fifth refused |
 | Equivalence partitioning | R12 | Seat IDs: valid, wrong row letter, lower case, wrong digit count, injection-shaped text, wrong JSON type |
-| Decision table | R6, R7 | Card outcome (pay, decline, timeout) by key (new, repeated) by hold (open, expired, none) |
+| Decision table | R6, R7 | Card outcome (pay, decline, timeout) by key (new, repeated) by hold (open, expired, none). Covered: every outcome with a new key on an open hold; repeated keys for all three outcomes on an open hold; a repeated paid key after expiry. Not covered: a repeated declined or timed-out key after the hold has expired |
 | State transition | R4 to R7, R13 | Hold states below |
 | Error guessing and negative testing | R8, R9, R12 | A client-sent price, another account's ticket ID, a key reused across accounts |
 | Concurrency testing | R2, R3, R7 | 50 fans on one seat; 10 parallel claims by one fan; 5 parallel Pay clicks |
@@ -83,7 +83,7 @@ Each row has at least one API test. The rows on error paths also have browser te
 | R6 | `test_checkout` (4), `test_checkout_recovery` (2) | | | `test_declined_card_keeps_the_seats`, `test_pressing_enter_twice_sends_one_payment` | | seats kept after failure |
 | R7 | `test_checkout` (6: success, decline and timeout replays, replay after the expiry, a key refused for a different hold twice), settle recovery | key scoped to account | double click, parallel retries | `test_retry_after_a_server_error_reuses_the_payment_key`, `test_a_kept_payment_key_is_not_reused_for_different_seats` | | repeated key |
 | R8 | `test_the_client_cannot_set_the_price` | | | | money matches tickets | money matches tickets |
-| R9 | `test_auth` (every account route, missing and made-up token), `test_tickets` | `test_access_control` (6), foreign `Host` refused on the real server | | | | cross-account access |
+| R9 | `test_auth` (every account route, missing and made-up token), `test_tickets` | `test_access_control` (5 cross-account tests), foreign `Host` refused on the real server | | | | cross-account access |
 | R10 | | `test_abuse_and_headers` (5) | | | 429 counted as correct | rapid changes |
 | R11 | `test_holds` | | | map states in every journey | | map versus database |
 | R12 | `test_validation` (bodies, address IDs, cards, keys, error shape for unknown addresses), generated inputs | | | | no 5xx | no 5xx |

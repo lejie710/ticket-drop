@@ -77,7 +77,7 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 
 **Fix.** Seats hide the default outline and show keyboard focus with a ring that follows the circle (`.seat.focused`).
 
-**Correction.** This entry used to say `test_seats_can_be_chosen_with_the_keyboard_only` showed that focus stays visible. It did not: it checks which seat has focus, not what is drawn. A later review found that tabbing into the map drew no ring at all, because the ring was added only on arrow keys (DEF-013). `test_tabbing_into_the_map_shows_a_focus_ring` now checks the class and that the computed ring differs from an unfocused seat.
+**Correction.** This entry used to say `test_seats_can_be_chosen_with_the_keyboard_only` showed that focus stays visible. It did not: it checks which seat has focus, not what is drawn. A later review found that tabbing into the map drew no ring at all, because the ring was added only on arrow keys (DEF-013). `test_tabbing_into_the_map_shows_a_focus_ring` now checks the class within one second and that the focused seat's computed stroke differs from an unfocused seat of the same category (A-02), which has no stroke of its own.
 
 ## DEF-006: generator crashed printing its own report
 
@@ -143,7 +143,7 @@ A reporting bug was found at the same time: the summary copied Locust's `Request
 
 **Found by** looking at the real screenshots taken for the documentation, not by a test: at 390 px wide the wordmark broke onto two lines, and the docked payment strip covered about 45 percent of the screen, hiding most of the seat map.
 
-**Fix.** On phones the "Signed in as" text and the timer note are hidden, the test-card help is smaller, and the timer sits beside the card field. The strip now covers about 29 percent of the screen. `test_phone_layout_docks_the_payment_strip` still checks that the strip is docked to the bottom edge and the Pay button is visible; a test cannot judge "crowded", which is why screenshots are reviewed by eye.
+**Fix.** On phones the "Signed in as" text and the timer note are hidden, the test-card help is smaller, and the timer sits beside the card field. The strip covered about 29 percent of the screen after this fix; the held-seat summary added later (DEF-013) makes it about 34 percent. `test_phone_layout_docks_the_payment_strip` still checks that the strip is docked to the bottom edge and the Pay button is visible; a test cannot judge "crowded", which is why screenshots are reviewed by eye.
 
 ## DEF-012: the page dropped its payment key after a server error
 

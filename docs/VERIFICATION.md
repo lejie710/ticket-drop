@@ -15,7 +15,7 @@ What was actually run, what it showed, and what it does not show. Every figure h
 
 ## 2. Automated tests
 
-Final full run on the final code, in a fresh virtual environment built in `%TEMP%` from `requirements.txt` alone, which is what `requirements-lock.txt` was frozen from (Python 3.12.10, Playwright 1.64.1): `python -m pytest`, 4 November 2026 11:20 to 11:24 (+08:00), **197 passed in 185 s**. An earlier run in the same environment, before the documentation changes, also passed 197 in 180 s.
+Final full run on the final code, in a fresh virtual environment built in `%TEMP%` from `requirements.txt` alone, which is what `requirements-lock.txt` was frozen from (Python 3.12.10, Playwright 1.64.1): `python -m pytest`, 4 November 2026 11:20 to 11:24 (+08:00), **197 passed in 185 s**. An earlier run in the same environment, before the documentation changes, also passed 197 in 180 s. After the last checker fixes (a stronger focus-ring comparison and recaptured screenshots), the suite was run again in the project environment: 4 November 2026 11:49 to 11:52 (+08:00), **197 passed in 155 s**.
 
 | Suite | Tests | What it checks |
 |---|---|---|
@@ -79,7 +79,7 @@ Real defects and investigations are in [DEFECTS.md](DEFECTS.md): thirteen entrie
 | Keyboard operation of the seat map | Tested for one path; no screen-reader testing |
 | Payment | Simulated by a mock gateway; no real provider was integrated |
 | AI-generated data and exploration | Measured on one small local model: one seed for data generation, three seeds per fault for exploration; not a general claim about language models |
-| Hosted CI (`.github/workflows/ci.yml`) | Published as a private repository; hosted CI results are not recorded here |
+| Hosted CI (`.github/workflows/ci.yml`) | Runs on GitHub for pull requests and pushes to main; its results are not recorded in this document |
 | Showcase page on GitHub Pages | Prepared; whether it has been published is not recorded here |
 | Production readiness, capacity, accessibility compliance | Not claimed |
 

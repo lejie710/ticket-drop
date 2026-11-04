@@ -20,7 +20,7 @@ How version 1 of Ticket Drop actually works. The product contract is in [BRIEF.m
 | Database | `app/db.py` | Schema, connections, seed data, optional sample sales |
 | Seeded faults | `app/faults.py` | Named deliberate bugs, all off unless enabled for an experiment |
 
-The server listens on 127.0.0.1 only and answers only to the host names `127.0.0.1` and `localhost` (plus `testserver` for the in-process tests); any other `Host` header gets 400, so a page that rebinds its own DNS name to 127.0.0.1 cannot use the API. One process owns one SQLite file in WAL mode.
+The server listens on 127.0.0.1 only and answers only to the host names `127.0.0.1` and `localhost` (plus `testserver` for the in-process tests); any other `Host` header gets 400, so a page that rebinds its own DNS name to 127.0.0.1 cannot use the API. That 400 is plain text from the middleware, the one answer that does not use the JSON error shape. One process owns one SQLite file in WAL mode.
 
 ## 2. One operation end to end: holding a seat
 
