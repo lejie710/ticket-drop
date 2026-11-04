@@ -20,7 +20,7 @@ from dataclasses import dataclass, field
 
 from tests.support.live_server import LiveServer
 
-ACTORS = {"A": "mei", "B": "arjun", "C": "siti"}
+ACTORS = {"A": "lejie", "B": "arjun", "C": "siti"}
 CARDS = {"success": "4242424242424242", "decline": "4000000000000002", "timeout": "4000000000000408"}
 FRONT_SEATS = [f"{r}-{n:02d}" for r in "ABCD" for n in range(1, 11)]
 HOLD_MS = 300_000
@@ -277,7 +277,7 @@ class Harness:
         over = db("""SELECT u.username, (SELECT COUNT(*) FROM tickets t WHERE t.user_id = u.id)
                      + (SELECT COUNT(*) FROM seats s JOIN holds h ON h.id = s.hold_id
                         WHERE h.user_id = u.id AND h.status IN ('active', 'paying')) AS n
-                     FROM users u WHERE u.username IN ('mei', 'arjun', 'siti') AND n > 4""")
+                     FROM users u WHERE u.username IN ('lejie', 'arjun', 'siti') AND n > 4""")
         for name, n in over:
             self.flag("R3", f"{name} has {n} seats held or owned")
         charged = db("SELECT COALESCE(SUM(amount_cents), 0) FROM charges")[0][0]

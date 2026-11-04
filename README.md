@@ -52,7 +52,7 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe serve.py --sample-sales 0.55
 ```
 
-Open http://127.0.0.1:8000 and sign in as `mei`, `arjun`, `siti` or `wei`, password `demo-pass`. Test cards: `4242 4242 4242 4242` pays, `4000 0000 0000 0002` is declined, `4000 0000 0000 0408` times out. `--sample-sales` marks about half the seats as sold to sample accounts so the map looks like a sale in progress.
+Open http://127.0.0.1:8000 and sign in as `lejie`, `arjun`, `siti` or `wei`, password `demo-pass`. Test cards: `4242 4242 4242 4242` pays, `4000 0000 0000 0002` is declined, `4000 0000 0000 0408` times out. `--sample-sales` marks about half the seats as sold to sample accounts so the map looks like a sale in progress.
 
 ## Test it
 

@@ -49,7 +49,7 @@ HAND_WRITTEN = {
     "seat_id": {"Z-01", "c-09", "C-9", "C-009", "C09", "", "C-09'; DROP TABLE seats;--", "C-09\n"},
     "card_number": {"", "abcd", "4242", "4242-4242-4242-4242", "4" * 40},
     "idempotency_key": {"short", "has space here", "x" * 65, "semi;colon!"},
-    "username": {"nobody", "mei"},
+    "username": {"nobody", "lejie"},
 }
 
 
@@ -123,7 +123,7 @@ def main() -> int:
         # Header values must be latin-1 to be sent at all; such keys are recorded as not sendable.
         client = TestClient(create_app(Settings(db_path=str(Path(tmp) / "datagen.db"), payment_timeout_seconds=0,
                                                 hold_burst=10_000, hold_rate_per_second=10_000.0), Clock()))
-        token = client.post("/api/login", json={"username": "mei", "password": "demo-pass"}).json()["token"]
+        token = client.post("/api/login", json={"username": "lejie", "password": "demo-pass"}).json()["token"]
         headers = {"Authorization": f"Bearer {token}"}
         cases, rows = [], []
         for field, items in generated.items():
@@ -149,7 +149,7 @@ def main() -> int:
                 if not duplicate and sendable:
                     cases.append({"field": field, "value": value, "expected_valid": expected_valid})
             client.post("/api/logout", headers=headers)
-            token = client.post("/api/login", json={"username": "mei", "password": "demo-pass"}).json()["token"]
+            token = client.post("/api/login", json={"username": "lejie", "password": "demo-pass"}).json()["token"]
             headers = {"Authorization": f"Bearer {token}"}
         client.close()
 

@@ -16,7 +16,7 @@ DATA = json.loads((Path(__file__).parents[1] / "data" / "generated_inputs.json")
 def fan(make_client, sign_in):
     # A generous rate limit, so a long run of generated seat IDs is judged on validation alone.
     client = make_client(hold_burst=10_000, hold_rate_per_second=10_000.0)
-    return sign_in("mei", client)
+    return sign_in("lejie", client)
 
 
 @pytest.mark.parametrize("case", DATA["cases"], ids=lambda c: f"{c['field']}:{c['value']!r}"[:60])

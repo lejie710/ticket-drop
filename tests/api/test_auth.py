@@ -2,15 +2,15 @@
 
 
 def test_demo_account_signs_in(client):
-    response = client.post("/api/login", json={"username": "mei", "password": "demo-pass"})
+    response = client.post("/api/login", json={"username": "lejie", "password": "demo-pass"})
     assert response.status_code == 200
     body = response.json()
-    assert body["user"] == {"username": "mei", "display_name": "Mei"}
+    assert body["user"] == {"username": "lejie", "display_name": "Le Jie"}
     assert len(body["token"]) >= 40
 
 
 def test_wrong_password_and_unknown_user_look_the_same(client):
-    wrong_password = client.post("/api/login", json={"username": "mei", "password": "nope"})
+    wrong_password = client.post("/api/login", json={"username": "lejie", "password": "nope"})
     unknown_user = client.post("/api/login", json={"username": "nobody", "password": "demo-pass"})
     assert wrong_password.status_code == unknown_user.status_code == 401
     # Identical answers, so the endpoint cannot be used to discover which usernames exist.
@@ -31,6 +31,6 @@ def test_a_made_up_token_is_refused(client):
 
 
 def test_signing_out_ends_the_session(sign_in, client):
-    fan = sign_in("mei")
+    fan = sign_in("lejie")
     assert client.post("/api/logout", headers=fan.headers).status_code == 204
     assert client.get("/api/hold", headers=fan.headers).status_code == 401

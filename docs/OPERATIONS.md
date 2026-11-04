@@ -21,7 +21,7 @@ Optional, only for the AI tools: install [Ollama](https://ollama.com) and run `o
 .\.venv\Scripts\python.exe serve.py
 ```
 
-Open http://127.0.0.1:8000 and sign in as `mei`, `arjun`, `siti` or `wei` with the password `demo-pass`. Stop the server with Ctrl+C.
+Open http://127.0.0.1:8000 and sign in as `lejie`, `arjun`, `siti` or `wei` with the password `demo-pass`. Stop the server with Ctrl+C.
 
 | Option | Effect |
 |---|---|

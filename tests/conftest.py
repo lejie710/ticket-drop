@@ -84,7 +84,7 @@ def client(make_client):
 
 @pytest.fixture
 def sign_in(client):
-    def _sign_in(username="mei", c=None):
+    def _sign_in(username="lejie", c=None):
         c = c or client
         response = c.post("/api/login", json={"username": username, "password": "demo-pass"})
         assert response.status_code == 200, response.text

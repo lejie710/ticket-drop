@@ -119,7 +119,7 @@ def test_seats_can_be_chosen_with_the_keyboard_only(signed_in):
 
 def test_wrong_password_is_explained(page, server):
     page.goto(server.url)
-    page.get_by_label("Username").fill("mei")
+    page.get_by_label("Username").fill("lejie")
     page.get_by_label("Password").fill("wrong")
     page.get_by_role("button", name="Sign in").click()
     expect(page.get_by_role("alert")).to_have_text("The username or password is wrong.")
@@ -129,7 +129,7 @@ def test_before_the_sale_opens(page, start_server):
     """R1: the countdown shows and holding is refused with an explanation."""
     srv = start_server(sale_opens_in=3600)
     page.goto(srv.url)
-    page.get_by_label("Username").fill("mei")
+    page.get_by_label("Username").fill("lejie")
     page.get_by_label("Password").fill("demo-pass")
     page.get_by_role("button", name="Sign in").click()
     expect(page.locator("#saleState")).to_contain_text(re.compile(r"Sale opens in \d+:\d\d"))

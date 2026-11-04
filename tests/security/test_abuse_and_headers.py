@@ -7,10 +7,10 @@ pytestmark = pytest.mark.security
 
 def test_rapid_seat_changes_are_limited(sign_in):
     """Burst of 10 allowed, then 429 with Retry-After. Each request toggles the same seat."""
-    mei = sign_in("mei")
+    lejie = sign_in("lejie")
     codes = []
     for i in range(14):
-        response = mei.hold("C-09") if i % 2 == 0 else mei.unhold("C-09")
+        response = lejie.hold("C-09") if i % 2 == 0 else lejie.unhold("C-09")
         codes.append(response.status_code)
         if response.status_code == 429:
             assert int(response.headers["Retry-After"]) >= 1
@@ -21,7 +21,7 @@ def test_rapid_seat_changes_are_limited(sign_in):
 
 def test_signing_in_again_does_not_reset_the_rate_limit(sign_in):
     """Added after fault injection: the limit belongs to the account, not to one session."""
-    first, second = sign_in("mei"), sign_in("mei")
+    first, second = sign_in("lejie"), sign_in("lejie")
     codes = []
     for i in range(14):
         fan = first if i % 2 == 0 else second
@@ -31,25 +31,25 @@ def test_signing_in_again_does_not_reset_the_rate_limit(sign_in):
 
 
 def test_one_fans_rate_limit_does_not_affect_another(sign_in):
-    mei, arjun = sign_in("mei"), sign_in("arjun")
+    lejie, arjun = sign_in("lejie"), sign_in("arjun")
     for i in range(14):
-        mei.hold("C-09") if i % 2 == 0 else mei.unhold("C-09")
+        lejie.hold("C-09") if i % 2 == 0 else lejie.unhold("C-09")
     assert arjun.hold("D-01").status_code == 200
 
 
 def test_repeated_failed_sign_ins_are_slowed_down(client):
     for _ in range(10):
-        assert client.post("/api/login", json={"username": "mei", "password": "guess"}).status_code == 401
-    blocked = client.post("/api/login", json={"username": "mei", "password": "guess"})
+        assert client.post("/api/login", json={"username": "lejie", "password": "guess"}).status_code == 401
+    blocked = client.post("/api/login", json={"username": "lejie", "password": "guess"})
     assert blocked.status_code == 429
     assert int(blocked.headers["Retry-After"]) >= 1
     # The right password is also refused while blocked: the limit protects the account from guessing.
-    assert client.post("/api/login", json={"username": "mei", "password": "demo-pass"}).status_code == 429
+    assert client.post("/api/login", json={"username": "lejie", "password": "demo-pass"}).status_code == 429
 
 
 def test_successful_sign_ins_are_not_limited(client):
     for _ in range(15):
-        assert client.post("/api/login", json={"username": "mei", "password": "demo-pass"}).status_code == 200
+        assert client.post("/api/login", json={"username": "lejie", "password": "demo-pass"}).status_code == 200
 
 
 @pytest.mark.parametrize("path", ["/", "/app.js", "/api/event"])
@@ -65,8 +65,8 @@ def test_security_headers_on_every_response(client, path):
 
 
 def test_api_responses_are_not_cached(sign_in):
-    mei = sign_in("mei")
-    assert mei.client.get("/api/hold", headers=mei.headers).headers["Cache-Control"] == "no-store"
+    lejie = sign_in("lejie")
+    assert lejie.client.get("/api/hold", headers=lejie.headers).headers["Cache-Control"] == "no-store"
 
 
 def test_interactive_api_docs_are_not_served(client):
