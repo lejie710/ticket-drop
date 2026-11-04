@@ -18,7 +18,7 @@ Why things are the way they are. Product decisions were made by the project owne
 |---|---|---|
 | Python, FastAPI, SQLite | Node, PostgreSQL | One language across app and tests; nothing to install on Windows. SQLite has one writer at a time, which makes correctness easier and limits throughput (DEF-002) |
 | `BEGIN IMMEDIATE` plus a conditional `UPDATE` for seat claims | Optimistic version numbers, application locks | The write lock makes check-then-claim atomic; the conditional update still refuses a second claim on its own. Simple to explain and to test. Approved by the owner |
-| Three-step checkout with a `paying` hold state | Call the gateway inside the transaction | Keeps the slow gateway call out of the lock so other fans are not blocked; the `paying` state stops expiry from reselling seats mid-payment. Cost: a crash mid-payment needs reconciliation that version 1 lacks |
+| Three-step checkout with a `paying` hold state | Call the gateway inside the transaction | Keeps the slow gateway call out of the lock so other fans are not blocked; the `paying` state stops expiry from reselling seats mid-payment. Cost: a crash between the charge and recording its outcome needs reconciliation that version 1 lacks. Approved by the owner |
 | Store the full response with each payment | Store only the outcome | A repeated key returns exactly the same status and body, which is what a retrying client needs |
 | Idempotency keys scoped to the account | Global keys | One fan's key can never reveal or replay another fan's payment |
 | Another fan's ticket answers 404, not 403 | 403 Forbidden | Does not confirm that the ID exists |
